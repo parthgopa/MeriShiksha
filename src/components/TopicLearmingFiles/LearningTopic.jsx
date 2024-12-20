@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./LearningTopic.module.css";
 import APIService from "../API"; // Assuming you have an API service to handle it
 import { useLocation, useNavigate } from "react-router";
@@ -15,55 +15,98 @@ const LearningTopic = () => {
   const [response, setResponse] = useState(initialPrompt);
   const [loading, setLoading] = useState(false); // Add loading state
   const [speechRate, setSpeechRate] = useState(1); // State for speech rate
+  const cacheRef = useRef({}); // Cache object to store responses
+  const [currentSpeechResponse, setSpeechResponse] = useState("");
 
   const { speak, cancel, speaking, supported, voices } = useSpeechSynthesis();
 
-  const handleOnResponse = (response) => {
-    setResponse(response["candidates"][0]["content"]["parts"][0]["text"]);
+  const handleOnResponse = (part, response) => {
+    const responseText =
+      response["candidates"][0]["content"]["parts"][0]["text"];
+    let SpeechResponse = responseText.slice(3, responseText.length);
+    setSpeechResponse(SpeechResponse);
+
+    setResponse(responseText);
     setLoading(false); // Stop spinner once response is received
+
+    // Save response to cache
+    cacheRef.current[part] = {
+      prompt: part,
+      response: responseText,
+    };
   };
 
   useEffect(() => {
-    setLoading(true); // Start spinner when making API call
-    console.log("Part while loading page :", currentPart);
-    APIService({ question: initialPrompt, onResponse: handleOnResponse });
+    const fetchInitialContent = async () => {
+      setLoading(true); // Start spinner when making API call
+
+      // Check cache for the initial part
+      if (cacheRef.current[currentPart]) {
+        setResponse(cacheRef.current[currentPart].response);
+        setLoading(false);
+      } else {
+        await APIService({
+          question: initialPrompt,
+          onResponse: (response) => handleOnResponse(currentPart, response),
+        });
+      }
+    };
+
+    fetchInitialContent();
   }, [initialPrompt]);
 
   const handleNext = async () => {
     if (currentPart < parts) {
-      // Change to < instead of <= to prevent extra increment
-      setLoading(true); // Start spinner when making API call
+      const nextPart = currentPart + 1;
 
-      let newPrompt = "";
-      if (currentPart === 1) {
-        newPrompt = `I have completed Part 1 of :${topic} and understand its basics. For Part 2, please provide content on the core concepts and fundamental elements of :${topic}. Focus on important terms, key components, and foundational ideas to build a solid understanding.`;
-      } else if (currentPart === 2) {
-        newPrompt = `Having learned the fundamentals of :${topic}, I am ready for Part 3. Provide an overview of the advanced concepts and applications of :${topic}, explaining how it is applied in real-world scenarios and its impact on related fields.`;
-      } else if (currentPart === 3) {
-        newPrompt = `I have completed Parts 1 to 3 of :${topic}. For Part 4, provide content on the current trends, contemporary issues, and recent developments in :${topic}. Include challenges, innovations, and the evolving role of 'XYZ' in society.`;
-      } else if (currentPart === 4) {
-        newPrompt = `With Parts 1 to 4 of :${topic} complete, please provide content for Part 5 that explores the future prospects of :${topic}, potential career paths, and upcoming advancements. Highlight opportunities for further learning and professional growth in this field.`;
-      }
-
-      if (newPrompt) {
-        await APIService({ question: newPrompt, onResponse: handleOnResponse });
-      } else {
-        setResponse("No more content available for this part.");
+      if (cacheRef.current[nextPart]) {
+        setResponse(cacheRef.current[nextPart].response);
+        setCurrentPart(nextPart);
         setLoading(false);
+      } else {
+        setLoading(true); // Start spinner when making API call
+
+        let newPrompt = "";
+        if (nextPart === 2) {
+          newPrompt = `I have completed Part 1 of :${topic} and understand its basics. For Part 2, please provide content on the core concepts and fundamental elements of :${topic}. Focus on important terms, key components, and foundational ideas to build a solid understanding.`;
+        } else if (nextPart === 3) {
+          newPrompt = `Having learned the fundamentals of :${topic}, I am ready for Part 3. Provide an overview of the advanced concepts and applications of :${topic}, explaining how it is applied in real-world scenarios and its impact on related fields.`;
+        } else if (nextPart === 4) {
+          newPrompt = `I have completed Parts 1 to 3 of :${topic}. For Part 4, provide content on the current trends, contemporary issues, and recent developments in :${topic}. Include challenges, innovations, and the evolving role of 'XYZ' in society.`;
+        } else if (nextPart === 5) {
+          newPrompt = `With Parts 1 to 4 of :${topic} complete, please provide content for Part 5 that explores the future prospects of :${topic}, potential career paths, and upcoming advancements. Highlight opportunities for further learning and professional growth in this field.`;
+        }
+
+        await APIService({
+          question: newPrompt,
+          onResponse: (response) => handleOnResponse(nextPart, response),
+        });
+
+        setCurrentPart(nextPart);
       }
-      setCurrentPart(currentPart + 1);
     }
   };
 
   const handlePrevious = () => {
     if (currentPart > 1) {
-      setLoading(true); // Start spinner when making API call
       const prevPart = currentPart - 1;
-      setCurrentPart(prevPart);
 
-      const prevPrompt = `I am a beginner and I want to learn ${topic} having a level of ${level} and in ${parts} parts. I had learned part ${currentPart} of the topic, now go to previous part of it.`;
+      if (cacheRef.current[prevPart]) {
+        setResponse(cacheRef.current[prevPart].response);
+        setCurrentPart(prevPart);
+        setLoading(false);
+      } else {
+        setLoading(true); // Start spinner when making API call
 
-      APIService({ question: prevPrompt, onResponse: handleOnResponse });
+        const prevPrompt = `I am a beginner and I want to learn ${topic} having a level of ${level} and in ${parts} parts. I had learned part ${currentPart} of the topic, now go to previous part of it.`;
+
+        APIService({
+          question: prevPrompt,
+          onResponse: (response) => handleOnResponse(prevPart, response),
+        });
+
+        setCurrentPart(prevPart);
+      }
     }
   };
 
@@ -79,7 +122,9 @@ const LearningTopic = () => {
   };
 
   const handleSpeak = () => {
-    speak({ text: response, rate: speechRate });
+    if (currentSpeechResponse) {
+      speak({ text: currentSpeechResponse, rate: speechRate });
+    }
   };
 
   const handleStop = () => {
@@ -127,21 +172,21 @@ const LearningTopic = () => {
         <button
           className={`btn btn-primary ${styles.button}`}
           onClick={handlePrevious}
-          disabled={currentPart === 1}
+          disabled={currentPart === 1 || loading}
         >
           Previous
         </button>
         <button
           className={`btn btn-primary ${styles.button}`}
           onClick={handleNext}
-          disabled={currentPart === 1 || currentPart === parts}
+          disabled={currentPart === parts || loading}
         >
           Next
         </button>
         <button
           className={`btn btn-success ${styles.button}`}
           onClick={handleFinish}
-          disabled={currentPart != parts}
+          disabled={currentPart != parts || loading}
         >
           Finish
         </button>

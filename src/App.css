@@ -1,19 +1,17 @@
 body,html{
   margin: 0; padding: 0; width: 100%; height: 100%;
 }
-.containr{
+.Outer-container{
   display: flex;
-}
-.right-container{
-  display: flex;
-  flex-direction: column;
-  width: 100%;
 }
 .sidebar{
-  min-height: 80%;
-  text-align: left;
-  background-color: #235486;
+  width:15%
+  
 }
+.right-outlet{
+  width: 80%;
+}
+
 .App-image{
   width: 50%;
   height:70%;

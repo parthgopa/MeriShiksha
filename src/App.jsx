@@ -1,33 +1,20 @@
 import "./App.css";
-import Footer from "./components/Footer";
-import Navbar from "./components/Navbarbar";
 import { Outlet } from "react-router";
 import { useState } from "react";
-import CompanyName from "./components/CompanyName";
-import LoadingSpinner from "./components/LoadingSpinner";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [currentSidebar, setSidebar] = useState("Home");
 
-  const handleResponse = (response) => {
-    console.log("Response received from server");
-    // console.log("API Response:", response['candidates']['0']['content']['parts']['0']['text']);
-  };
-
   return (
     <>
-      <CompanyName />
-      <div className="containr">
+      <div className="Outer-container">
         <div className="sidebar">
-          <Navbar />
+          <Navbar currentSidebar={currentSidebar} setSidebar={setSidebar} />
         </div>
-
-        <div className="right-container">
+        <div className="right-outlet">
           <Outlet />
         </div>
-      </div>
-      <div>
-        <Footer />
       </div>
     </>
   );

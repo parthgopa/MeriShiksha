@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { FaHome } from "react-icons/fa";
 import { FaBook } from "react-icons/fa";
 import { TbSettings2 } from "react-icons/tb";
@@ -9,12 +9,14 @@ import { ImProfile } from "react-icons/im";
 import { IoMdLogIn } from "react-icons/io";
 import { VscAccount } from "react-icons/vsc";
 import { MdOutlineAccountCircle } from "react-icons/md";
-import image from "../assets/MyLogo.png";
+import { useEffect } from "react";
 
 const Navbar = ({ currentSidebar, setSidebar }) => {
-  let handlesidebarclick = (tabname) => {
-    setSidebar(tabname);
-  };
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   navigate("/");
+  // }, [navigate]);   // If page isreloaded , GO To HomePage.
 
   return (
     <Sidebar rootStyles={{ height: "100%" }} width="auto">
@@ -48,13 +50,13 @@ const Navbar = ({ currentSidebar, setSidebar }) => {
             "&:hover": {
               backgroundColor: "rgb(163, 233, 249)",
               "&:before": {
-                boxShadow: "0 12.5px 0 0 rgb(163, 233, 249)",
+                boxShadow: "0 8.5px 0 0 rgb(163, 233, 249)",
               },
               "&:after": {
-                boxShadow: "0 -12.5px 0 0 rgb(163, 233, 249)",
+                boxShadow: "0 -8.5px 0 0 rgb(163, 233, 249)",
               },
             },
-            [`&.active`]: {
+            ["&.active"]: {
               backgroundColor: "#547CFF",
               "&:before": {
                 boxShadow: "0 12.5px 0 0 #547CFF",
