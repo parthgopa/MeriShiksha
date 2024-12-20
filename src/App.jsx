@@ -1,6 +1,6 @@
 import "./App.css";
 import Footer from "./components/Footer";
-import Sidebar from "./components/Sidebar";
+import Navbar from "./components/Navbarbar";
 import { Outlet } from "react-router";
 import { useState } from "react";
 import CompanyName from "./components/CompanyName";
@@ -17,11 +17,11 @@ function App() {
   return (
     <>
       <CompanyName />
-      <div className="container">
-        <Sidebar
-          currentSidebar={currentSidebar}
-          setSidebar={setSidebar}
-        ></Sidebar>
+      <div className="containr">
+        <div className="sidebar">
+          <Navbar />
+        </div>
+
         <div className="right-container">
           <Outlet />
         </div>
