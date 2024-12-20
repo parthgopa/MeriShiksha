@@ -42,7 +42,6 @@ const MCQTest = () => {
         "correctAnswers": ["Paris", "4"]
       }; . The output should be in the same format as given with curly braces.`;
       }
-      console.log(prompt);
 
       setLoading(true);
       await APIService({ question: prompt, onResponse: handleOnResponse });

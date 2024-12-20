@@ -66,13 +66,13 @@ Controversies or Debates: Disagreements and potential issues.`;
             />
           )}
         </div>
-        <div className="d-flex h-100">
-          <div className="align-self-start mr-auto">
+        <div className="d-flex h-100 justify-content-between">
+          <div className="align-self-start">
             <Button className="btn btn-primary" onClick={() => navigate(-1)}>
               Back
             </Button>
           </div>
-          <div className="align-self-start ml-auto">
+          <div className="align-self-start">
             <Button className="btn btn-primary" onClick={handleCopyToClipboard}>
               Copy to Clipboard
             </Button>
