@@ -1,0 +1,10 @@
+.header {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.textArea {
+  margin-bottom: 20px;
+  resize: none;
+}

@@ -1,0 +1,9 @@
+.footer{
+  margin-top: 15px;
+  position:static;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: rgb(8, 6, 6);
+  text-align: center;
+}

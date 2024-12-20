@@ -1,0 +1,46 @@
+/* LearningTopic.module.css */
+
+.container {
+  margin-top: 5px;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+.speechControls { display: flex; align-items: center; gap: 10px; }
+h3 {
+  margin-bottom: 1.5rem;
+  font-size: 25px;
+  color: #343a40;
+  text-align: center;
+  font-weight: bold;
+}
+
+.textArea {
+  width: 100%;
+  border-radius: 5px;
+  padding: 1rem;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  transition: border-color 0.3s;
+}
+
+.textArea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.buttonGroup {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  min-width: 10%;
+}
+.sliderValue { 
+  font-size: 1.3rem; /* Adjust the font size as needed */ 
+  color: #12365b
+}

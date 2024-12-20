@@ -1,0 +1,48 @@
+.container {
+  margin-top: 1rem;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: #343a40;
+  text-align: center;
+  font-weight: bold;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-top: 1.5rem;
+  color: #040405;
+  margin-bottom: 4px;
+  font-size: 18px; /* Space between label and input */
+}
+
+.formControl {
+  border-radius: 5px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  transition: border-color 0.3s;
+}
+
+.formControl:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.submitButton {
+  margin-top: 10px;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}

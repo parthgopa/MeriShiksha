@@ -1,0 +1,21 @@
+import axios from "axios";
+
+const APIService = async ({ question, onResponse }) => {
+  const API_KEY = "AIzaSyDeBYzQdETviot419u29UzC9Vsc6eKqsks";
+
+  try {
+    const response = await axios({
+      url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`,
+      method: "POST",
+      data: {
+        contents: [{ parts: [{ text: question }] }],
+      },
+    });
+
+    onResponse(response.data); // Invoke the callback with the response data
+  } catch (error) {
+    console.error("Error generating response:", error);
+  }
+};
+
+export default APIService;

@@ -1,0 +1,60 @@
+.container {
+  width : 100%;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  background-color: #f8f9fa;
+}
+
+h1 {
+  text-align: center;
+  color: #343a40;
+}
+
+.mcq {
+  margin: 20px 0;
+}
+
+.mcq h5 {
+  font-size: 1.25rem;
+  margin-bottom: 15px;
+  color: #495057;
+}
+
+.option {
+  display: flex;
+  align-items:center;
+  margin-bottom: 10px;
+}
+
+.option input[type="radio"] {
+  margin-right: 10px;
+  vertical-align:top;
+}
+
+.option label {
+  font-size: 1.4rem;
+  color: #495057;
+  cursor: pointer;
+  margin: 0; /* Align label with input */
+  vertical-align: top;
+}
+
+
+.option label {
+  font-size: 1rem;
+  color: #495057;
+  cursor: pointer;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.button {
+  width: 100px;
+  margin: 0 10px;
+}
