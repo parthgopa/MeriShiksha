@@ -1,0 +1,25 @@
+.logo{
+    border-radius: 7px;
+    width: 40px;
+
+}
+.compName{
+    position: relative;
+    padding: 5px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    z-index: 1000;
+    margin: 0;
+
+}
+.compName p{
+    font-family: 'Poppins', 'Roboto', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: #10003E;
+    top: 50%;
+    text-align: center;
+    position: relative;
+    margin: 0;
+}

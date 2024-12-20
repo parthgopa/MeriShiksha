@@ -2,6 +2,7 @@ import "./App.css";
 import { Outlet } from "react-router";
 import { useState } from "react";
 import Navbar from "./components/Navbar";
+import Danger from "./components/Danger";
 
 function App() {
   const [currentSidebar, setSidebar] = useState("Home");
@@ -16,6 +17,8 @@ function App() {
           <Outlet />
         </div>
       </div>
+      <hr />
+      <Danger />
     </>
   );
 }
