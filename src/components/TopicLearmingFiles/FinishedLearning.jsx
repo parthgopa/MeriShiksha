@@ -20,7 +20,7 @@ const FinishedLearning = () => {
 
   const handleSubmit = () => {
     const comingfrom = "FromTopicLearning";
-    navigate("/mcq-test", {
+    navigate("/app/mcq-test", {
       state: { topic, level, numMCQs, comingfrom: comingfrom },
     }); // Navigate to MCQ test component with number of MCQs
   };

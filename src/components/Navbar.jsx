@@ -1,6 +1,5 @@
-import { Link, NavLink, useNavigate } from "react-router";
-import { FaHome } from "react-icons/fa";
-import { FaBook } from "react-icons/fa";
+import { NavLink } from "react-router";
+import { FaHome, FaBook } from "react-icons/fa";
 import { TbSettings2 } from "react-icons/tb";
 import { HiClipboardList } from "react-icons/hi";
 import { GiCubes } from "react-icons/gi";
@@ -9,29 +8,21 @@ import { ImProfile } from "react-icons/im";
 import { IoMdLogIn } from "react-icons/io";
 import { VscAccount } from "react-icons/vsc";
 import { MdOutlineAccountCircle } from "react-icons/md";
-import { useEffect } from "react";
 import logo from "../assets/MyLogo.png";
 import styles from "./Navbar.module.css";
 
-const Navbar = ({ currentSidebar, setSidebar }) => {
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   navigate("/");
-  // }, [navigate]);   // If page isreloaded , GO To HomePage.
-
+const Navbar = () => {
   return (
     <>
       <div className={styles.compName}>
         <img src={logo} className={styles.logo} />
         <p>ParthAI</p>
       </div>
+
       <Sidebar rootStyles={{ height: "100%" }} width="auto">
         <Menu
           menuItemStyles={{
             button: {
-              // the active class will be added automatically by react router
-              // so we can use it to style the active menu item
               borderRadius: "25px 0 0 25px",
               "&:before": {
                 content: '""',
@@ -53,10 +44,8 @@ const Navbar = ({ currentSidebar, setSidebar }) => {
                 borderTopRightRadius: "50%",
                 backgroundColor: "transparent",
               },
-
               "&:hover": {
                 backgroundColor: "rgb(163, 233, 249)",
-
                 "&:before": {
                   boxShadow: "0 8.5px 0 0 rgb(163, 233, 249)",
                 },
@@ -77,68 +66,12 @@ const Navbar = ({ currentSidebar, setSidebar }) => {
             },
           }}
         >
-          <MenuItem
-            icon={<FaHome />}
-            component={
-              <NavLink
-                to="/"
-                end
-                className={({ isActive }) => (isActive ? "active" : "")}
-              />
-            }
-          >
-            Home
-          </MenuItem>
-          <MenuItem
-            icon={<FaBook />}
-            component={
-              <NavLink
-                to="/topic-learning"
-                className={({ isActive }) => (isActive ? "active" : "")}
-              />
-            }
-          >
-            Topic Learning
-          </MenuItem>
-          <MenuItem
-            icon={<TbSettings2 />}
-            component={
-              <NavLink
-                to="/generate-mcqs"
-                className={({ isActive }) => (isActive ? "active" : "")}
-              />
-            }
-          >
-            MCQ Generator
-          </MenuItem>
-          <MenuItem
-            icon={<GiCubes />}
-            component={
-              <NavLink
-                to="/paragraph-mcqs"
-                className={({ isActive }) => (isActive ? "active" : "")}
-              />
-            }
-          >
-            Passage test
-          </MenuItem>
-          <MenuItem
-            icon={<HiClipboardList />}
-            component={
-              <NavLink
-                to="/dotpoint-summary"
-                className={({ isActive }) => (isActive ? "active" : "")}
-              />
-            }
-          >
-            Summarizer(dot.point)
-          </MenuItem>
           <SubMenu label="Account" icon={<MdOutlineAccountCircle />}>
             <MenuItem
               icon={<VscAccount />}
               component={
                 <NavLink
-                  to="/"
+                  to="/sign-up"
                   className={({ isActive }) => (isActive ? "active" : "")}
                 />
               }
@@ -154,25 +87,79 @@ const Navbar = ({ currentSidebar, setSidebar }) => {
                 />
               }
             >
-              {" "}
               Login
             </MenuItem>
             <MenuItem
               icon={<ImProfile />}
               component={
                 <NavLink
-                  to="/"
+                  to="./profile"
                   className={({ isActive }) => (isActive ? "active" : "")}
                 />
               }
             >
-              {" "}
               Profile
             </MenuItem>
           </SubMenu>
+          <MenuItem
+            icon={<FaHome />}
+            component={
+              <NavLink
+                to="./home"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              />
+            }
+          >
+            Home
+          </MenuItem>
+          <MenuItem
+            icon={<FaBook />}
+            component={
+              <NavLink
+                to="/app/topic-learning"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              />
+            }
+          >
+            Topic Learning
+          </MenuItem>
+          <MenuItem
+            icon={<TbSettings2 />}
+            component={
+              <NavLink
+                to="/app/generate-mcqs"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              />
+            }
+          >
+            MCQ Generator
+          </MenuItem>
+          <MenuItem
+            icon={<GiCubes />}
+            component={
+              <NavLink
+                to="/app/paragraph-mcqs"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              />
+            }
+          >
+            Passage test
+          </MenuItem>
+          <MenuItem
+            icon={<HiClipboardList />}
+            component={
+              <NavLink
+                to="/app/dotpoint-summary"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              />
+            }
+          >
+            Summarizer (Dot Point)
+          </MenuItem>
         </Menu>
       </Sidebar>
     </>
   );
 };
+
 export default Navbar;

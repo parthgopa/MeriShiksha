@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import axios from "axios";
 import styles from "./TopicLearning.module.css";
 import { useNavigate } from "react-router";
 
@@ -8,7 +9,7 @@ const TopicLearning = () => {
   const parts = useRef("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const topicValue = e.target[0].value;
     const levelValue = levelentry;
@@ -16,15 +17,24 @@ const TopicLearning = () => {
 
     const initialPrompt = `I am a beginner in the topic :${topicValue}. Provide content for Part 1, including a basic introduction, definition, and historical background. Cover the key points and relevance of :${topicValue} in a way suitable for a beginner.`;
 
-    let data = { topic:topicValue, level:levelValue, parts:partsValue,initialPrompt:initialPrompt };
+    let data = {
+      topic: topicValue,
+      level: levelValue,
+      parts: partsValue,
+      initialPrompt: initialPrompt,
+    };
 
-
-    navigate("/learning-topic", { state: data });
-
-    //<LearningTopic state={data} />;
-    //       topic.current = "";
-    //       setlevelentry("");
-    //       parts.current = "";
+    try {
+      const response = await axios.post("http://localhost:5000/data", data, {
+        headers: {
+          "Content-Type": "application/json", // Ensure the content type is set to JSON
+        },
+      });
+      console.log(response.data);
+      navigate("/app/learning-topic", { state: data });
+    } catch (error) {
+      console.log("Error adding data:", error.message);
+    }
   };
 
   const handleLevelChange = (e) => {

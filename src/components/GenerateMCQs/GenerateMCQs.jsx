@@ -13,7 +13,7 @@ const GenerateMCQs = () => {
     const numMCQs = e.target[2].value;
 
     //navigate to questions page.
-    navigate("./questions", {
+    navigate("/app/generate-mcqs/questions", {
       state: {
         topic: topic,
         level: level,

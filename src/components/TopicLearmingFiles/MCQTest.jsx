@@ -90,7 +90,9 @@ const MCQTest = () => {
   };
 
   const handleFinish = () => {
-    navigate("/final-result", { state: { userAnswers, correctAnswers } });
+    navigate("/app/final-result", {
+      state: { userAnswers, correctAnswers, questions },
+    });
   };
 
   if (loading) {

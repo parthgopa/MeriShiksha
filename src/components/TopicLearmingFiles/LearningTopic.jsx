@@ -112,7 +112,7 @@ const LearningTopic = () => {
 
   const handleFinish = () => {
     const data = { topic: topic, level: level };
-    navigate("/finished-learning", { state: data });
+    navigate("/app/finished-learning", { state: data });
   };
 
   const handleCopyToClipboard = () => {
@@ -186,7 +186,7 @@ const LearningTopic = () => {
         <button
           className={`btn btn-success ${styles.button}`}
           onClick={handleFinish}
-          disabled={currentPart != parts || loading}
+          // disabled={currentPart != parts || loading}
         >
           Finish
         </button>

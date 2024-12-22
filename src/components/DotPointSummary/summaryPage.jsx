@@ -54,9 +54,9 @@ Controversies or Debates: Disagreements and potential issues.`;
     <Container>
       <form>
         <div className={styles.formGroup}>
-          <h3>
+          {/* <h3>
             Summary for {topic} - Level {level}
-          </h3>
+          </h3> */}
           {loading ? (
             <LoadingSpinner /> // Render spinner when loading
           ) : (

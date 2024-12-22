@@ -1,17 +1,14 @@
 import "./App.css";
 import { Outlet } from "react-router";
-import { useState } from "react";
 import Navbar from "./components/Navbar";
 import Danger from "./components/Danger";
 
 function App() {
-  const [currentSidebar, setSidebar] = useState("Home");
-
   return (
     <>
       <div className="Outer-container">
         <div className="sidebar">
-          <Navbar currentSidebar={currentSidebar} setSidebar={setSidebar} />
+          <Navbar />
         </div>
         <div className="right-outlet">
           <Outlet />
