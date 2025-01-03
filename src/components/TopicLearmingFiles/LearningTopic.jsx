@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown"; // Add this import
 import LoadingSpinner from "../LoadingSpinner"; // Import the LoadingSpinner component
 import { useSpeechSynthesis } from "react-speech-kit"; // Import useSpeechSynthesis
+import HomeButton from "../HomeButton";
 
 const LearningTopic = () => {
   const navigate = useNavigate();
@@ -53,10 +54,15 @@ const LearningTopic = () => {
     };
 
     fetchInitialContent();
-  }, [initialPrompt]);
+
+    // Stop speech when component is unmounted or part changes
+    return () => cancel();
+  }, [initialPrompt, currentPart]);
 
   const handleNext = async () => {
     if (currentPart < parts) {
+      cancel(); // Stop speech immediately when moving to the next part
+
       const nextPart = currentPart + 1;
 
       if (cacheRef.current[nextPart]) {
@@ -89,6 +95,8 @@ const LearningTopic = () => {
 
   const handlePrevious = () => {
     if (currentPart > 1) {
+      cancel(); // Stop speech immediately when moving to the previous part
+
       const prevPart = currentPart - 1;
 
       if (cacheRef.current[prevPart]) {
@@ -111,6 +119,7 @@ const LearningTopic = () => {
   };
 
   const handleFinish = () => {
+    cancel(); // Stop speech when finishing
     const data = { topic: topic, level: level };
     navigate("/finished-learning", { state: data });
   };
@@ -134,26 +143,34 @@ const LearningTopic = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        {/* <h3>
-          Learning Part: {currentPart} of {topic}
-        </h3> */}
+        <h4>Topic Learning Part - {currentPart}</h4>
         {supported && (
           <div className={styles.speechControls}>
-            <button className="btn btn-outline-primary" onClick={handleSpeak}>
+            <button className="btn btn-warning" onClick={handleSpeak}>
               {speaking ? "Speaking..." : "Speak"}
             </button>
-            <button className="btn btn-outline-danger" onClick={handleStop}>
+            <button className="btn btn-danger" onClick={handleStop}>
               Stop
             </button>
             <label>
               Speed:
               <input
+                className={styles.speedbar}
                 type="range"
                 min="0.5"
                 max="2"
                 step="0.1"
                 value={speechRate}
-                onChange={(e) => setSpeechRate(e.target.value)}
+                onChange={(e) => {
+                  setSpeechRate(parseFloat(e.target.value));
+                  if (speaking) {
+                    cancel();
+                    speak({
+                      text: currentSpeechResponse,
+                      rate: parseFloat(e.target.value),
+                    });
+                  }
+                }}
               />
               <span className={styles.sliderValue}>{speechRate}</span>
             </label>
@@ -170,23 +187,22 @@ const LearningTopic = () => {
       )}
       <div className={styles.buttonGroup}>
         <button
-          className={`btn btn-primary ${styles.button}`}
+          className={`btn btn-success ${styles.button}`}
           onClick={handlePrevious}
           disabled={currentPart === 1 || loading}
         >
           Previous
         </button>
         <button
-          className={`btn btn-primary ${styles.button}`}
+          className={`btn btn-success ${styles.button}`}
           onClick={handleNext}
           disabled={currentPart === parts || loading}
         >
           Next
         </button>
         <button
-          className={`btn btn-success ${styles.button}`}
+          className={`btn btn-warning ${styles.button}`}
           onClick={handleFinish}
-          disabled={currentPart != parts || loading}
         >
           Finish
         </button>
@@ -194,6 +210,7 @@ const LearningTopic = () => {
           Copy to Clipboard
         </button>
       </div>
+      <HomeButton className={styles.HomeButton} />
     </div>
   );
 };

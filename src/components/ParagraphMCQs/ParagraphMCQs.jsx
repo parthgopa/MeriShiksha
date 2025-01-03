@@ -1,36 +1,48 @@
 import React, { useState } from "react";
 import styles from "./ParagraphMCQs.module.css";
 import { useNavigate } from "react-router";
+import HomeButton from "../HomeButton";
 
 const ParagraphMCQs = () => {
   const [levelentry, setlevelentry] = useState("Primary");
+  const [warning, setWarning] = useState(false);
   const navigate = useNavigate();
 
-  const handleOnSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const topic = e.target[0].value;
     const level = levelentry;
     const numMCQs = e.target[2].value;
     const comingfrom = "FromParagraph";
 
+    if (topic && level && numMCQs && comingfrom) {
+      navigate("/mcq-test", {
+        state: {
+          topic: topic,
+          level: level,
+          numMCQs: numMCQs,
+          comingfrom: comingfrom,
+        },
+      });
+    } else {
+      setWarning(true);
+    }
+
     //navigate to questions page.
-    navigate("./mcq-test", {
-      state: {
-        topic: topic,
-        level: level,
-        numMCQs: numMCQs,
-        comingfrom: comingfrom,
-      },
-    });
   };
 
   const handleLevelChange = (event) => {
     setlevelentry(event.target.value);
   };
+  const handleEnterPressed = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit;
+    }
+  };
   return (
     <div className={styles.container}>
       <h2>MCQ Generator from Paragraph</h2>
-      <form onSubmit={handleOnSubmit}>
+      <form onSubmit={handleSubmit} onKeyDown={handleEnterPressed}>
         <div className={styles.formGroup}>
           <label htmlFor="paragraphInput">Enter Your Paragraph</label>
           <textarea
@@ -76,6 +88,12 @@ const ParagraphMCQs = () => {
           </button>
         </center>
       </form>
+      {warning && (
+        <div className="alert alert-danger" role="alert">
+          Please fill all the fields!
+        </div>
+      )}
+      <HomeButton />
     </div>
   );
 };

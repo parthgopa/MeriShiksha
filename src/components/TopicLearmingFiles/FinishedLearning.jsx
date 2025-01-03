@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation, data } from "react-router";
 import styles from "./FinishedLearning.module.css";
+import HomeButton from "../HomeButton";
 
 const FinishedLearning = () => {
   const [showInput, setShowInput] = useState(false);
@@ -15,7 +16,7 @@ const FinishedLearning = () => {
   };
 
   const handleNo = () => {
-    navigate("/"); // Navigate back to home or any other component
+    navigate("/topic-learning"); // Navigate back to home or any other component
   };
 
   const handleSubmit = () => {
@@ -24,11 +25,16 @@ const FinishedLearning = () => {
       state: { topic, level, numMCQs, comingfrom: comingfrom },
     }); // Navigate to MCQ test component with number of MCQs
   };
+  const handleEnterPressed = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit;
+    }
+  };
 
   return (
     <div className={styles.container}>
-      <h2>Finished Learning</h2>
-      <p>Would you like to take an MCQ test on what you have learned?</p>
+      <h1>Finished Learning</h1>
+      <h5>Would you like to take an MCQ test of what you have learned?</h5>
       <div className={styles.buttonGroup}>
         <button
           className={`btn btn-success ${styles.button}`}
@@ -45,25 +51,29 @@ const FinishedLearning = () => {
       </div>
       {showInput && (
         <div className={styles.mcqInput}>
-          <label htmlFor="numMCQs">
+          <h5 htmlFor="numMCQs">
             How many MCQs would you like to generate? (max 10)
-          </label>
+          </h5>
           <input
             type="number"
             id="numMCQs"
             className="form-control"
-            value={numMCQs}
             onChange={(e) =>
               setNumMCQs(Math.min(Math.max(e.target.value, 1), 10))
             } // Ensure value is between 1 and 10
             max="10"
             min="1"
           />
-          <button className="btn btn-primary mt-2" onClick={handleSubmit}>
+          <button
+            className="btn btn-primary mt-2"
+            onClick={handleSubmit}
+            onKeyDown={handleEnterPressed}
+          >
             Submit
           </button>
         </div>
       )}
+      <HomeButton />
     </div>
   );
 };

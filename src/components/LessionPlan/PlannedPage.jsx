@@ -4,36 +4,34 @@ import APIService from "../API";
 import LoadingSpinner from "../LoadingSpinner";
 import ReactMarkdown from "react-markdown";
 
-import styles from "./summaryPage.module.css";
+import styles from "./PlannedPage.module.css";
 import { Button, Container } from "react-bootstrap";
 import HomeButton from "../HomeButton";
-
-const SummaryPage = () => {
-  const [summary, setSummary] = useState("none");
+const PlannedPage = () => {
+  const [plan, setplan] = useState("none");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-  const { topic, level } = location.state;
+  const { subject, topic, time } = location.state;
   const date = new Date().toDateString();
-  const time = new Date().toTimeString();
+  const Time = new Date().toTimeString();
 
   useEffect(() => {
-    let prompt = `Provide a Randimozed concise bullet point summary of ${topic}, covering:
-Core Concepts: Definitions, principles, theories.
-Real-world Applications: Practical uses and impacts.
-Key Theories or Models: Explanations and significance.
-Controversies or Debates: Disagreements and potential issues. For date:${date} , time :${time}`;
+    let prompt = `I want to learn the following topic so design a Randomized lesson plan for  learning following topic in ${time}.
+Subject- ${subject} 
+Topic - ${topic}, 
+Prepare brief note based on provided subject, example of topic and also prepare dot point note for my exam time reading. For current date:${date} and time:${Time}`;
 
     const fetchMCQs = async () => {
       setLoading(true);
       await APIService({ question: prompt, onResponse: handleOnResponse });
     };
     fetchMCQs();
-  }, [topic, level]);
+  }, [topic, subject, time]);
 
   const handleOnResponse = (response) => {
     try {
-      setSummary(response["candidates"][0]["content"]["parts"][0]["text"]);
+      setplan(response["candidates"][0]["content"]["parts"][0]["text"]);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching response:", error);
@@ -42,33 +40,34 @@ Controversies or Debates: Disagreements and potential issues. For date:${date} ,
   };
 
   const handleCopyToClipboard = () => {
-    navigator.clipboard.writeText(summary).then(() => {
+    navigator.clipboard.writeText(plan).then(() => {
       alert("Copied to clipboard successfully.");
     });
   };
-
   return (
     <Container
       style={{
         background: "linear-gradient(to right, #5a8bdb, #dfb181)",
-        minHeight: "90vh",
+        minHeight: "95vh",
       }}
     >
       <form>
         <div className={styles.formGroup}>
-          <h5 style={{ textAlign: "right", margin: "15px" }}>
-            Dot Summary of : {topic} & Level-{level}
+          <h5 style={{ textAlign: "center", marginTop: "0rem" }}>
+            Plan of : {subject} & Topic-{topic}
           </h5>
           {loading ? (
             <LoadingSpinner /> // Render spinner when loading
           ) : (
             <ReactMarkdown
               className={`form-control ${styles.textArea}`}
-              children={summary}
+              children={plan}
             />
           )}
         </div>
-        <div className="d-flex h-100 justify-content-between">
+        <div
+          className={`d-flex h-100 justify-content-between ${styles.buttoncontainer}`}
+        >
           <div className="align-self-start">
             <Button className="btn btn-primary" onClick={() => navigate(-1)}>
               Back
@@ -80,10 +79,9 @@ Controversies or Debates: Disagreements and potential issues. For date:${date} ,
             </Button>
           </div>
         </div>
-        <HomeButton />
       </form>
+      <HomeButton />
     </Container>
   );
 };
-
-export default SummaryPage;
+export default PlannedPage;

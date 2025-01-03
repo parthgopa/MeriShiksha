@@ -1,6 +1,9 @@
 .container {
   text-align: center;
-  margin-top: 50px;
+  background: linear-gradient(to right, #2e6ed4, #eba75e);
+  min-height: 100vh;
+  padding: 20px;
+  border-radius: 10px;
 }
 
 .buttonGroup {
@@ -25,4 +28,15 @@
 .mcqInput input {
   width: 100px;
   text-align: center;
+}
+h1{
+  color: black;
+  font: 800;
+  text-shadow: 2px 1px 1px #000000;
+  margin-top: 10rem;
+}
+@media (max-width: 480px) {
+  h1{
+    font-size: 30px;
+  }
 }

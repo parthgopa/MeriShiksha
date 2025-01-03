@@ -1,60 +1,109 @@
-.container {
-  width : 100%;
-  margin: 20px auto;
+.quizWrap {
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 30px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.quizQn {
   padding: 20px;
+  background: var(--secondary-color);
+  color: #faf3f3;
+  font-size: 24px;
   border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  background-color: #f8f9fa;
+  margin-bottom: 20px;
+  background-color: rgb(80, 10, 114);
 }
 
-h1 {
+.quizAns {
+  margin: 10px 0;
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-gap: 10px;
+}
+
+.radioInput {
+  display: none;
+}
+
+.radioLabel {
+  background: #f2f6f7;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 20px;
+  cursor: pointer;
   text-align: center;
-  color: #343a40;
+  width: 100%;
+  transition: background-color 0.5s ease;
+  margin: 0;
+  box-sizing: border-box;
 }
-
-.mcq {
-  margin: 20px 0;
-}
-
-.mcq h5 {
-  font-size: 1.25rem;
-  margin-bottom: 15px;
-  color: #495057;
-}
-
-.option {
-  display: flex;
-  align-items:center;
-  margin-bottom: 10px;
-}
-
-.option input[type="radio"] {
-  margin-right: 10px;
-  vertical-align:top;
-}
-
-.option label {
-  font-size: 1.4rem;
-  color: #495057;
+.radioLabel:hover{
   cursor: pointer;
-  margin: 0; /* Align label with input */
-  vertical-align: top;
+  background-color: var(--option-hover);
 }
 
+.radioInput:checked + .radioLabel {
+  /* background: var(--option-color); */
+  background-color: #cbe9f1;
+  /* background: var(--secondary-color); */
+  border: 2px solid rgb(170, 113, 235);
+}
 
-.option label {
-  font-size: 1rem;
-  color: #495057;
-  cursor: pointer;
+.radioInput:disabled + .radioLabel {
+  background: #995656;
+  border: 1px solid #c78181;
 }
 
 .buttonGroup {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px 35px;
 }
 
-.button {
-  width: 100px;
-  margin: 0 10px;
+.previousButton, .nextButton, .finishButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin: 0px 15px;
+}
+
+.previousButton {
+  background-color: #007bff;
+  border-radius: 7px;
+  color: white;
+}
+
+.previousButton:hover {
+  background-color: #03468e;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+.nextButton {
+  background-color: #007bff;
+  border-radius: 7px;
+  color: white;
+}
+
+.nextButton:hover {
+  background-color: #03468e;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+.finishButton {
+  background-color: #28a745;
+  border-radius: 7px;
+
+  color: white;
+}
+
+.finishButton:hover {
+  background-color: #218838;
+  box-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
 }

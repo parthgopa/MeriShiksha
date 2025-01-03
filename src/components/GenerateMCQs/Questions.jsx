@@ -4,9 +4,14 @@ import { useNavigate, useLocation } from "react-router";
 import LoadingSpinner from "../LoadingSpinner";
 import APIService from "../API";
 import Answer from "./Answers";
+// import { TiArrowBack } from "react-icons/ti";
+// import { IoCopy } from "react-icons/io5";
+// import { FcAnswers } from "react-icons/fc";
+// import { CiTextAlignCenter, CiTextAlignLeft } from "react-icons/ci";
+import HomeButton from "../HomeButton";
 
 const Questions = () => {
-  const location = useLocation();
+  const location = useLocation(null);
   const navigate = useNavigate();
   const { topic, level, numMCQs } = location.state;
 
@@ -16,11 +21,13 @@ const Questions = () => {
   const [loading, setLoading] = useState(true);
   const [showAnswers, setShowAnswers] = useState(false);
   const answerRef = useRef(false);
+  const date = new Date().toDateString();
+  const time = new Date().toTimeString();
 
   useEffect(() => {
     let prompt;
     if (level === "College Level") {
-      prompt = `As a college student, generate a set of MCQs on ${topic} at the '${level}' level .  Include ${numMCQs} MCQs and The output should be a valid JSON object in the following format:
+      prompt = `As a college student, generate a Randomized set of MCQs on ${topic} at the '${level}' level .  Include ${numMCQs} MCQs and The output should be a valid JSON object in the following format:
       {
         "questions": ["What is the capital of France?", "What is 2 + 2?"],
         "options": [
@@ -28,7 +35,7 @@ const Questions = () => {
           ["3", "4", "5", "6"]
         ],
         "correctAnswers": ["Paris", "4"]
-      };. The output should be in the same format as given with curly braces.`;
+      };. For current date: ${date} and time : ${time}`;
     } else {
       prompt = `Generate ${numMCQs} MCQs for the topic '${topic}' at '${level}' level. The output should be a valid JSON object in the following format:
     {
@@ -66,14 +73,16 @@ const Questions = () => {
       mcqData = mcqData.slice(7, mcqData.length - 4);
       mcqData = JSON.parse(mcqData);
 
-      setQuestions(mcqData.questions);
-      setOptions(mcqData.options);
-      setCorrectAnswers(mcqData.correctAnswers);
+      console.log(mcqData.correctAnswers);
+
+      setQuestions(mcqData.questions || []);
+      setOptions(mcqData.options || []);
+      setCorrectAnswers(mcqData.correctAnswers || []);
     } catch (error) {
       console.error("Error parsing JSON response:", error);
-      navigate("/error", { state: { error: "Invalid JSON response" } });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   if (loading) {
@@ -84,57 +93,61 @@ const Questions = () => {
     if (!showAnswers) {
       setTimeout(
         () => answerRef.current.scrollIntoView({ behavior: "smooth" }),
-        100
+        10
       ); //To scroll the page up so user see the correct answers.
     }
   };
 
   return (
     <div>
-      <form>
+      <form className={styles.container}>
         <div className={styles.formGroup}>
-          <h3>Questions</h3>
-          <textarea
-            className={`form-control ${styles.formControl}`}
-            id="paragraphInput"
-            rows="15"
-            value={questions
-              .map(
-                (q, index) =>
-                  `${index + 1}. ${q}\nOptions:\n${options[index]
-                    .map((opt, i) => `${String.fromCharCode(97 + i)}) ${opt}`)
-                    .join("\n")}`
-              )
-              .join("\n\n")}
-            readOnly
-          ></textarea>
+          <h6 style={{ textAlign: "right" }}>MCQ Generation</h6>
+          <>
+            <h3 style={{ textAlign: "center" }}>Questions</h3>
+            <textarea
+              className={`form-control ${styles.formControl}`}
+              id="paragraphInput"
+              rows="15"
+              value={questions
+                .map(
+                  (q, index) =>
+                    `${index + 1}. ${q}\nOptions:\n${options[index]
+                      .map((opt, i) => `${String.fromCharCode(97 + i)}) ${opt}`)
+                      .join("\n")}`
+                )
+                .join("\n\n")}
+              readOnly
+            ></textarea>
+          </>
         </div>
-        <div className="d-flex h-100">
-          <div className="align-self-start mr-auto">
+        <div className={`${styles.buttonGroup}`}>
+          <div>
             <button
               type="button"
-              className="btn btn-primary"
+              className={`btn btn-primary ${styles.button}`}
               onClick={() => navigate(-1)}
             >
+              {/* <TiArrowBack /> */}
               Back
             </button>
           </div>
-          <div className="align-self-center mx-auto">
+          <div>
             <button
               type="button"
-              className="btn btn-primary"
+              className={`btn btn-primary ${styles.button}`}
               onClick={copyToClipboard}
             >
-              Copy to Clipboard
+              Copy to Clipboard{" "}
             </button>
           </div>
-          <div className="align-self-end ml-auto">
+          <div>
             <button
               type="button"
-              className="btn btn-primary"
+              className={`btn btn-success ${styles.button}`}
               onClick={handleShowAnswer}
             >
-              Correct Answers
+              Corrrect Answers{" "}
             </button>
           </div>
         </div>
@@ -147,6 +160,7 @@ const Questions = () => {
           </div>
         )}
       </form>
+      {/* <HomeButton /> */}
     </div>
   );
 };

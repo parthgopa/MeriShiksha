@@ -1,5 +1,5 @@
 .header {
-  margin-top: 20px;
+  margin-top: 20rem;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -7,5 +7,8 @@
 .textArea {
   margin-bottom: 20px;
   resize: none;
-  background-color: rgb(222, 231, 220);
+  background-color: rgb(235, 239, 235);
+}
+.buttoncontainer{
+  margin-bottom: 50px;
 }

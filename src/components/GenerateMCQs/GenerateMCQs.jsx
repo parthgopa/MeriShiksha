@@ -1,9 +1,11 @@
 import { useState } from "react";
 import styles from "./GenerateMCQs.module.css";
 import { useNavigate } from "react-router";
+import HomeButton from "../HomeButton";
 
 const GenerateMCQs = () => {
   const [levelentry, setlevelentry] = useState("Primary");
+  const [warning, setwarning] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -12,31 +14,42 @@ const GenerateMCQs = () => {
     const level = levelentry;
     const numMCQs = e.target[2].value;
 
+    if (topic && level && numMCQs) {
+      setwarning(false);
+      navigate("/questions", {
+        state: {
+          topic: topic,
+          level: level,
+          numMCQs: numMCQs,
+        },
+      });
+    } else {
+      setwarning(true);
+    }
+
     //navigate to questions page.
-    navigate("./questions", {
-      state: {
-        topic: topic,
-        level: level,
-        numMCQs: numMCQs,
-      },
-    });
   };
 
   const handleLevelChange = (event) => {
     setlevelentry(event.target.value);
   };
+  const handleEnterPressed = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit;
+    }
+  };
 
   return (
     <div className={styles.container}>
       <h2>MCQ Generator</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onKeyDown={handleEnterPressed}>
         <div className={styles.formGroup}>
           <label htmlFor="topicEntry">Enter the topic </label>
           <input
             type="text"
             className={`form-control ${styles.formControl}`}
             id="topicEntry"
-            placeholder="Enter topic"
+            placeholder="python , solar system, etc"
           />
         </div>
         <div className={styles.formGroup}>
@@ -50,20 +63,19 @@ const GenerateMCQs = () => {
             <option value="Primary">Primary</option>
             <option value="Secondary">Secondary</option>
             <option value="Advance">Advance</option>
-            <option value="College Level">College Level</option>
-            <option value="School Level">School Level</option>
+            {/* <option value="College Level">College Level</option> */}
           </select>
         </div>
         <div className={styles.formGroup}>
           <label htmlFor="mcqCount">
-            How many MCQs do you want to generate?
+            How many MCQs do you want to generate? (max 10)
           </label>
           <input
             type="number"
             className={`form-control ${styles.formControl}`}
             id="mcqCount"
             max="10"
-            placeholder="Enter number of MCQs"
+            placeholder="e.g 1,2,.."
           />
         </div>
         <center>
@@ -74,7 +86,13 @@ const GenerateMCQs = () => {
             Submit
           </button>
         </center>
+        {warning && (
+          <div className="alert alert-danger" role="alert">
+            Please fill all the fields!
+          </div>
+        )}
       </form>
+      <HomeButton />
     </div>
   );
 };

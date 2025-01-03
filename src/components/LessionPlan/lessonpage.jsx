@@ -1,34 +1,29 @@
 import React, { useState } from "react";
-import styles from "./DotPointSummary.module.css";
+import styles from "./lessionpage.module.css";
 import { useNavigate } from "react-router";
 import HomeButton from "../HomeButton";
 
-const DotPointSummary = () => {
-  const [levelentry, setlevelentry] = useState("Primary");
-  const [warning, setWarning] = useState(false);
+const LessonPage = () => {
   const navigate = useNavigate();
+  const [warning, setWarning] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const topic = e.target[0].value;
-    const level = levelentry;
+    const subject = e.target[0].value;
+    const topic = e.target[1].value;
+    const time = e.target[2].value;
 
-    if (topic && level) {
-      navigate("./summary-page", {
+    if (subject && topic && time) {
+      navigate("/lessonpage/planned-page", {
         state: {
+          subject: subject,
           topic: topic,
-          level: level,
+          time: time,
         },
       });
     } else {
       setWarning(true);
     }
-
-    //navigate to questions page.
-  };
-
-  const handleLevelChange = (e) => {
-    setlevelentry(e.target.value);
   };
   const handleEnterPressed = (e) => {
     if (e.key === "Enter") {
@@ -37,33 +32,39 @@ const DotPointSummary = () => {
   };
   return (
     <div className={styles.container}>
-      <h1>Dot Point Summary</h1>
+      <h2>Planning of Topic</h2>
       <form onSubmit={handleSubmit} onKeyDown={handleEnterPressed}>
         <div className={styles.formGroup}>
-          <label htmlFor="topicEntry">Topic Entry</label>
+          <label>Enter the Subject to study</label>
+          <input
+            type="text"
+            className={`form-control ${styles.formControl}`}
+            id="SubjectEntry"
+            placeholder="Gravity, rockets , biopics etc."
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label>Enter the Topic in Subject</label>
           <input
             type="text"
             className={`form-control ${styles.formControl}`}
             id="topicEntry"
-            placeholder="OS, bridges, chips etc .."
+            placeholder="Newton's Law , Momentum etc."
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="summaryLevel">Level of the Topic</label>
-          <select
+          <label>In how much time you want to study.</label>
+          <input
+            type="text"
             className={`form-control ${styles.formControl}`}
-            id="summaryLevel"
-            onChange={handleLevelChange}
-          >
-            <option>Primary</option>
-            <option>Secondary</option>
-            <option>Advance</option>
-          </select>
+            id="topicEntry"
+            placeholder="60 minutes, 5 days, etc."
+          />
         </div>
         <center>
           <button
             type="submit"
-            className={`btn btn-success ${styles.subnmitButton}`}
+            className={`btn btn-success ${styles.submitButton}`}
           >
             Submit
           </button>
@@ -78,5 +79,4 @@ const DotPointSummary = () => {
     </div>
   );
 };
-
-export default DotPointSummary;
+export default LessonPage;

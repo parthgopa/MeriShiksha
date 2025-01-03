@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import APIService from "../API";
 import styles from "./MCQTest.module.css";
 import LoadingSpinner from "../LoadingSpinner";
+import HomeButton from "../HomeButton";
 
 const MCQTest = () => {
   const location = useLocation();
@@ -17,12 +18,14 @@ const MCQTest = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
   const [loading, setLoading] = useState(true);
+  const date = new Date().toDateString();
+  const time = new Date().toTimeString();
 
   useEffect(() => {
     const fetchMCQs = async () => {
       let prompt;
       if (incomingdata === "FromParagraph") {
-        prompt = `Generate ${numMCQs} MCQs for the Paragraph Provided =>: "${topic}" at '${level}' level. The output should be a valid JSON object in the following format:
+        prompt = `Generate ${numMCQs} Randomized MCQs for the Paragraph Provided =>: "${topic}" at '${level}' level. The output should be a valid JSON object in the following format:
       {
         "questions": ["What is the capital of France?", "What is 2 + 2?"],
         "options": [
@@ -30,9 +33,9 @@ const MCQTest = () => {
           ["3", "4", "5", "6"]
         ],
         "correctAnswers": ["Paris", "4"]
-      };`;
+      }; For current date :${date} and current time :${time}`;
       } else if (incomingdata === "FromTopicLearning") {
-        prompt = `Generate ${numMCQs} MCQs for the topic '${topic}' at '${level}' level. The output should be a valid JSON object in the following format:
+        prompt = `Generate ${numMCQs} Randomized MCQs for the topic '${topic}' at '${level}' level. The output should be a valid JSON object in the following format:
       {
         "questions": ["What is the capital of France?", "What is 2 + 2?"],
         "options": [
@@ -40,7 +43,17 @@ const MCQTest = () => {
           ["3", "4", "5", "6"]
         ],
         "correctAnswers": ["Paris", "4"]
-      }; . The output should be in the same format as given with curly braces.`;
+      };  For current date :${date} and current time :${time}`;
+      } else if (incomingdata === "RetakeMCQs") {
+        prompt = `Generate ${numMCQs} Randomized MCQs for the topic '${topic}' at '${level}' level different from the previous one. The output should be a valid JSON object in the following format:
+      {
+        "questions": ["What is the capital of France?", "What is 2 + 2?"],
+        "options": [
+          ["Berlin", "Madrid", "Paris", "Rome"],
+          ["3", "4", "5", "6"]
+        ],
+        "correctAnswers": ["Paris", "4"]
+      };  For current date :${date} and current time :${time}`;
       }
 
       setLoading(true);
@@ -54,10 +67,6 @@ const MCQTest = () => {
       let mcqData = response["candidates"][0]["content"]["parts"][0]["text"];
       mcqData = mcqData.slice(7, mcqData.length - 4);
       mcqData = JSON.parse(mcqData);
-
-      // console.log(mcqData.questions);
-      // console.log(mcqData.options);
-      // console.log(mcqData.correctAnswers);
 
       try {
         setQuestions(mcqData.questions);
@@ -90,7 +99,9 @@ const MCQTest = () => {
   };
 
   const handleFinish = () => {
-    navigate("/final-result", { state: { userAnswers, correctAnswers } });
+    navigate("/final-result", {
+      state: { userAnswers, correctAnswers, questions, topic, level },
+    });
   };
 
   if (loading) {
@@ -98,56 +109,76 @@ const MCQTest = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.quizWrap}>
       {incomingdata === "FromTopicLearning" && (
-        <h4>
+        <h3>
           MCQ Quiz: {topic} ({level})
-        </h4>
+        </h3>
       )}
       {incomingdata === "FromParagraph" && <h1>MCQ Quiz</h1>}
+      {incomingdata === "RetakeMCQs" && <h1> ReTest</h1>}
+
+      <div className={styles.progressBar}>
+        <div
+          className={styles.progress}
+          style={{
+            width: `${((currentQuestionIndex + 1) / questions.length) * 100}%`,
+          }}
+        />
+      </div>
+
       <div className={styles.mcq}>
-        <h5>{`(${currentQuestionIndex + 1}/${questions.length}) ${
-          questions[currentQuestionIndex]
-        }`}</h5>
-        {options[currentQuestionIndex].map((option, idx) => (
-          <div key={idx} className={styles.option}>
-            <input
-              type="radio"
-              id={`mcq-${currentQuestionIndex}-option-${idx}`}
-              name={`mcq-${currentQuestionIndex}`}
-              value={option}
-              checked={userAnswers[currentQuestionIndex] === option}
-              onChange={() => handleAnswerChange(currentQuestionIndex, option)}
-            />
-            <label htmlFor={`mcq-${currentQuestionIndex}-option-${idx}`}>
-              {option}
-            </label>
-          </div>
-        ))}
+        <h5 className={styles.quizQn}>{`(${currentQuestionIndex + 1}/${
+          questions.length
+        }) ${questions[currentQuestionIndex]}`}</h5>
+        <div className={styles.quizAns}>
+          {options[currentQuestionIndex].map((option, idx) => (
+            <div key={idx} className={styles.option}>
+              <input
+                type="radio"
+                id={`mcq-${currentQuestionIndex}-option-${idx}`}
+                name={`mcq-${currentQuestionIndex}`}
+                value={option}
+                checked={userAnswers[currentQuestionIndex] === option}
+                onChange={() =>
+                  handleAnswerChange(currentQuestionIndex, option)
+                }
+                className={styles.radioInput}
+              />
+              <label
+                htmlFor={`mcq-${currentQuestionIndex}-option-${idx}`}
+                className={styles.radioLabel}
+              >
+                {option}
+              </label>
+            </div>
+          ))}
+        </div>
       </div>
       <div className={styles.buttonGroup}>
         <button
-          className={`btn btn-primary ${styles.button}`}
+          className={` ${styles.previousButton}`}
           onClick={handlePrevious}
           disabled={currentQuestionIndex === 0}
         >
           Previous
         </button>
         <button
-          className={`btn btn-primary ${styles.button}`}
+          className={` ${styles.nextButton}`}
           onClick={handleNext}
           disabled={currentQuestionIndex === questions.length - 1}
         >
           Next
         </button>
         <button
-          className={`btn btn-success ${styles.button}`}
+          className={` ${styles.finishButton}`}
           onClick={handleFinish}
           disabled={currentQuestionIndex !== questions.length - 1}
         >
           Finish
         </button>
       </div>
+      <HomeButton />
     </div>
   );
 };

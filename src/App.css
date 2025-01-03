@@ -17,3 +17,8 @@ body,html{
   height:70%;
   float: left;
 }
+.homebutton{
+  position: fixed;
+  top: 50px;
+  left: 20px;
+}

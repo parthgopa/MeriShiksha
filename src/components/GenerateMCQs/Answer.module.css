@@ -11,12 +11,12 @@
 /* Header styles */
 h3 {
   text-align: center;
-  color: #343a40;
+  color: #1a1d20;
   margin-bottom: 20px;
 }
 
 /* Textarea styles */
-.form-control {
+.formControl {
   width: 100%;
   height: auto;
   resize: none;
@@ -25,7 +25,8 @@ h3 {
   padding: 10px;
   font-size: 16px;
   color: #495057;
-  background-color: #fff;
+  background-color: rgb(222, 231, 220);
+
 }
 
 /* Button container styles */
@@ -35,30 +36,24 @@ h3 {
   margin-top: 20px;
 }
 
-/* Button styles */
-.btn {
-  width: 45%;
-  padding: 10px;
-  font-size: 16px;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.buttonGroup{
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+.button {
+  min-width: 10%;
 }
 
-.btn-primary {
-  background-color: #007bff;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-}
-
-.btn-success {
-  background-color: #28a745;
-}
-
-.btn-success:hover {
-  background-color: #218838;
+@media (max-width: 480px) {
+  .buttonGroup{
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  .button{
+    width: 100%;
+    margin: 3px;;
+  }
 }

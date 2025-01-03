@@ -2,12 +2,27 @@
 
 .container {
   width: 100%;
-  margin-top: 1rem;
   padding: 20px;
   background-color: #f8f9fa;
   border-radius: 10px;
   box-shadow: 0 10px 8px rgba(0, 0, 0, 0.1);
+  /* background: linear-gradient(to right, #bac2c7, #E2EBF0); */
+  background: linear-gradient(to right, #c9cbce, #bdcce4);
+
+  /* background-color: gray; */
+  min-height: 90vh;
 }
+
+form input,select  {
+  background: linear-gradient(to right, #81f2f6, #7474e9);
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  color: #0a0606;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+
 label{
   display: block;
   margin-top: 1.5rem;
@@ -16,12 +31,10 @@ label{
   font-size: 18px;
 }
 
-h2 {
+h4 {
   margin-bottom: 0.5rem;
-  font-size: 2rem;
   color: #343a40;
-  text-align: center;
-  font-weight: bold;
+  text-align: right;
 }
 
 .form-group {
@@ -48,8 +61,12 @@ h2 {
 }
 
 .submitButton {
-  margin-top: 10px;
-
+  margin: 20px 20px;
+}
+.homebutton {
+  position: fixed;
+  top: 20px;
+  left: 20px;
 }
 
 .btn:hover {

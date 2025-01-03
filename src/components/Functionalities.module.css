@@ -1,0 +1,174 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  /* background-image: url('../assets/homepagema.jpg'); */
+  background-position: center;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.MainButton {
+  margin: 20px;
+  position: relative;
+  float: right;
+  left: 66%;
+}
+.logo{
+  width:50px;
+  margin:10px;
+  border-radius: 7px;
+}
+.CompanyName{
+  font-size: 40px;
+  margin-left: 10px;
+  font-weight: 500;
+  color: #0c012f;}
+
+.overlay::before{
+  /* content: ""; */
+  background-size: cover;
+
+  position: absolute;
+  /* top: 0;
+  left: 0; */
+  width: 100%;
+  height: 100vh;
+  opacity: 0.9;
+  z-index: -1;
+}
+
+.overlay {
+  background-size:cover;
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  background-image: url('../assets/homepagema.jpg');
+  /* background: rgba(71, 69, 69, 0.9); */
+  opacity: 0.6;
+  filter: brightness(0.7);
+
+}
+.content {
+  margin: 10%;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  max-width: 90%;
+  max-height: 280vh; /* Limit the height for scrollability */
+  overflow-y:hidden; /* Enable vertical scrolling */
+  padding: 10px;
+  box-shadow: inset 0px 10px 10px rgba(0, 0, 0, 0.3); /* Optional for aesthetics */
+}
+
+.card {
+  width: 210px;
+  padding: 10px;
+  background: rgba(8, 1, 1, 0.9);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(19, 19, 19, 0.1);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(246, 244, 244, 0.8);
+}
+
+.title {
+  font-size: 24px;
+  color: #03fff2;
+  margin-bottom: 10px;
+}
+
+.description {
+  font-size: 16px;
+  color: #ffffff;
+}
+
+/* Add media queries for better responsiveness */
+@media (max-width: 768px) {
+  .content {
+    max-height: 70vh; /* Adjust height for smaller screens */
+    gap: 15px;
+    padding: 10px;
+    
+  }
+
+  .card {
+    width: 190px; /* Adjust card size */
+    padding: 8px;
+  }
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(247, 244, 244, 0.8);
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+  .MainButton {
+    margin: 10px;
+    position: relative;
+    float: right;
+    left: 310px;
+  }
+  .logo{
+    width:50px;
+    margin:10px;
+    border-radius: 7px;
+  }
+  .CompanyName{
+    font-size: 40px;
+    margin-left: 10px;
+    font-weight: 500;
+    color: #0c012f;}
+}
+
+@media (max-width: 480px) {
+  .content {
+    flex-direction: column; /* Stack cards vertically */
+    align-items: center;
+    max-height: 30rem; /* Restrict height to enable scrolling */
+    overflow-y: scroll; /* Enable vertical scrolling */
+    padding: 5px; /* Add padding for better spacing */
+    stroke-dashoffset: 2%;    
+  }
+
+  .card {
+    width: 190px; /* Make cards take up more space */
+    margin: 10px 0px; /* Add spacing between cards */
+  }
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(153, 221, 238, 0.8);
+  }
+  .MainButton {
+    font-size: 20px;
+    width: 100px;
+    margin: 10px;
+    position: relative;
+    float: right;
+    left: 30px;
+  }
+  .logo{
+    width:40px;
+    height: 40px;
+    margin:10px;
+    border-radius: 7px;
+  }
+  .CompanyName{
+    font-size: 25px;
+    margin: 9px 0px;
+    font-weight: 500;
+    color: #0c012f;}
+}

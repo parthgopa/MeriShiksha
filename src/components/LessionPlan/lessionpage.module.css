@@ -1,4 +1,4 @@
-/* MCQForm.module.css */
+/* DotPointSummaryForm.module.css */
 
 .container {
 
@@ -7,11 +7,19 @@
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background: linear-gradient(to right, #c9cbce, #bdcce4);
-  min-height: 90vh;
+  min-height: 95vh;
+}
+label{
+  
+  display: block;
+  margin-top: 1.5rem;
+  color: #040405;
+  margin-bottom: 4px;
+  font-size: 18px;
 }
 
 h2 {
-  margin-bottom: 1.5rem;
+  margin: 1.5rem;
   font-size: 2rem;
   color: #343a40;
   text-align: center;
@@ -19,7 +27,7 @@ h2 {
 }
 
 .formGroup {
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.5rem;
 }
 
 .formGroup label {
@@ -29,6 +37,7 @@ h2 {
   margin-bottom: 4px;
   font-size: 18px; /* Space between label and input */
 }
+
 
 .formControl {
   border-radius: 5px;
@@ -55,3 +64,4 @@ h2 {
   top: 20px;
   left: 20px;
 }
+
