@@ -69,7 +69,7 @@ const ParagraphMCQs = () => {
         </div>
         <div className={styles.formGroup}>
           <label htmlFor="mcqCount">
-            How many MCQs do you want to generate?
+            How many MCQs do you want to generate?(max 10)
           </label>
           <input
             type="number"
@@ -77,12 +77,13 @@ const ParagraphMCQs = () => {
             id="mcqCount"
             placeholder="Enter number of MCQs"
             max="10"
+            min="1"
           />
         </div>
         <center>
           <button
             type="submit"
-            className={`btn btn-success ${styles.submitButton}`}
+            className={`btn btn-dark ${styles.submitButton}`}
           >
             Submit
           </button>

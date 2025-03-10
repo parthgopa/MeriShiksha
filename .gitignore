@@ -22,3 +22,30 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+git add .
+git commit -m ""
+git push origin -m main
+
+FOR NOT CRACHING THE WEBSITE WHILE RELOADING..
+
+RewriteRule ^index\.html$ - [L] 
+RewriteCond %{REQUEST_FILENAME} !-f 
+RewriteCond %{REQUEST_FILENAME} !-d 
+RewriteCond %{REQUEST_FILENAME} !-l 
+RewriteRule . /index.html -[L]
+
+
+Solved problems(08-01-2025):
+1) website crash when reloading and other page.
+2) pdf size decreased from 150Mb to 700Kb.
+3) add 4 robots on first page .
+
+Lazy Import :
+async function useLibrary() {
+  const { default: Library } = await import('library-name');
+
+To add gradient to text:
+background: linear-gradient(to right,  #018878, #004D40);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;  

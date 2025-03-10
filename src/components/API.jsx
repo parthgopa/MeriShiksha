@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const APIService = async ({ question, onResponse }) => {
-  const API_KEY = "AIzaSyDeBYzQdETviot419u29UzC9Vsc6eKqsks";
+  // const API_KEY = "AIzaSyAiUqUOYbZs2blgfFRBiD6XGyBeZKTiQRI";
+  const API_KEY = "AIzaSyDAwwkHabXKN7vAhN9Akf7YunjFJ2D67CI";
 
   try {
     const response = await axios({
@@ -15,6 +16,7 @@ const APIService = async ({ question, onResponse }) => {
     onResponse(response.data); // Invoke the callback with the response data
   } catch (error) {
     console.error("Error generating response:", error);
+    // onResponse("Please try again. ");
   }
 };
 

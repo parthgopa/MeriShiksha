@@ -1,6 +1,6 @@
 import React from "react";
 import exampleImage from "../assets/homepagema.jpg";
-import FirstPage from "./FirstPage";
+// import FirstPage from "./FirstPage";
 import Functionalities from "./Functionalities";
 
 const Home = () => {

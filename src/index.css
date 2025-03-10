@@ -1,4 +1,42 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+@import 'tailwindcss';
+
+@theme{
+  --color-primary:#060812;
+  --color-secondary:#0f3760;
+  --color-accent:#ef5262;
+  --color-cardaccent:#f47c88;
+
+  --font-heading:sans-serif;
+}
+.white-rounded-border {
+  --secondary-blue: #0f3760;
+
+  position: relative;
+  border-radius: 1rem; /* Adjust as per the `rounded-lg` size */
+  overflow: hidden;
+}
+h2{
+  color: white;
+}
+
+.white-rounded-border::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  z-index: -1;
+  background: linear-gradient(to right, #ffffff, #ffffff);
+  border-radius: inherit;
+}
+
 :root {
+  --primary-black: #060812;
+  --accent-teal: #0b294a;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -27,13 +65,16 @@ body {
   display: flex;
   place-items: center;
   min-width: 320px;
+  width:100%;
   min-height: 100vh;
 }
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.container {
+  width: 100%;
+  max-width: 1200px; /* or any other desired maximum width */
+  margin: 0 auto;
+  padding: 0 1rem; /* or any other desired padding */
 }
+
 
 button {
   border-radius: 8px;
@@ -54,7 +95,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -65,4 +106,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */

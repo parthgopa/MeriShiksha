@@ -3,6 +3,7 @@ import { Outlet } from "react-router";
 import { useState } from "react";
 import Navbar from "./components/Navbar";
 import Danger from "./components/Danger";
+import "index.css";
 
 function App() {
   const [currentSidebar, setSidebar] = useState("Home");

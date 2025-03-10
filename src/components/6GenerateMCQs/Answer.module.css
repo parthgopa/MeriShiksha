@@ -1,0 +1,60 @@
+/* Container styles */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styles */
+h3 {
+  text-align: center;
+  color: #1a1d20;
+  margin-bottom: 20px;
+}
+
+/* Textarea styles */
+.formControl {
+  width: 100%;
+  height: auto;
+  resize: none;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  color: #495057;
+  background: linear-gradient(to bottom right, #f3ae73, #FFFFFF 50%, #FFFFFF 50%, #4dac5a);
+
+
+}
+
+/* Button container styles */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.buttonGroup{
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+.button {
+  min-width: 10%;
+}
+
+@media (max-width: 480px) {
+  .buttonGroup{
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  .button{
+    width: 100%;
+    margin: 3px;;
+  }
+}

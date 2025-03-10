@@ -1,0 +1,49 @@
+/* About.module.css */
+.aboutContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  /* justify-content: center; */
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #f3ec78, #af4261);
+  background: linear-gradient(to bottom, #ace6e1, #09869f);
+
+  color: #ffffff;
+  text-align: center;
+  overflow: hidden; /* Prevent scrolling of the whole page */
+}
+
+.scrollableContent {
+  max-height: 72vh; /* Set maximum height for the scrollable content */
+  overflow-y: auto; /* Enable vertical scrolling */
+  background: rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+p,ul{
+  justify-content: center;
+
+}
+
+.scrollableContent h2 {
+  margin-top: 20px;
+  color:white;
+}
+.scrollableContent p{
+  font-size: 17px;
+}
+
+.scrollableContent ul {
+  text-align: left;
+  margin-left: 20px;
+}
+
+.scrollableContent li {
+  margin-bottom: 10px;
+}
+@media(max-width:480px){
+  
+
+}

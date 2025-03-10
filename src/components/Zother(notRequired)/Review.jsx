@@ -79,7 +79,7 @@ const ReviewSection = () => {
                   <button
                     type="button"
                     className="btn btn-primary mx-2"
-                    onClick={() => navigate("/functionalities")}
+                    onClick={() => navigate("/")}
                   >
                     Home
                   </button>

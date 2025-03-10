@@ -1,16 +1,6 @@
 body,html{
   margin: 0; padding: 0; width: 100%; height: 100%;
 }
-.Outer-container{
-  display: flex;
-}
-.sidebar{
-  width:20%
-  
-}
-.right-outlet{
-  width: 80%;
-}
 
 .App-image{
   width: 50%;
@@ -22,3 +12,4 @@ body,html{
   top: 50px;
   left: 20px;
 }
+

@@ -1,42 +1,16 @@
 const Danger = () => {
   return (
-    <footer
-      style={{
-        marginTop: "5vh",
-        // position: "relative",
-        marginBottom: "0vh",
-        bottom: "0px",
-        position: "fixed",
-        left: "0px",
-        right: "0px",
-        width: "100%",
-        textAlign: "center",
-        backgroundColor: "rgba(0, 7, 7, 1)",
-      }}
-    >
-      <hr style={{ margin: 0, opacity: 1 }} />
-      <p
-        style={{
-          color: "rgb(158, 243, 178)",
-          zIndex: "5",
-          fontSize: "14px",
-          fontWeight: "300",
-          margin: "0",
-        }}
-      >
-        Dedicated to Meghmani Parivar Diamond Boys' Hostel.
+    <footer className="fixed bottom-0 left-0 right-0 w-full text-center bg-white mt-[5vh]">
+      <hr className="m-0 opacity-100" />
+      <p className="text-black z-5 !text-[13px] font-normal m-0 !lg:text-2xl">
+        Parth Gopani - 3rd year CSE student of M.S University
       </p>
-      <p
-        style={{
-          color: "rgb(158, 243, 178)",
-          fontSize: "12px",
-          fontWeight: "300",
-          margin: "0",
-        }}
-      >
-        Parth GPT can make mistakes, so double-check it.
+      <p className="text-black z-5 !text-[13px] font-NORMAL m-0">
+        merishiksha.com is showing response based on available information on
+        internet , so double-check it.
       </p>
     </footer>
   );
 };
+
 export default Danger;

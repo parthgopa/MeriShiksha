@@ -7,6 +7,7 @@ const Layout = ({ children }) => {
       <div>
         {children}
         <Danger />
+        {/* <Cognito /> */}
       </div>
     </>
   );

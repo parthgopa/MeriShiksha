@@ -1,41 +1,180 @@
-import { StrictMode } from "react";
+// import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router";
 
-import GenerateMCQs from "./components/GenerateMCQs/GenerateMCQs.jsx";
-import ParagraphMCQs from "./components/ParagraphMCQs/ParagraphMCQs.jsx";
-import DotPointSummary from "./components/DotPointSummary/DotPointSummary.jsx";
-import Home from "./components/Home.jsx";
-import TopicLearning from "./components/TopicLearmingFiles/TopicLearning.jsx";
-import LearningTopic from "./components/TopicLearmingFiles/LearningTopic.jsx";
-import FinishedLearning from "./components/TopicLearmingFiles/FinishedLearning.jsx";
-import MCQTest from "./components/TopicLearmingFiles/MCQTest.jsx";
-import FinalResult from "./components/TopicLearmingFiles/FinalResult.jsx";
-import Questions from "./components/GenerateMCQs/Questions.jsx";
-import SummaryPage from "./components/DotPointSummary/summaryPage.jsx";
-import FirstPage from "./components/FirstPage.jsx";
+//Functionalities Components
+
 import Functionalities from "./components/Functionalities.jsx";
-import LessonPage from "./components/LessionPlan/lessonpage.jsx";
-import PlannedPage from "./components/LessionPlan/PlannedPage.jsx";
-import FlashCard from "./components/FlashCards/Flashcard.jsx";
-// import ReviewSection from "./components/Review.jsx";
 import Layout from "./components/Layout.jsx";
+import About from "./About.jsx";
+import ContactUs from "./components/ContactUs.jsx";
+import Chatbot from "./components/Chatbot.jsx";
+//0
+import CarrierLanguageInput from "./components/0AICarrierGuidance/CarrierLanguageInput.jsx";
+import AICarrierGuidance from "./components/0AICarrierGuidance/1AICarrierGuidance.jsx";
+//1
+import CarrierCounciling from "./components/1CarrierCounciling/1carrCounc.jsx";
+import CareerOutput from "./components/1CarrierCounciling/2carrierpage.jsx";
+//2
+import Assessment from "./components/2KnowledgeGap/3assessment.jsx";
+import Report from "./components/2KnowledgeGap/4report.jsx";
+import TopicsList from "./components/2KnowledgeGap/2topiclist.jsx";
+//3
+import LessonPage from "./components/3LessionPlan/lessonpage.jsx";
+import PlannedPage from "./components/3LessionPlan/PlannedPage.jsx";
+//4
+import TopicLearning from "./components/4TopicLearningFiles/TopicLearning.jsx";
+import LearningTopic from "./components/4TopicLearningFiles/LearningTopic.jsx";
+import FinishedLearning from "./components/4TopicLearningFiles/FinishedLearning.jsx";
+import MCQTest from "./components/4TopicLearningFiles/MCQTest.jsx";
+import FinalResult from "./components/4TopicLearningFiles/FinalResult.jsx";
+//5
+import DotPointSummary from "./components/5DotPointSummary/DotPointSummary.jsx";
+import SummaryPage from "./components/5DotPointSummary/summaryPage.jsx";
+//6
+import GenerateMCQs from "./components/6GenerateMCQs/GenerateMCQs.jsx";
+import Questions from "./components/6GenerateMCQs/Questions.jsx";
+//7
+import QandA from "./components/7Q&A/1QandA.jsx";
+import QandAsecondPage from "./components/7Q&A/2page.jsx";
+//8
+import QuizPlay from "./components/8Quiz Play/1quizplay.jsx";
+import QuizPlayQuiz from "./components/8Quiz Play/2quiz.jsx";
+//9 and 10
+import FlashCards from "./components/9FlashCards/Flashcard.jsx";
+import PPt from "./components/10PPtContent/1PPt.jsx";
+//11
+import LanguageLearning from "./components/11LanguageLearning/1languagelearning.jsx";
+import LearningParts from "./components/11LanguageLearning/2Learningparts.jsx";
+import LanguageQuiz from "./components/11LanguageLearning/3languageQuiz.jsx";
+import LanguageResult from "./components/11LanguageLearning/4languageResult.jsx";
+// import LanguageChat from "./components/11LanguageLearning/languagechat.jsx";
+//11b
+import LanguageAccelerator from "./components/11bLanguageAccelerator/1languageaccelerator.jsx";
+import AcceleratedPage from "./components/11bLanguageAccelerator/2acceleratedpage.jsx";
+
+//12
+import LabAssistant from "./components/12LabAssistant/1labAssistant.jsx";
+import LabReport from "./components/12LabAssistant/2labreport.jsx";
+//13
+import AIJobHunt from "./components/13AIJobHunt/1AIhunt.jsx";
+import HuntedPage from "./components/13AIJobHunt/2huntedpage.jsx";
+
+
+//14
+import MockInterview from "./components/14Mock Interview/1mockInterview.jsx";
+import InterviewSimulation from "./components/14Mock Interview/2InterviewSimulation.jsx";
+import InterviewResult from "./components/14Mock Interview/3InterviewResult.jsx";
+
+import GeminiImageAnalyzer from "./imageTrial/Demo.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <Layout>
-        <FirstPage />
+        <Functionalities />
+        {/* <GeminiImageAnalyzer/> */}
       </Layout>
     ),
   },
   {
-    path: "/functionalities",
+    path: "/aboutUs",
     element: (
       <Layout>
-        <Functionalities />
+        <About />
+      </Layout>
+    ),
+  },
+  {
+    path: "/ContactUs",
+    element: (
+      <Layout>
+        <ContactUs />
+      </Layout>
+    ),
+  },
+  {
+    path: "/chatbot",
+    element: (
+      <Layout>
+        <Chatbot />
+      </Layout>
+    ),
+  },
+
+  {
+    path: "/interview-language-input",
+    element: (
+      <Layout>
+        <CarrierLanguageInput />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/ai-carrier-guidance",
+    element: (
+      <Layout>
+        <AICarrierGuidance />{" "}
+      </Layout>
+    ),
+  },
+
+  {
+    path: "/carrier-counciling",
+    element: (
+      <Layout>
+        <CarrierCounciling />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/carrier-counciling/output",
+    element: (
+      <Layout>
+        <CareerOutput />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/knowlwdgeGap-Topic-list",
+    element: (
+      <Layout>
+        <TopicsList />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/knowledge-gap/assessment",
+    element: (
+      <Layout>
+        <Assessment />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/knowledge-gap/report",
+    element: (
+      <Layout>
+        <Report />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/lesson-plan",
+    element: (
+      <Layout>
+        <LessonPage />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/lessonpage/planned-page",
+    element: (
+      <Layout>
+        <PlannedPage />{" "}
       </Layout>
     ),
   },
@@ -55,47 +194,6 @@ const router = createBrowserRouter([
       </Layout>
     ),
   },
-  {
-    path: "/generate-mcqs",
-    element: (
-      <Layout>
-        <GenerateMCQs />{" "}
-      </Layout>
-    ),
-  },
-  {
-    path: "/paragraph-mcqs",
-    element: (
-      <Layout>
-        <ParagraphMCQs />{" "}
-      </Layout>
-    ),
-  },
-  {
-    path: "/paragraph-mcqs/mcq-test",
-    element: (
-      <Layout>
-        <MCQTest />{" "}
-      </Layout>
-    ),
-  },
-  {
-    path: "/dotpoint-summary",
-    element: (
-      <Layout>
-        <DotPointSummary />{" "}
-      </Layout>
-    ),
-  },
-  {
-    path: "/dotpoint-summary/summary-page",
-    element: (
-      <Layout>
-        <SummaryPage />{" "}
-      </Layout>
-    ),
-  },
-
   {
     path: "/finished-learning",
     element: (
@@ -121,6 +219,30 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/dotpoint-summary",
+    element: (
+      <Layout>
+        <DotPointSummary />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/dotpoint-summary/summary-page",
+    element: (
+      <Layout>
+        <SummaryPage />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/generate-mcqs",
+    element: (
+      <Layout>
+        <GenerateMCQs />{" "}
+      </Layout>
+    ),
+  },
+  {
     path: "/questions",
     element: (
       <Layout>
@@ -129,29 +251,177 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/lesson-plan",
+    path: "/q-and-a",
     element: (
       <Layout>
-        <LessonPage />{" "}
+        <QandA />{" "}
       </Layout>
     ),
   },
   {
-    path: "/lessonpage/planned-page",
+    path: "/q-and-a/2page",
     element: (
       <Layout>
-        <PlannedPage />{" "}
+        <QandAsecondPage />
       </Layout>
     ),
   },
+  {
+    path: "/quiz-play",
+    element: (
+      <Layout>
+        <QuizPlay />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/quiz-play/quiz",
+    element: (
+      <Layout>
+        <QuizPlayQuiz />{" "}
+      </Layout>
+    ),
+  },
+
   {
     path: "/flash-cards",
     element: (
       <Layout>
-        <FlashCard />{" "}
+        <FlashCards />{" "}
       </Layout>
     ),
   },
+
+  {
+    path: "/ppt-content",
+    element: (
+      <Layout>
+        <PPt />{" "}
+      </Layout>
+    ),
+  },
+
+  {
+    path: "/language-learning",
+    element: (
+      <Layout>
+        <LanguageLearning />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/learning-parts",
+    element: (
+      <Layout>
+        <LearningParts />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/language-quiz",
+    element: (
+      <Layout>
+        <LanguageQuiz />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/language-result",
+    element: (
+      <Layout>
+        <LanguageResult />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/language-accelerator",
+    element: (
+      <Layout>
+        <LanguageAccelerator />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/accelerated-page",
+    element: (
+      <Layout>
+        <AcceleratedPage />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/lab-assistant",
+    element: (
+      <Layout>
+        <LabAssistant />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/lab-report",
+    element: (
+      <Layout>
+        <LabReport />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/ai-job-hunt",
+    element: (
+      <Layout>
+        <AIJobHunt />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/hunted-page",
+    element: (
+      <Layout>
+        <HuntedPage />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/mock-interview",
+    element: (
+      <Layout>
+        <MockInterview />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/interview",
+    element: (
+      <Layout>
+        <InterviewSimulation />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/interview-result",
+    element: (
+      <Layout>
+        <InterviewResult />{" "}
+      </Layout>
+    ),
+  },
+  //{
+  //   path: "/paragraph-mcqs",
+  //   element: (
+  //     <Layout>
+  //       <ParagraphMCQs />{" "}
+  //     </Layout>
+  //   ),
+  // },
+  // {
+  //   path: "/paragraph-mcqs/mcq-test",
+  //   element: (
+  //     <Layout>
+  //       <MCQTest />{" "}
+  //     </Layout>
+  //   ),
+  // },
+
   // {
   //   path: "/review-section",
   //   element: (
@@ -163,9 +433,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>
+  // <StrictMode>
+  <RouterProvider router={router} />
+  // {/* </StrictMode> */}
 );
 
 // [
