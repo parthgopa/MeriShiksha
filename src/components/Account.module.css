@@ -1,0 +1,80 @@
+
+  .form {
+    margin-left : 35%;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 40px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    max-width: 350px;
+    width: 100%;
+  }
+  
+  h3 {
+    margin-bottom: 15px;
+    font-size: 24px;
+  }
+  
+  button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: #ff512f;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: #ff7841;
+  }
+  
+  .social {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .social div {
+    padding: 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+  }
+  
+  .social div:hover {
+    border: black solid 2px;
+  }
+  
+  .social .go {
+    background: #db4437;
+  }
+  
+  .social .fb {
+    background: #3b5998;
+  }
+  
+  .invalidmessage{
+    color :#db4437;
+    font-weight: 500;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  @media screen and (max-width: 768px) {
+   .form {
+      margin-left: 0;
+    }
+  }
+
+  .signupinput,.logininput{
+    width: 100%;border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 10px;
+  }
+
+  .signupbutton,.loginbutton{
+    width: 100%;
+    border-radius: 20px;
+    margin : 10px 0px
+  }

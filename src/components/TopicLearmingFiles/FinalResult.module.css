@@ -1,0 +1,149 @@
+.container {
+  max-width: 80%;
+  margin: 50px auto;
+  padding: 30px;
+  background: linear-gradient(135deg, #ffffff, #f0f4f8);
+  border-radius: 12px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  font-family: "Arial", sans-serif;
+}
+
+.heading {
+  font-size: 28px;
+  color: #2c3e50;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+.chartContainer {
+  width: 100%;
+  height: 300px;
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center ;
+}
+
+.summary {
+  margin-top: 20px;
+  background-color: #e9ecef;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.scoreText {
+  font-size: 20px;
+  font-weight: bold;
+  color: #17a2b8;
+  margin: 10px 0;
+}
+
+.detailsText {
+  font-size: 18px;
+  color: #6c757d;
+}
+
+.evaluationSection {
+  margin-top: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.evaluationHeading {
+  font-size: 24px;
+  color: #2c3e50;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.evaluationTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.evaluationTable th,
+.evaluationTable td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #dee2e6;
+}
+
+.evaluationTable th {
+  background-color: #17a2b8;
+  color: white;
+  font-size: 16px;
+}
+
+.evaluationTable td {
+  font-size: 15px;
+  color: #495057;
+}
+
+.correctAnswer {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.wrongAnswer {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.correct {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.incorrect {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.buttonContainer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.btn {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  transform: scale(1.05);
+}
+.textArea {
+  width: 100%;
+  border-radius: 5px;
+  padding: 1rem;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  transition: border-color 0.3s;
+}
