@@ -51,7 +51,7 @@ For date: ${date} and time: ${time}(dont display it in output)`;
         setcarriercounciling(content);
         setLoading(false);
 
-        navigate("/carrier-counciling/output", {
+        navigate("/carrier-counselling/output", {
           state: { response: content },
         });
       } else {

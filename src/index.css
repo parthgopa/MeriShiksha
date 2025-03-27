@@ -3,7 +3,7 @@
 @tailwind utilities; */
 @import 'tailwindcss';
 
-@theme{
+:root {
   --color-primary:#060812;
   --color-secondary:#0f3760;
   --color-accent:#ef5262;
@@ -11,6 +11,7 @@
 
   --font-heading:sans-serif;
 }
+
 .white-rounded-border {
   --secondary-blue: #0f3760;
 
@@ -35,8 +36,10 @@ h2{
 }
 
 :root {
-  --primary-black: #060812;
-  --accent-teal: #0b294a;
+  --primary-black: #18181b;
+  --primary-violet: #4a1d96;
+  --accent-teal: #06b6d4;
+  
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
