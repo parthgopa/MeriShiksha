@@ -23,6 +23,8 @@ const CarrierCounciling = () => {
     const interest = e.target[0].value;
     setInterest(interest);
 
+    console.log(interest);
+
     if (!interest) {
       setWarning(true);
       return;
@@ -51,7 +53,7 @@ For date: ${date} and time: ${time}(dont display it in output)`;
         setcarriercounciling(content);
         setLoading(false);
 
-        navigate("/carrier-counciling/output", {
+        navigate("/carrier-counselling/output", {
           state: { response: content },
         });
       } else {

@@ -2,9 +2,8 @@
 import { createRoot } from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-<<<<<<< HEAD
 //Functionalities Components
 
 import Functionalities from "./components/Functionalities.jsx";
@@ -13,8 +12,9 @@ import About from "./About.jsx";
 import ContactUs from "./components/ContactUs.jsx";
 import Chatbot from "./components/Chatbot.jsx";
 //0
-import CarrierLanguageInput from "./components/0AICarrierGuidance/CarrierLanguageInput.jsx";
-import AICarrierGuidance from "./components/0AICarrierGuidance/1AICarrierGuidance.jsx";
+import CarrierLanguageInput from "./components/0AICarrierGuidance/AICarrierCounsellingInput.jsx";
+// import AICarrierGuidance from "./components/0AICarrierGuidance/1AICarrierGuidance.jsx";
+import AICarrierGuidance from "./components/0AICarrierGuidance/1AICarrierGuidance.jsx"
 //1
 import CarrierCounciling from "./components/1CarrierCounciling/1carrCounc.jsx";
 import CareerOutput from "./components/1CarrierCounciling/2carrierpage.jsx";
@@ -70,103 +70,16 @@ import InterviewSimulation from "./components/14Mock Interview/2InterviewSimulat
 import InterviewResult from "./components/14Mock Interview/3InterviewResult.jsx";
 
 import GeminiImageAnalyzer from "./imageTrial/Demo.jsx";
-=======
-import GenerateMCQs from "./components/GenerateMCQs/GenerateMCQs.jsx";
-import ParagraphMCQs from "./components/ParagraphMCQs/ParagraphMCQs.jsx";
-import DotPointSummary from "./components/DotPointSummary/DotPointSummary.jsx";
-import Home from "./components/Home.jsx";
-import Login from "./components/Login.jsx";
-import Signup from "./components/Signup.jsx";
-import TopicLearning from "./components/TopicLearmingFiles/TopicLearning.jsx";
-import LearningTopic from "./components/TopicLearmingFiles/LearningTopic.jsx";
-import FinishedLearning from "./components/TopicLearmingFiles/FinishedLearning.jsx";
-import MCQTest from "./components/TopicLearmingFiles/MCQTest.jsx";
-import FinalResult from "./components/TopicLearmingFiles/FinalResult.jsx";
-import Questions from "./components/GenerateMCQs/Questions.jsx";
-import SummaryPage from "./components/DotPointSummary/summaryPage.jsx";
-import ForgotPassword from "./components/ForgetPassword.jsx";
-import Profile from "./components/Profile.jsx";
->>>>>>> dbb2147506cfa3c7b243884bb92c0f50064da7a5
 
 const router = createBrowserRouter([
   {
     path: "/",
-<<<<<<< HEAD
     element: (
       <Layout>
         <Functionalities />
         {/* <GeminiImageAnalyzer/> */}
       </Layout>
     ),
-=======
-    element: <Login />,
-  },
-  {
-    path: "/sign-up",
-    element: <Signup />,
-  },
-  {
-    path: "/forgot-password",
-    element: <ForgotPassword />,
-  },
-  {
-    path: "/app",
-    element: <App />,
-    children: [
-      {
-        path: "home",
-        element: <Home />,
-      },
-      {
-        path: "profile",
-        element: <Profile />,
-      },
-      {
-        path: "topic-learning",
-        element: <TopicLearning />,
-      },
-      {
-        path: "generate-mcqs",
-        element: <GenerateMCQs />,
-      },
-      {
-        path: "paragraph-mcqs",
-        element: <ParagraphMCQs />,
-      },
-      {
-        path: "paragraph-mcqs/mcq-test",
-        element: <MCQTest />,
-      },
-      {
-        path: "dotpoint-summary",
-        element: <DotPointSummary />,
-      },
-      {
-        path: "dotpoint-summary/summary-page",
-        element: <SummaryPage />,
-      },
-      {
-        path: "learning-topic",
-        element: <LearningTopic />,
-      },
-      {
-        path: "finished-learning",
-        element: <FinishedLearning />,
-      },
-      {
-        path: "mcq-test",
-        element: <MCQTest />,
-      },
-      {
-        path: "final-result",
-        element: <FinalResult />,
-      },
-      {
-        path: "generate-mcqs/questions",
-        element: <Questions />,
-      },
-    ],
->>>>>>> dbb2147506cfa3c7b243884bb92c0f50064da7a5
   },
   {
     path: "/aboutUs",
@@ -194,7 +107,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/interview-language-input",
+    path: "/ai-carrier-counselling-input",
     element: (
       <Layout>
         <CarrierLanguageInput />{" "}
@@ -211,7 +124,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/carrier-counciling",
+    path: "/carrier-counselling-input",
     element: (
       <Layout>
         <CarrierCounciling />{" "}
@@ -219,7 +132,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/carrier-counciling/output",
+    path: "/carrier-counselling/output",
     element: (
       <Layout>
         <CareerOutput />{" "}
