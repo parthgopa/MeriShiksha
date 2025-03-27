@@ -23,6 +23,8 @@ const CarrierCounciling = () => {
     const interest = e.target[0].value;
     setInterest(interest);
 
+    console.log(interest);
+
     if (!interest) {
       setWarning(true);
       return;
