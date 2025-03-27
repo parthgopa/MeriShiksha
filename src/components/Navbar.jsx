@@ -9,7 +9,6 @@ import { ImProfile } from "react-icons/im";
 import { IoMdLogIn } from "react-icons/io";
 import { VscAccount } from "react-icons/vsc";
 import { MdOutlineAccountCircle } from "react-icons/md";
-import { useEffect } from "react";
 import logo from "../assets/MyLogo.png";
 import styles from "./Navbar.module.css";
 
