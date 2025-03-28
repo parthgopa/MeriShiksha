@@ -13,6 +13,7 @@ import Speech from "react-speech";
 import { PiMicrophoneDuotone, PiSpeakerHighFill } from "react-icons/pi";
 import { HiMiniStop } from "react-icons/hi2";
 import { IoClose } from "react-icons/io5";
+
 import HomeButton from "../HomeButton";
 
 const InterviewSimulation = () => {
