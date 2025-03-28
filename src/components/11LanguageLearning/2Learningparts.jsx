@@ -3,7 +3,8 @@ import APIService from "../API"; // Assuming you have an API service to handle i
 import { useLocation, useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown"; // Add this import
 import LoadingSpinner from "../LoadingSpinner"; // Import the LoadingSpinner component
-import { useSpeechSynthesis } from "react-speech-kit"; // Import useSpeechSynthesis
+// import { useSpeechSynthesis } from "react-speech-kit"; // Import useSpeechSynthesis
+import Speech from 'react-speech';
 import HomeButton from "../HomeButton";
 
 import { HiMiniStop } from "react-icons/hi2";
@@ -22,8 +23,9 @@ const LearningParts = () => {
   const date = new Date().toDateString();
   const time = new Date().toTimeString();
   const [showQuitPopup, setShowQuitPopup] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const speechRef = useRef(null);
 
-  const { speak, cancel, speaking, supported, voices } = useSpeechSynthesis();
 
   const handleOnResponse = (part, response) => {
     const responseText =
@@ -63,7 +65,6 @@ const LearningParts = () => {
 
     fetchInitialContent();
 
-    return () => cancel();
   }, [initialPrompt, currentPart]);
 
   //   const handleNext = async () => {
@@ -136,12 +137,29 @@ const LearningParts = () => {
   };
 
   const handleSpeak = () => {
-    if (currentSpeechResponse) {
-      speak({ text: currentSpeechResponse, rate: speechRate });
+    if (currentPart && speechRef.current) {
+      if (!isSpeaking) {
+        setIsSpeaking(true);
+        speechRef.current.play();
+      }
     }
   };
+
   const handleStop = () => {
-    cancel();
+    if (isSpeaking && speechRef.current) {
+      setIsSpeaking(false);
+      speechRef.current.pause();
+    }
+  };
+
+  // Custom style for Speech component
+  const speechStyle = {
+    play: {
+      display: 'none', // Hide the default play button
+    },
+    stop: {
+      display: 'none', // Hide the default stop button
+    }
   };
 
   const handleDownloadPdf = async () => {
@@ -369,44 +387,56 @@ Spanish. 'El gato es negro' means 'The cat is black'
           <h4 className="text-2xl font-bold text-white mb-4">
             {language} Language Part - {currentPart}
           </h4>
-          {supported && (
-            <div className="flex flex-wrap justify-center items-center gap-4">
-              <button
-                className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
-                onClick={handleSpeak}
-              >
-                {speaking ? "Speaking..." : <PiSpeakerHighFill />}
-              </button>
-              <button
-                className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
-                onClick={handleStop}
-              >
-                <HiMiniStop />
-              </button>
-              <label className="flex items-center gap-2">
-                Speed:
-                <input
-                  className="w-32 rounded-lg bg-secondary text-white focus:ring-2 focus:ring-accent focus:outline-none"
-                  type="range"
-                  min="0.5"
-                  max="2"
-                  step="0.1"
-                  value={speechRate}
-                  onChange={(e) => {
-                    setSpeechRate(parseFloat(e.target.value));
-                    if (speaking) {
-                      cancel();
-                      speak({
-                        text: currentSpeechResponse,
-                        rate: parseFloat(e.target.value),
-                      });
-                    }
-                  }}
-                />
-              </label>
-              <span className="text-white font-medium">{speechRate}</span>
-            </div>
-          )}
+          <div className="flex flex-wrap justify-center items-center gap-4 mb-4">
+                <button
+                  className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
+                  onClick={handleSpeak}
+                >
+                  {isSpeaking ? "Speaking..." : <PiSpeakerHighFill />}
+                </button>
+                <button
+                  className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
+                  onClick={handleStop}
+                >
+                  <HiMiniStop />
+                </button>
+                <label className="flex items-center gap-2">
+                  Speed:
+                  <input
+                    className="w-32 rounded-lg bg-secondary text-white"
+                    type="range"
+                    min="0.5"
+                    max="2"
+                    step="0.1"
+                    value={speechRate}
+                    onChange={(e) => {
+                      const newRate = parseFloat(e.target.value);
+                      setSpeechRate(newRate);
+                      if (isSpeaking) {
+                        handleStop();
+                        // Small timeout to ensure stop completes before starting again
+                        setTimeout(() => {
+                          handleSpeak();
+                        }, 100);
+                      }
+                    }}
+                  />
+                </label>
+                <span className="text-white font-medium">{speechRate}x</span>
+                {/* Hidden Speech component controlled via ref */}
+                <div style={{ display: 'none' }}>
+                  <Speech
+                    ref={speechRef}
+                    text={currentSpeechResponse}
+                    pitch={1}
+                    rate={speechRate}
+                    volume={1}
+                    lang="en-US"
+                    voice="Google US English"
+                    style={speechStyle}
+                  />
+                </div>
+              </div>
         </div>
 
         {loading ? (

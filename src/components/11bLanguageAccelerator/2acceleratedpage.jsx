@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import APIService from '../API';
 import { useLocation, useNavigate } from 'react-router';
 import LoadingSpinner from '../LoadingSpinner';
 import HomeButton from '../HomeButton';
-import { useSpeechSynthesis } from 'react-speech-kit';
+import Speech from 'react-speech';
 import { HiMiniStop } from "react-icons/hi2";
 import { PiSpeakerHighFill } from "react-icons/pi";
 
@@ -23,11 +23,12 @@ const AcceleratedPage = () => {
   const [showQuitPopup, setShowQuitPopup] = useState(false);
   const [speechRate, setSpeechRate] = useState(1);
   const [analysisRef, setAnalysisRef] = useState(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const speechRef = useRef(null);
+  
 
   const date = new Date().toDateString();
   const time = new Date().toTimeString();
-
-  const { speak, cancel, speaking, supported } = useSpeechSynthesis();
 
   const handleOnResponse = (response) => {
     const responseText = response.candidates[0].content.parts[0].text;
@@ -107,8 +108,28 @@ const AcceleratedPage = () => {
   };
 
   const handleSpeak = () => {
-    if (currentQuestion) {
-      speak({ text: currentQuestion, rate: speechRate });
+    if (currentQuestion && speechRef.current) {
+      if (!isSpeaking) {
+        setIsSpeaking(true);
+        speechRef.current.play();
+      }
+    }
+  };
+
+  const handleStop = () => {
+    if (isSpeaking && speechRef.current) {
+      setIsSpeaking(false);
+      speechRef.current.pause();
+    }
+  };
+
+  // Custom style for Speech component
+  const speechStyle = {
+    play: {
+      display: 'none', // Hide the default play button
+    },
+    stop: {
+      display: 'none', // Hide the default stop button
     }
   };
 
@@ -122,7 +143,7 @@ const AcceleratedPage = () => {
 
   useEffect(() => {
     getInitialQuestion();
-    return () => cancel();
+    // No need for cleanup as we're using our own stop function
   }, []);
 
   useEffect(() => {
@@ -141,35 +162,46 @@ const AcceleratedPage = () => {
             {language} Language Learning - Question {qaHistory.length + 1}/20
           </h4>
           
-          {supported && (
-            <div className="flex flex-wrap justify-center items-center gap-4 mb-4">
-              <button
-                className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
-                onClick={handleSpeak}
-              >
-                {speaking ? "Speaking..." : <PiSpeakerHighFill />}
-              </button>
-              <button
-                className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
-                onClick={cancel}
-              >
-                <HiMiniStop />
-              </button>
-              <label className="flex items-center gap-2">
-                Speed:
-                <input
-                  type="range"
-                  min="0.5"
-                  max="2"
-                  step="0.1"
-                  value={speechRate}
-                  onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
-                  className="w-32 rounded-lg bg-secondary text-white"
-                />
-                <span>{speechRate}x</span>
-              </label>
+          <div className="flex flex-wrap justify-center items-center gap-4 mb-4">
+            <button
+              className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
+              onClick={handleSpeak}
+            >
+              {isSpeaking ? "Speaking..." : <PiSpeakerHighFill />}
+            </button>
+            <button
+              className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
+              onClick={handleStop}
+            >
+              <HiMiniStop />
+            </button>
+            <label className="flex items-center gap-2">
+              Speed:
+              <input
+                type="range"
+                min="0.5"
+                max="2"
+                step="0.1"
+                value={speechRate}
+                onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
+                className="w-32 rounded-lg bg-secondary text-white"
+              />
+              <span>{speechRate}x</span>
+            </label>
+            {/* Hidden Speech component controlled via ref */}
+            <div style={{ display: 'none' }}>
+              <Speech
+                ref={speechRef}
+                text={currentQuestion}
+                pitch={1}
+                rate={speechRate}
+                volume={1}
+                lang="en-US"
+                voice="Google US English"
+                style={speechStyle}
+              />
             </div>
-          )}
+          </div>
         </div>
 
         {isLoadingNext ? (
