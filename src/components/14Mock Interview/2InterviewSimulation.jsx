@@ -9,10 +9,9 @@ import APIService from "../API";
 import LoadingSpinner from "../LoadingSpinner";
 import { useLocation, useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown";
-import { useSpeechSynthesis } from "react-speech-kit";
+import Speech from "react-speech";
 import { PiMicrophoneDuotone, PiSpeakerHighFill } from "react-icons/pi";
 import { HiMiniStop } from "react-icons/hi2";
-import { BsFillMicFill } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
 import HomeButton from "../HomeButton";
 
@@ -36,9 +35,8 @@ const InterviewSimulation = () => {
   const [showSpeechModal, setShowSpeechModal] = useState(false);
   const [isProcessingSpeech, setIsProcessingSpeech] = useState(false);
   const [previewText, setPreviewText] = useState("");
-
-  // Speech synthesis hooks
-  const { speak, cancel, speaking, supported } = useSpeechSynthesis();
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const speechRef = useRef(null);
 
   // Router hooks
   const location = useLocation(null);
@@ -368,10 +366,31 @@ const InterviewSimulation = () => {
 
   // Handle text-to-speech
   const handleSpeak = useCallback(() => {
-    if (currentSpeechResponse) {
-      speak({ text: currentSpeechResponse, rate: speechRate });
+    if (currentSpeechResponse && speechRef.current) {
+      if (!isSpeaking) {
+        setIsSpeaking(true);
+        speechRef.current.play();
+      }
     }
-  }, [currentSpeechResponse, speak, speechRate]);
+  }, [currentSpeechResponse, isSpeaking]);
+
+  // Handle stop speech
+  const handleStop = useCallback(() => {
+    if (isSpeaking && speechRef.current) {
+      setIsSpeaking(false);
+      speechRef.current.pause();
+    }
+  }, [isSpeaking]);
+
+  // Custom style for Speech component
+  const speechStyle = {
+    play: {
+      display: 'none', // Hide the default play button
+    },
+    stop: {
+      display: 'none', // Hide the default stop button
+    }
+  };
 
   // Speech recognition setup
   const recognitionRef = useRef(null);
@@ -537,45 +556,56 @@ const InterviewSimulation = () => {
           <div className="w-screen max-w-7xl mx-auto">
             <div className="bg-secondary/20 p-3 rounded-xl shadow-lg">
               {/* Speech Controls */}
-              {supported && (
-                <div className="flex flex-wrap justify-center items-center gap-4 mb-4">
-                  <button
-                    className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
-                    onClick={handleSpeak}
-                  >
-                    {speaking ? "Speaking..." : <PiSpeakerHighFill />}
-                  </button>
-                  <button
-                    className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
-                    onClick={cancel}
-                  >
-                    <HiMiniStop />
-                  </button>
-                  <label className="flex items-center gap-2">
-                    Speed:
-                    <input
-                      className="w-32 rounded-lg bg-secondary text-white"
-                      type="range"
-                      min="0.5"
-                      max="2"
-                      step="0.1"
-                      value={speechRate}
-                      onChange={(e) => {
-                        const newRate = parseFloat(e.target.value);
-                        setSpeechRate(newRate);
-                        if (speaking) {
-                          cancel();
-                          speak({
-                            text: currentSpeechResponse,
-                            rate: newRate,
-                          });
-                        }
-                      }}
-                    />
-                  </label>
-                  <span className="text-white font-medium">{speechRate}x</span>
+              <div className="flex flex-wrap justify-center items-center gap-4 mb-4">
+                <button
+                  className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
+                  onClick={handleSpeak}
+                >
+                  {isSpeaking ? "Speaking..." : <PiSpeakerHighFill />}
+                </button>
+                <button
+                  className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
+                  onClick={handleStop}
+                >
+                  <HiMiniStop />
+                </button>
+                <label className="flex items-center gap-2">
+                  Speed:
+                  <input
+                    className="w-32 rounded-lg bg-secondary text-white"
+                    type="range"
+                    min="0.5"
+                    max="2"
+                    step="0.1"
+                    value={speechRate}
+                    onChange={(e) => {
+                      const newRate = parseFloat(e.target.value);
+                      setSpeechRate(newRate);
+                      if (isSpeaking) {
+                        handleStop();
+                        // Small timeout to ensure stop completes before starting again
+                        setTimeout(() => {
+                          handleSpeak();
+                        }, 100);
+                      }
+                    }}
+                  />
+                </label>
+                <span className="text-white font-medium">{speechRate}x</span>
+                {/* Hidden Speech component controlled via ref */}
+                <div style={{ display: 'none' }}>
+                  <Speech
+                    ref={speechRef}
+                    text={currentSpeechResponse}
+                    pitch={1}
+                    rate={speechRate}
+                    volume={1}
+                    lang="en-US"
+                    voice="Google US English"
+                    style={speechStyle}
+                  />
                 </div>
-              )}
+              </div>
 
               {/* Question and Answer Section */}
               <div className="space-y-4">

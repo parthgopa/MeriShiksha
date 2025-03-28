@@ -2,7 +2,7 @@
 import { createRoot } from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router";
 
 //Functionalities Components
 
@@ -14,7 +14,7 @@ import Chatbot from "./components/Chatbot.jsx";
 //0
 import CarrierLanguageInput from "./components/0AICarrierGuidance/AICarrierCounsellingInput.jsx";
 // import AICarrierGuidance from "./components/0AICarrierGuidance/1AICarrierGuidance.jsx";
-import AICarrierGuidance from "./components/0AICarrierGuidance/1AICarrierGuidance.jsx"
+import AICarrierGuidance from "./components/0AICarrierGuidance/1AICarrierGuidance.jsx";
 //1
 import CarrierCounciling from "./components/1CarrierCounciling/1carrCounc.jsx";
 import CareerOutput from "./components/1CarrierCounciling/2carrierpage.jsx";
@@ -62,7 +62,6 @@ import LabReport from "./components/12LabAssistant/2labreport.jsx";
 //13
 import AIJobHunt from "./components/13AIJobHunt/1AIhunt.jsx";
 import HuntedPage from "./components/13AIJobHunt/2huntedpage.jsx";
-
 
 //14
 import MockInterview from "./components/14Mock Interview/1mockInterview.jsx";

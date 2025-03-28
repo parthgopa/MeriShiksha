@@ -4,7 +4,7 @@ import APIService from "../API"; // Assuming you have an API service to handle i
 import { useLocation, useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown"; // Add this import
 import LoadingSpinner from "../LoadingSpinner"; // Import the LoadingSpinner component
-import { useSpeechSynthesis } from "react-speech-kit"; // Import useSpeechSynthesis
+import Speech from "react-speech"; // Import Speech from react-speech instead of react-speech-kit
 
 const LearningTopic = () => {
   const navigate = useNavigate();
@@ -17,8 +17,8 @@ const LearningTopic = () => {
   const [speechRate, setSpeechRate] = useState(1); // State for speech rate
   const cacheRef = useRef({}); // Cache object to store responses
   const [currentSpeechResponse, setSpeechResponse] = useState("");
-
-  const { speak, cancel, speaking, supported, voices } = useSpeechSynthesis();
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const speechRef = useRef(null);
 
   const handleOnResponse = (part, response) => {
     const responseText =
@@ -122,13 +122,41 @@ const LearningTopic = () => {
   };
 
   const handleSpeak = () => {
-    if (currentSpeechResponse) {
-      speak({ text: currentSpeechResponse, rate: speechRate });
+    if (currentSpeechResponse && speechRef.current) {
+      if (!isSpeaking) {
+        setIsSpeaking(true);
+        // The play method is called on the Speech component via ref
+        speechRef.current.play();
+      }
     }
   };
 
   const handleStop = () => {
-    cancel();
+    if (isSpeaking && speechRef.current) {
+      setIsSpeaking(false);
+      // The pause method is called on the Speech component via ref
+      speechRef.current.pause();
+    }
+  };
+
+  // Custom style for Speech component
+  const speechStyle = {
+    play: {
+      display: 'none', // Hide the default play button
+    },
+    stop: {
+      display: 'none', // Hide the default stop button
+    }
+  };
+
+  // Custom properties for Speech component
+  const speechProps = {
+    text: currentSpeechResponse,
+    pitch: 1,
+    rate: speechRate,
+    volume: 1,
+    lang: "en-US",
+    voice: "Google US English"
   };
 
   return (
@@ -137,28 +165,39 @@ const LearningTopic = () => {
         {/* <h3>
           Learning Part: {currentPart} of {topic}
         </h3> */}
-        {supported && (
-          <div className={styles.speechControls}>
-            <button className="btn btn-outline-primary" onClick={handleSpeak}>
-              {speaking ? "Speaking..." : "Speak"}
-            </button>
-            <button className="btn btn-outline-danger" onClick={handleStop}>
-              Stop
-            </button>
-            <label>
-              Speed:
-              <input
-                type="range"
-                min="0.5"
-                max="2"
-                step="0.1"
-                value={speechRate}
-                onChange={(e) => setSpeechRate(e.target.value)}
-              />
-              <span className={styles.sliderValue}>{speechRate}</span>
-            </label>
+        <div className={styles.speechControls}>
+          <button className="btn btn-outline-primary" onClick={handleSpeak}>
+            {isSpeaking ? "Speaking..." : "Speak"}
+          </button>
+          <button className="btn btn-outline-danger" onClick={handleStop}>
+            Stop
+          </button>
+          <label>
+            Speed:
+            <input
+              type="range"
+              min="0.5"
+              max="2"
+              step="0.1"
+              value={speechRate}
+              onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
+            />
+            <span className={styles.sliderValue}>{speechRate}</span>
+          </label>
+          {/* Hidden Speech component controlled via ref */}
+          <div style={{ display: 'none' }}>
+            <Speech
+              ref={speechRef}
+              text={currentSpeechResponse}
+              pitch={1}
+              rate={speechRate}
+              volume={1}
+              lang="en-US"
+              voice="Google US English"
+              style={speechStyle}
+            />
           </div>
-        )}
+        </div>
       </div>
       {loading ? (
         <LoadingSpinner /> // Render spinner when loading
