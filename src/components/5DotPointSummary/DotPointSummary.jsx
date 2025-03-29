@@ -34,85 +34,88 @@ const DotPointSummary = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-black via-secondary to-black text-white py-6 md:py-10 px-4 md:px-6 flex flex-col lg:flex-row justify-center items-center gap-6 md:gap-8 overflow-x-hidden">
-      {/* Image Section */}
-      <div className="w-full lg:w-1/3 flex justify-center mb-6 lg:mb-0">
-        <img
-          src={img5}
-          alt="Dot Point Summary"
-          className="w-3/4 sm:w-1/2 md:w-2/5 lg:w-4/5 h-auto object-cover rounded-lg shadow-lg"
-        />
-      </div>
+    <div className="min-h-screen w-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-6 md:py-10 px-4 md:px-6 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
       
-      {/* Form Section */}
-      <div className="w-full lg:w-2/3 max-w-2xl">
-        <div className="w-full mb-5 p-4 md:p-6 rounded-lg shadow-lg bg-gradient-to-r from-secondary via-20% to-black">
-          <h2
-            className="text-2xl md:text-3xl font-bold text-center mb-4 md:mb-6 text-white"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Dot Point Summary
-          </h2>
-          
-          <form
-            onSubmit={handleSubmit}
-            onKeyDown={handleEnterPressed}
-            className="space-y-4 md:space-y-6"
-          >
-            {/* Subject Entry */}
-            <div className="space-y-2">
-              <label
-                htmlFor="SubjectEntry"
-                className="block text-base md:text-lg font-medium text-white"
-              >
-                Enter the subject
-              </label>
-              <input
-                type="text"
-                id="SubjectEntry"
-                name="SubjectEntry"
-                className="w-full p-3 rounded-lg bg-secondary placeholder-gray-400 text-white focus:ring-2 focus:ring-accent focus:outline-none"
-                placeholder="e.g., Mathematics, Physics"
-              />
-            </div>
-
-            {/* Topic Entry */}
-            <div className="space-y-2">
-              <label
-                htmlFor="topicEntry"
-                className="block text-base md:text-lg font-medium text-white"
-              >
-                Select Topic to Learn
-              </label>
-              <input
-                type="text"
-                id="topicEntry"
-                name="topicEntry"
-                className="w-full p-3 rounded-lg bg-secondary placeholder-gray-400 text-white focus:ring-2 focus:ring-accent focus:outline-none"
-                placeholder="e.g., Rational Numbers, Photosynthesis"
-              />
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex justify-center mt-4">
-              <button
-                type="submit"
-                className="px-6 py-2 rounded-lg btn btn-info"
-              >
-                Submit
-              </button>
-            </div>
-          </form>
-
-          {/* Warning Alert */}
-          {warning && (
-            <div
-              className="mt-4 p-3 bg-red-500 bg-opacity-20 border border-red-600 rounded-lg text-center text-white"
-              role="alert"
+      <div className="max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row justify-center items-center gap-8">
+        {/* Image Section */}
+        <div className="w-full lg:w-1/3 flex justify-center mb-6 lg:mb-0">
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+            <img
+              src={img5}
+              alt="Dot Point Summary"
+              className="relative w-full h-auto object-cover rounded-lg shadow-2xl transform transition-all duration-500 hover:scale-[1.01]"
+            />
+          </div>
+        </div>
+        
+        {/* Form Section */}
+        <div className="w-full lg:w-2/3 max-w-2xl">
+          <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 md:p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm">
+            <h1 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+              Dot Point Summary
+            </h1>
+            
+            <form
+              onSubmit={handleSubmit}
+              onKeyDown={handleEnterPressed}
+              className="space-y-6"
             >
-              Please fill all the fields!
-            </div>
-          )}
+              {/* Subject Entry */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="SubjectEntry"
+                  className="block text-base md:text-lg font-medium text-white"
+                >
+                  Enter the Subject
+                </label>
+                <input
+                  type="text"
+                  id="SubjectEntry"
+                  name="SubjectEntry"
+                  className="w-full p-3 rounded-lg bg-[var(--primary-black)]/60 border border-[var(--accent-teal)]/20 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all"
+                  placeholder="e.g., Mathematics, Physics"
+                />
+              </div>
+
+              {/* Topic Entry */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="topicEntry"
+                  className="block text-base md:text-lg font-medium text-white"
+                >
+                  Select Topic to Learn
+                </label>
+                <input
+                  type="text"
+                  id="topicEntry"
+                  name="topicEntry"
+                  className="w-full p-3 rounded-lg bg-[var(--primary-black)]/60 border border-[var(--accent-teal)]/20 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all"
+                  placeholder="e.g., Rational Numbers, Photosynthesis"
+                />
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex justify-center mt-6">
+                <button
+                  type="submit"
+                  className="px-8 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] font-medium"
+                >
+                  Generate Summary
+                </button>
+              </div>
+            </form>
+
+            {/* Warning Alert */}
+            {warning && (
+              <div className="mt-6 p-4 bg-red-500/20 border border-red-600 rounded-lg text-center text-white">
+                Please fill all the required fields!
+              </div>
+            )}
+          </div>
         </div>
       </div>
       

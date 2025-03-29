@@ -7,6 +7,7 @@ import HomeButton from "../HomeButton";
 import Speech from "react-speech";
 import { HiMiniStop } from "react-icons/hi2";
 import { PiSpeakerHighFill } from "react-icons/pi";
+import { IoArrowBack, IoArrowForward, IoCheckmarkDone, IoDocumentText } from "react-icons/io5";
 
 const LearningTopic = () => {
   const navigate = useNavigate();
@@ -202,149 +203,173 @@ const LearningTopic = () => {
     },
     stop: {
       display: 'none', // Hide the default stop button
+    },
+    pause: {
+      display: 'none', // Hide the default pause button
+    },
+  };
+
+  const cancel = () => {
+    if (isSpeaking && speechRef.current) {
+      setIsSpeaking(false);
+      speechRef.current.pause();
     }
   };
 
-  const handleDownloadPdf = async () => {
-    const { default: jsPDF } = await import("jspdf");
-    const { default: html2canvas } = await import("html2canvas");
-
-    const input = document.getElementById("output-container");
-    html2canvas(input, { scale: 2 }) // Reduce the scale from 5 to 2
-      .then((canvas) => {
-        const imgData = canvas.toDataURL("image/jpeg", 0.8); // Change to JPEG and lower quality
-        const pdfWidth = canvas.width * 0.75; // Convert pixels to points
-        const pdfHeight = canvas.height * 0.75; // Convert pixels to points
-
-        // Create the PDF document with custom dimensions
-        const pdf = new jsPDF({
-          orientation: pdfWidth > pdfHeight ? "landscape" : "portrait",
-          unit: "pt",
-          format: [pdfWidth, pdfHeight],
-        });
-
-        pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`${topic} Part -${currentPart}.pdf`);
-      })
-      .catch((err) => {
-        console.error("Failed to generate PDF: ", err);
-      });
-  };
-
   return (
-    <div
-      className="min-h-screen w-screen bg-gradient-to-b from-black via-secondary to-black text-white py-12 px-6 flex flex-col items-center"
-      id="container"
-    >
-      <div className="w-full max-w-4xl bg-gradient-to-r from-secondary via-60% to-black from-65% p-2 rounded-lg shadow-lg">
-        <div className="mb-6 text-center">
-          <h4 className="text-2xl font-bold text-white mb-4">
-            Topic Learning Part - {currentPart}
-          </h4>
-          <div className="flex flex-wrap justify-center items-center gap-4 mb-4">
+    <div className="min-h-screen w-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-6 md:py-10 px-4 md:px-6 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
+      
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Header */}
+        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <button 
+              onClick={handleBack}
+              className="text-[var(--accent-teal)] hover:text-white transition-colors flex items-center gap-2"
+            >
+              <IoArrowBack size={20} />
+              <span>Back</span>
+            </button>
+            <h1 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+              {topic}
+            </h1>
             <button
-              className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
+              onClick={handleCopyToClipboard}
+              className="text-[var(--accent-teal)] hover:text-white transition-colors flex items-center gap-2"
+            >
+              <IoDocumentText size={20} />
+              <span>Copy</span>
+            </button>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="w-full h-2 bg-[var(--primary-black)]/60 rounded-full mb-4 overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] transition-all"
+              style={{
+                width: `${(currentPart / parts) * 100}%`,
+              }}
+            />
+          </div>
+          
+          {/* Part Navigation */}
+          <div className="flex justify-center gap-2 mb-2">
+            {Array.from({ length: parts }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  cancel();
+                  setCurrentPart(i + 1);
+                }}
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                  currentPart === i + 1
+                    ? "bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white"
+                    : "bg-[var(--primary-black)]/40 text-gray-300 hover:bg-[var(--primary-black)]/60"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+          
+          {/* Speech Controls */}
+          <div className="flex justify-center gap-4 mt-4">
+            <button
               onClick={handleSpeak}
+              disabled={loading || isSpeaking}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-all ${
+                isSpeaking
+                  ? "bg-[var(--primary-black)]/60 text-gray-400 cursor-not-allowed"
+                  : "bg-[var(--primary-black)]/40 text-[var(--accent-teal)] hover:bg-[var(--primary-black)]/60"
+              }`}
             >
-              {isSpeaking ? "Speaking..." : <PiSpeakerHighFill />}
+              <PiSpeakerHighFill size={20} />
+              <span>Listen</span>
             </button>
             <button
-              className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
               onClick={handleStop}
+              disabled={!isSpeaking}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-all ${
+                !isSpeaking
+                  ? "bg-[var(--primary-black)]/60 text-gray-400 cursor-not-allowed"
+                  : "bg-[var(--primary-black)]/40 text-red-400 hover:bg-[var(--primary-black)]/60"
+              }`}
             >
-              <HiMiniStop />
+              <HiMiniStop size={20} />
+              <span>Stop</span>
             </button>
-            <label className="flex items-center gap-2">
-              Speed:
-              <input
-                type="range"
-                min="0.5"
-                max="2"
-                step="0.1"
-                value={speechRate}
-                onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
-                className="w-32 rounded-lg bg-secondary text-white"
-              />
-              <span>{speechRate}x</span>
-            </label>
-            {/* Hidden Speech component controlled via ref */}
-            <div style={{ display: 'none' }}>
-              <Speech
-                ref={speechRef}
-                text={currentSpeechResponse}
-                pitch={1}
-                rate={speechRate}
-                volume={1}
-                lang="en-US"
-                voice="Google US English"
-                style={speechStyle}
-              />
-            </div>
           </div>
         </div>
-
-
-        {loading ? (
-          <LoadingSpinner /> // Render spinner when loading
-        ) : (
-          <>
-            <div
-              id="output-container"
-              className="p-2 rounded-lg bg-secondary text-white"
-            >
-              <ReactMarkdown
-                className="max-w-auto text-white"
-                children={response}
-              />
+        
+        {/* Content */}
+        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-6">
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <LoadingSpinner />
             </div>
-            <div
-              className="flex flex-wrap justify-center gap-4 mt-6"
-              id="buttonGroup"
-            >
-              <button
-                className="btn btn-info px-6 py-2 rounded-lg transition-all hover:scale-105"
-                onClick={handleBack}
-              >
-                Back
-              </button>
-              <button
-                className="btn btn-info px-6 py-2 rounded-lg transition-all hover:scale-105"
-                onClick={handlePrevious}
-                disabled={currentPart === 1 || loading}
-              >
-                Previous
-              </button>
-              <button
-                className="btn btn-info px-6 py-2 rounded-lg transition-all hover:scale-105"
-                onClick={handleNext}
-                disabled={currentPart === parts || loading}
-              >
-                Next
-              </button>
-              <button
-                className="btn btn-info px-6 py-2 rounded-lg transition-all hover:scale-105"
-                onClick={handleFinish}
-                disabled={currentPart === parts || loading}
-              >
-                Finish
-              </button>
-              <button
-                className="btn btn-info px-6 py-2 rounded-lg transition-all hover:scale-105"
-                onClick={handleCopyToClipboard}
-              >
-                Copy to Clipboard
-              </button>
-              <button
-                className="btn btn-info px-6 py-2 rounded-lg transition-all hover:scale-105"
-                onClick={handleDownloadPdf}
-              >
-                Download Pdf
-              </button>
+          ) : (
+            <div className="prose prose-invert max-w-none prose-headings:text-[var(--accent-teal)] prose-a:text-[var(--accent-teal)] prose-strong:text-white">
+              <ReactMarkdown>{response}</ReactMarkdown>
             </div>
-          </>
-        )}
-
-        <HomeButton className="mt-6 btn btn-accent px-6 py-2 rounded-lg" />
+          )}
+        </div>
+        
+        {/* Navigation Buttons */}
+        <div className="flex justify-between items-center gap-4 mb-6">
+          <button
+            onClick={handlePrevious}
+            disabled={currentPart === 1}
+            className={`px-6 py-3 rounded-lg flex items-center gap-2 transition-all ${
+              currentPart === 1
+                ? "bg-[var(--primary-black)]/60 text-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white hover:opacity-90"
+            }`}
+          >
+            <IoArrowBack size={20} />
+            <span>Previous</span>
+          </button>
+          
+          {currentPart < parts ? (
+            <button
+              onClick={handleNext}
+              className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg flex items-center gap-2 hover:opacity-90 transition-all"
+            >
+              <span>Next</span>
+              <IoArrowForward size={20} />
+            </button>
+          ) : (
+            <button
+              onClick={handleFinish}
+              className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg flex items-center gap-2 hover:opacity-90 transition-all"
+            >
+              <span>Finish</span>
+              <IoCheckmarkDone size={20} />
+            </button>
+          )}
+        </div>
+      </div>
+      
+      {/* Hidden Speech component */}
+      <div className="hidden">
+        <Speech
+          ref={speechRef}
+          text={currentSpeechResponse}
+          rate={speechRate}
+          pitch={1}
+          volume={1}
+          lang="en-US"
+          voice="Google UK English Female"
+          onEnd={() => setIsSpeaking(false)}
+          style={speechStyle}
+        />
+      </div>
+      
+      {/* Home Button */}
+      <div className="fixed bottom-6 right-6 z-10">
+        <HomeButton />
       </div>
     </div>
   );

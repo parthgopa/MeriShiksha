@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import APIService from "../API"; // Assuming APIService is in the same directory
+import APIService from "../API"; 
 import LoadingSpinner from "../LoadingSpinner";
 import { useNavigate } from "react-router";
 import HomeButton from "../HomeButton";
 import img2 from "../../assets/inputimages/img2.jpg";
+import { FaPlus, FaTrash, FaRedo, FaCheck, FaArrowRight } from "react-icons/fa";
 
 const TopicsList = () => {
   const [Topics, setTopics] = useState([]);
@@ -97,8 +98,6 @@ const TopicsList = () => {
 
   // Finalize topics
   const finalizeTopics = () => {
-    console.log("first time clicked");
-    console.log(finalizedTopics);
     setTopics((prev) => prev.filter((topic) => selectedTopics.includes(topic)));
     setSelectedTopics((prev) =>
       prev.filter((topic) => selectedTopics.includes(topic))
@@ -107,10 +106,11 @@ const TopicsList = () => {
 
     setstartasssessmentbutton(true);
     setTimeout(() =>
-      finaltopicsref.current.scrollIntoView({ behaviour: "scrolling" })
+      finaltopicsref.current.scrollIntoView({ behavior: "smooth" })
     );
   };
-  //handl reset topics
+  
+  //handle reset topics
   const handleResetTopics = () => {
     if (originaltopics) {
       setTopics(originaltopics);
@@ -128,153 +128,179 @@ const TopicsList = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-black via-secondary to-black text-white py-6 md:py-10 px-4 md:px-6 flex flex-col lg:flex-row justify-center items-center gap-6 md:gap-8 overflow-x-hidden">
-      {/* Image Section */}
-      <div className="w-full lg:w-1/3 flex justify-center mb-6 lg:mb-0">
-        <img
-          src={img2}
-          alt="Knowledge Gap Assessment"
-          className="w-3/4 sm:w-1/2 md:w-2/5 lg:w-4/5 h-auto object-cover rounded-lg shadow-lg"
-        />
-      </div>
+    <div className="min-h-screen w-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
       
-      {/* Form and Topics Section */}
-      <div className="w-full lg:w-2/3 max-w-2xl flex flex-col gap-6">
-        {/* Subject Entry Form */}
-        <form className="w-full p-4 md:p-6 mb-5 rounded-lg shadow-lg bg-gradient-to-r from-secondary via-20% to-black">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-4 md:mb-6 text-white">
-            Are You Ready to Level Up Your Knowledge?
-          </h2>
-          
-          <div className="space-y-4">
-            <label
-              htmlFor="SubjectEntry"
-              className="block text-base md:text-lg font-medium text-white"
-            >
-              Select your subject and begin the challenge
-            </label>
-            <input
-              type="text"
-              id="SubjectEntry"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              className="w-full p-3 rounded-lg bg-secondary placeholder-gray-400 text-white focus:ring-2 focus:ring-accent focus:outline-none"
-              placeholder="e.g., Mathematics, Biology, Physics"
+      <div className="max-w-6xl mx-auto relative z-10 flex flex-col lg:flex-row items-center gap-8">
+        {/* Image Section */}
+        <div className="w-full lg:w-1/3 flex justify-center mb-6 lg:mb-0">
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+            <img
+              src={img2}
+              alt="Knowledge Gap Assessment"
+              className="relative w-3/4 sm:w-1/2 md:w-2/5 lg:w-4/5 h-auto object-cover rounded-lg shadow-2xl"
             />
-            
-            {loading && (
-              <div className="flex justify-center my-4">
-                <LoadingSpinner />
-              </div>
-            )}
-            
-            <div className="flex justify-center mt-4">
-              <button
-                onClick={fetchTopicsFromAPI}
-                className="px-6 py-2 rounded-lg btn btn-info"
-                disabled={loading}
-              >
-                {loading ? "Fetching..." : "Fetch Topics"}
-              </button>
-            </div>
           </div>
-        </form>
-
-        {/* Topics List Section */}
-        {hideInfo && (
-          <div className="w-full p-4 md:p-6 mb-5 rounded-lg shadow-lg bg-gradient-to-r from-secondary via-20% to-black">
-            {/* Topics List */}
-            <div className="mb-6">
-              <h4 className="text-xl md:text-2xl font-semibold mb-4 text-white text-center">
-                Topics
-              </h4>
-              <ul className="space-y-2 max-h-80 overflow-y-auto p-2">
-                {Topics.map((topic, index) => (
-                  <li
-                    key={index}
-                    className="flex w-full items-center bg-neutral-700 p-2 rounded-lg text-white"
-                  >
-                    <label className="flex items-center w-full cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={selectedTopics.includes(topic)}
-                        onChange={() => toggleTopic(topic)}
-                        className="form-checkbox mr-3 h-5 w-5 text-accent focus:ring-accent"
-                      />
-                      <span className="text-white text-sm md:text-base">{topic}</span>
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Add Topic */}
-            <div className="mb-6">
-              <div className="flex flex-col sm:flex-row gap-3">
+        </div>
+        
+        {/* Form and Topics Section */}
+        <div className="w-full lg:w-2/3 max-w-2xl flex flex-col gap-6">
+          {/* Subject Entry Form */}
+          <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm">
+            <h2 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+              Identify Your Knowledge Gaps
+            </h2>
+            
+            <form onSubmit={fetchTopicsFromAPI} className="space-y-6">
+              <div className="space-y-2">
+                <label
+                  htmlFor="SubjectEntry"
+                  className="block text-lg font-medium text-white"
+                >
+                  Enter a subject to assess your knowledge
+                </label>
                 <input
                   type="text"
-                  placeholder="Add new topic"
-                  value={newTopic}
-                  onChange={(e) => setNewTopic(e.target.value)}
-                  className="flex-grow p-3 rounded-lg bg-secondary placeholder-gray-400 text-white focus:ring-2 focus:ring-accent focus:outline-none"
+                  id="SubjectEntry"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  className="w-full p-4 rounded-xl bg-[var(--primary-black)]/60 text-white border border-[var(--accent-teal)]/20 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent placeholder-gray-400 transition-all"
+                  placeholder="e.g., Mathematics, Biology, Physics"
                 />
+              </div>
+              
+              {loading && (
+                <div className="flex justify-center items-center py-4">
+                  <LoadingSpinner />
+                  <p className="ml-4 text-lg animate-pulse">Generating topics...</p>
+                </div>
+              )}
+              
+              <div className="flex justify-center">
                 <button
-                  onClick={addTopic}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition-all transform hover:scale-105"
+                  type="submit"
+                  className="px-8 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center gap-2"
+                  disabled={loading}
                 >
-                  Add Topic
+                  <span>{loading ? "Generating..." : "Generate Topics"}</span>
+                  {!loading && <FaArrowRight />}
                 </button>
               </div>
-            </div>
+            </form>
+          </div>
 
-            {/* Action Buttons */}
-            <div className="mb-6 flex flex-wrap justify-center gap-3">
-              <button
-                onClick={finalizeTopics}
-                className="px-5 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all transform hover:scale-105"
-              >
-                Lock Topics
-              </button>
-              <button
-                onClick={handleResetTopics}
-                className="px-5 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 transition-all transform hover:scale-105"
-              >
-                Reset Topics
-              </button>
-            </div>
-
-            {/* Display Finalized Topics */}
-            {finalizedTopics.length > 0 && (
-              <div className="mb-6" ref={finaltopicsref}>
-                <h4 className="text-xl font-semibold mb-4 text-white text-center">
-                  Locked Topics
-                </h4>
-                <ul className="space-y-2 max-h-80 overflow-y-auto p-2">
-                  {finalizedTopics.map((topic, index) => (
+          {/* Topics List Section */}
+          {hideInfo && (
+            <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] to-white">
+                  Key Topics in {subject}
+                </h3>
+                
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleResetTopics}
+                    className="p-2 rounded-lg bg-[var(--primary-black)] text-white hover:bg-[var(--primary-black)]/80 transition-all flex items-center gap-1"
+                    title="Reset to original topics"
+                  >
+                    <FaRedo className="text-[var(--accent-teal)]" />
+                    <span className="hidden sm:inline">Reset</span>
+                  </button>
+                  
+                  <button
+                    onClick={deleteTopics}
+                    className="p-2 rounded-lg bg-[var(--primary-black)] text-white hover:bg-[var(--primary-black)]/80 transition-all flex items-center gap-1"
+                    title="Delete unselected topics"
+                  >
+                    <FaTrash className="text-[var(--accent-teal)]" />
+                    <span className="hidden sm:inline">Delete Unselected</span>
+                  </button>
+                </div>
+              </div>
+              
+              {/* Topics List */}
+              <div className="bg-[var(--primary-black)]/40 rounded-xl p-4 border border-[var(--accent-teal)]/10 mb-6">
+                <ul className="space-y-2 max-h-60 overflow-y-auto custom-scrollbar p-2">
+                  {Topics.map((topic, index) => (
                     <li
                       key={index}
-                      className="bg-secondary p-3 rounded-lg text-white text-sm md:text-base"
+                      className="flex items-center gap-3 p-3 rounded-lg bg-[var(--primary-black)]/60 border border-[var(--accent-teal)]/20 hover:border-[var(--accent-teal)]/40 transition-colors"
                     >
-                      {topic}
+                      <label className="flex items-center w-full cursor-pointer">
+                        <div className="relative">
+                          <input
+                            type="checkbox"
+                            checked={selectedTopics.includes(topic)}
+                            onChange={() => toggleTopic(topic)}
+                            className="sr-only peer"
+                          />
+                          <div className={`flex h-5 w-5 items-center justify-center rounded border ${
+                            selectedTopics.includes(topic) 
+                              ? 'bg-[var(--accent-teal)] border-[var(--accent-teal)]' 
+                              : 'bg-transparent border-gray-400'
+                          } transition-colors`}>
+                            {selectedTopics.includes(topic) && <FaCheck className="text-white text-xs" />}
+                          </div>
+                        </div>
+                        <span className="ml-3 text-white">{topic}</span>
+                      </label>
                     </li>
                   ))}
                 </ul>
               </div>
-            )}
-          </div>
-        )}
-
-        {/* Start Assessment Button */}
-        {startasssessmentbutton && (
-          <div className="flex justify-center mb-6">
-            <button
-              onClick={startAssessment}
-              className="px-6 py-2 rounded-lg btn btn-info hover:scale-105"
-            >
-              Let's Go!
-            </button>
-          </div>
-        )}
+              
+              {/* Add New Topic */}
+              <div className="mb-6">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={newTopic}
+                    onChange={(e) => setNewTopic(e.target.value)}
+                    placeholder="Add a new topic"
+                    className="flex-1 p-3 rounded-lg bg-[var(--primary-black)]/60 text-white border border-[var(--accent-teal)]/20 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent placeholder-gray-400 transition-all"
+                  />
+                  <button
+                    onClick={addTopic}
+                    className="p-3 rounded-lg bg-[var(--primary-black)] text-white hover:bg-[var(--primary-black)]/80 transition-all"
+                    disabled={!newTopic.trim()}
+                  >
+                    <FaPlus className="text-[var(--accent-teal)]" />
+                  </button>
+                </div>
+              </div>
+              
+              {/* Finalize Button */}
+              <div className="flex justify-center">
+                <button
+                  onClick={finalizeTopics}
+                  className="px-8 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center gap-2"
+                >
+                  <span>Finalize Topics</span>
+                  <FaCheck />
+                </button>
+              </div>
+              
+              {/* Start Assessment Button */}
+              {startasssessmentbutton && (
+                <div ref={finaltopicsref} className="mt-8 text-center">
+                  <p className="mb-4 text-lg text-[var(--accent-teal)]">
+                    Your topics have been finalized. Ready to start the assessment?
+                  </p>
+                  <button
+                    onClick={startAssessment}
+                    className="px-8 py-3 bg-[var(--accent-teal)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center gap-2 mx-auto"
+                  >
+                    <span>Start Assessment</span>
+                    <FaArrowRight />
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
       
       {/* Home Button */}

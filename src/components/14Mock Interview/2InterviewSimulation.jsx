@@ -12,7 +12,8 @@ import ReactMarkdown from "react-markdown";
 import Speech from "react-speech";
 import { PiMicrophoneDuotone, PiSpeakerHighFill } from "react-icons/pi";
 import { HiMiniStop } from "react-icons/hi2";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoArrowBack, IoInformationCircle, IoCheckmarkCircle } from "react-icons/io5";
+import { FaRegClock } from "react-icons/fa";
 
 import HomeButton from "../HomeButton";
 
@@ -523,142 +524,175 @@ const InterviewSimulation = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-b from-black via-secondary to-black text-white flex items-center justify-center">
-      <div className="w-screen max-w-7xl mx-auto p-3 md:p-6">
+    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-6 px-4 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
+      
+      <div className="max-w-5xl mx-auto relative z-10">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-          <h2 className="text-3xl font-bold">Mock Interview Simulation</h2>
-          <div className="flex flex-wrap justify-center gap-4 text-lg">
-            <button
-              onClick={() => setShowTips(!showTips)}
-              className="btn btn-info rounded-lg flex items-center gap-2"
-            >
-              <span>Interview Tips</span>
-              <span>{showTips ? "▼" : "▶"}</span>
-            </button>
-            <div className="bg-secondary/50 p-2 rounded-lg">
-              Question Timer: {formatTime(questionTimer)}
+        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center">
+              <button 
+                onClick={handleBack}
+                className="mr-4 text-[var(--accent-teal)] hover:text-white transition-colors"
+              >
+                <IoArrowBack size={24} />
+              </button>
+              <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+                Mock Interview Simulation
+              </h2>
             </div>
-            <div className="bg-secondary/50 p-2 rounded-lg">
-              Total Time: {formatTime(totalTimer)}
+            
+            <div className="flex flex-wrap justify-center gap-3">
+              <button
+                onClick={() => setShowTips(!showTips)}
+                className="px-4 py-2 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg transition-all duration-300 hover:opacity-90 flex items-center gap-2"
+              >
+                <IoInformationCircle className="text-lg" />
+                <span>Interview Tips</span>
+                <span className="ml-1">{showTips ? "▼" : "▶"}</span>
+              </button>
+              
+              <div className="px-4 py-2 bg-[var(--primary-black)]/60 rounded-lg border border-[var(--accent-teal)]/20 flex items-center gap-2">
+                <FaRegClock className="text-[var(--accent-teal)]" />
+                <span className="text-sm text-teal-100">Question:</span>
+                <span className="font-medium">{formatTime(questionTimer)}</span>
+              </div>
+              
+              <div className="px-4 py-2 bg-[var(--primary-black)]/60 rounded-lg border border-[var(--accent-teal)]/20 flex items-center gap-2">
+                <FaRegClock className="text-[var(--accent-teal)]" />
+                <span className="text-sm text-teal-100">Total:</span>
+                <span className="font-medium">{formatTime(totalTimer)}</span>
+              </div>
             </div>
-            <button
-              onClick={handleBack}
-              className="px-6 py-2 bg-dark text-white rounded-lg hover:bg-accent transition-all transform hover:scale-105"
-            >
-              Back
-            </button>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 gap-6">
-          {/* Interview Area */}
-          <div className="w-screen max-w-7xl mx-auto">
-            <div className="bg-secondary/20 p-3 rounded-xl shadow-lg">
-              {/* Speech Controls */}
-              <div className="flex flex-wrap justify-center items-center gap-4 mb-4">
-                <button
-                  className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
-                  onClick={handleSpeak}
-                >
-                  {isSpeaking ? "Speaking..." : <PiSpeakerHighFill />}
-                </button>
-                <button
-                  className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
-                  onClick={handleStop}
-                >
-                  <HiMiniStop />
-                </button>
-                <label className="flex items-center gap-2">
-                  Speed:
-                  <input
-                    className="w-32 rounded-lg bg-secondary text-white"
-                    type="range"
-                    min="0.5"
-                    max="2"
-                    step="0.1"
-                    value={speechRate}
-                    onChange={(e) => {
-                      const newRate = parseFloat(e.target.value);
-                      setSpeechRate(newRate);
-                      if (isSpeaking) {
-                        handleStop();
-                        // Small timeout to ensure stop completes before starting again
-                        setTimeout(() => {
-                          handleSpeak();
-                        }, 100);
-                      }
-                    }}
-                  />
-                </label>
-                <span className="text-white font-medium">{speechRate}x</span>
-                {/* Hidden Speech component controlled via ref */}
-                <div style={{ display: 'none' }}>
-                  <Speech
-                    ref={speechRef}
-                    text={currentSpeechResponse}
-                    pitch={1}
-                    rate={speechRate}
-                    volume={1}
-                    lang="en-US"
-                    voice="Google US English"
-                    style={speechStyle}
-                  />
+        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-6">
+          {/* Speech Controls */}
+          <div className="flex flex-wrap justify-center items-center gap-4 mb-6 p-4 bg-[var(--primary-black)]/40 rounded-lg border border-[var(--accent-teal)]/20">
+            <button
+              className={`px-4 py-2 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 ${
+                isSpeaking 
+                  ? "bg-[var(--accent-teal)]/20 text-[var(--accent-teal)] border border-[var(--accent-teal)]/30" 
+                  : "bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] hover:opacity-90"
+              }`}
+              onClick={handleSpeak}
+            >
+              <PiSpeakerHighFill className="text-lg" />
+              <span>{isSpeaking ? "Speaking..." : "Speak"}</span>
+            </button>
+            
+            <button
+              className="px-4 py-2 bg-[var(--primary-black)]/60 rounded-lg border border-[var(--accent-teal)]/20 hover:bg-[var(--primary-black)]/80 transition-all duration-300 flex items-center justify-center gap-2"
+              onClick={handleStop}
+            >
+              <HiMiniStop className="text-lg" />
+              <span>Stop</span>
+            </button>
+            
+            <div className="flex items-center gap-3 px-4 py-2 bg-[var(--primary-black)]/40 rounded-lg border border-[var(--accent-teal)]/20">
+              <span className="text-sm text-teal-100">Speed:</span>
+              <input
+                type="range"
+                min="0.5"
+                max="2"
+                step="0.1"
+                value={speechRate}
+                onChange={(e) => {
+                  const newRate = parseFloat(e.target.value);
+                  setSpeechRate(newRate);
+                  if (isSpeaking) {
+                    handleStop();
+                    // Small timeout to ensure stop completes before starting again
+                    setTimeout(() => {
+                      handleSpeak();
+                    }, 100);
+                  }
+                }}
+                className="w-32 h-2 bg-[var(--primary-black)]/60 rounded-lg appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--accent-teal)]"
+              />
+              <span className="text-sm font-medium">{speechRate}x</span>
+            </div>
+            
+            {/* Hidden Speech component controlled via ref */}
+            <div style={{ display: 'none' }}>
+              <Speech
+                ref={speechRef}
+                text={currentSpeechResponse}
+                pitch={1}
+                rate={speechRate}
+                volume={1}
+                lang="en-US"
+                voice="Google US English"
+                style={speechStyle}
+              />
+            </div>
+          </div>
+
+          {/* Question and Answer Section */}
+          <div className="space-y-6">
+            {/* Question Display */}
+            <div className="p-6 rounded-xl bg-gradient-to-r from-[var(--primary-black)]/60 to-[var(--primary-violet)]/20 border border-[var(--accent-teal)]/20 mb-6 shadow-lg">
+              <h3 className="text-xl font-semibold mb-3 text-[var(--accent-teal)]">Interviewer Question:</h3>
+              <div className="prose prose-invert max-w-none">
+                <ReactMarkdown>
+                  {currentQuestion || "Loading the question..."}
+                </ReactMarkdown>
+              </div>
+            </div>
+
+            {loading && (
+              <div className="flex flex-col items-center justify-center py-8">
+                <LoadingSpinner />
+                <p className="mt-4 text-teal-100">Preparing next question...</p>
+              </div>
+            )}
+
+            {/* Answer Section */}
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-white to-[var(--accent-teal)]">
+                Your Answer:
+              </h3>
+              <div className="flex flex-col gap-3">
+                <textarea
+                  value={userResponse}
+                  onChange={(e) => setUserResponse(e.target.value)}
+                  placeholder="Type your response here..."
+                  className="w-full p-4 rounded-xl bg-[var(--primary-black)]/60 text-white border border-[var(--accent-teal)]/20 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent min-h-[150px] transition-all"
+                  rows={6}
+                />
+                <div className="flex justify-end">
+                  <button
+                    onClick={handleSpeechInput}
+                    className="p-3 bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white rounded-full hover:opacity-90 transition-all duration-300 shadow-lg"
+                    title="Speech Input"
+                  >
+                    <PiMicrophoneDuotone size={24} />
+                  </button>
                 </div>
               </div>
+            </div>
 
-              {/* Question and Answer Section */}
-              <div className="space-y-4">
-                <div className="bg-secondary/90 p-4 rounded-lg">
-                  <ReactMarkdown className="text-white text-lg">
-                    {currentQuestion || "Loading the question..."}
-                  </ReactMarkdown>
-                </div>
-
-                {loading && <LoadingSpinner />}
-
-                <div className="space-y-2">
-                  <h3 className="text-xl font-semibold text-white">
-                    Your Answer:
-                  </h3>
-                  <div className="flex flex-col gap-2">
-                    <textarea
-                      value={userResponse}
-                      onChange={(e) => setUserResponse(e.target.value)}
-                      placeholder="Type your response here..."
-                      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      rows={6}
-                    />
-                    <button
-                      onClick={handleSpeechInput}
-                      className="p-2 btn btn-dark w-13 text-white rounded-full hover:bg-blue-600 transition-colors"
-                      title="Speech Input"
-                    >
-                      <PiMicrophoneDuotone size={34} />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex justify-end m-4">
-                  {!loading && (
-                    <button
-                      onClick={
-                        isLastQuestion ? finishInterview : handleNextQuestion
-                      }
-                      className={`${
-                        isLastQuestion
-                          ? "bg-green-600 hover:bg-green-700"
-                          : "bg-teal-100 hover:bg-blue-700"
-                      } text-white font-bold py-3 px-6 rounded-lg transition-all hover:scale-105`}
-                      disabled={loading || !userResponse.trim()}
-                    >
-                      {isLastQuestion ? "Finish Interview" : "Next Question"}
-                    </button>
-                  )}
-                </div>
-              </div>
+            {/* Action Buttons */}
+            <div className="flex justify-end mt-6">
+              {!loading && (
+                <button
+                  onClick={isLastQuestion ? finishInterview : handleNextQuestion}
+                  className={`px-6 py-3 rounded-lg shadow-lg transition-all duration-300 transform hover:opacity-90 flex items-center gap-2 ${
+                    isLastQuestion
+                      ? "bg-gradient-to-r from-green-500 to-[var(--accent-teal)]"
+                      : "bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)]"
+                  } text-white font-medium`}
+                  disabled={loading || !userResponse.trim()}
+                >
+                  <span>{isLastQuestion ? "Finish Interview" : "Next Question"}</span>
+                  {isLastQuestion ? <IoCheckmarkCircle className="text-lg" /> : <IoArrowBack className="text-lg transform rotate-180" />}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -666,24 +700,24 @@ const InterviewSimulation = () => {
 
       {/* Interview Tips Modal - For all screen sizes */}
       {showTips && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-secondary/90 rounded-xl p-6 m-4 max-h-[80vh] w-full max-w-md overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-white">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-gradient-to-br from-[var(--primary-black)] to-[var(--primary-violet)]/30 p-6 rounded-xl border border-[var(--accent-teal)]/20 shadow-2xl max-w-md w-full mx-4 overflow-y-auto max-h-[80vh]">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-[var(--accent-teal)]">
                 Interview Tips
               </h3>
               <button
                 onClick={() => setShowTips(false)}
-                className="p-2 hover:bg-secondary/50 rounded-full"
+                className="p-2 hover:bg-[var(--primary-black)]/60 rounded-full transition-colors"
               >
-                <IoClose size={24} />
+                <IoClose size={24} className="text-[var(--accent-teal)]" />
               </button>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {interviewTipsData.map((tip, index) => (
                 <div
                   key={index}
-                  className="bg-secondary/30 p-3 rounded-lg text-xl"
+                  className="p-4 rounded-lg bg-[var(--primary-black)]/60 border border-[var(--accent-teal)]/10 text-white"
                 >
                   {tip}
                 </div>
@@ -692,17 +726,20 @@ const InterviewSimulation = () => {
           </div>
         </div>
       )}
+      
       {/* Speech Modal */}
       {showSpeechModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-gradient-to-br from-[var(--primary-black)] to-[var(--primary-violet)]/30 p-6 rounded-xl border border-[var(--accent-teal)]/20 shadow-2xl max-w-md w-full mx-4">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-bold text-gray-800">Speech Input</h3>
+              <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-[var(--accent-teal)]">
+                Speech Input
+              </h3>
               <button
                 onClick={closeSpeechModal}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-2 hover:bg-[var(--primary-black)]/60 rounded-full transition-colors"
               >
-                <IoClose size={24} className="text-gray-600" />
+                <IoClose size={24} className="text-[var(--accent-teal)]" />
               </button>
             </div>
 
@@ -717,15 +754,15 @@ const InterviewSimulation = () => {
                     }
                   }}
                   disabled={isProcessingSpeech}
-                  className={`p-6 rounded-full ${
+                  className={`p-6 rounded-full shadow-lg transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
                     isRecording
-                      ? "bg-red-500 hover:bg-red-600 animate-pulse"
-                      : "bg-blue-500 hover:bg-blue-600"
-                  } text-white transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg`}
+                      ? "bg-gradient-to-r from-red-500 to-red-600 animate-pulse"
+                      : "bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)]"
+                  }`}
                 >
                   <PiMicrophoneDuotone
                     size={40}
-                    className={isRecording ? "animate-bounce" : ""}
+                    className={isRecording ? "animate-bounce text-white" : "text-white"}
                   />
                 </button>
                 {isRecording && (
@@ -737,7 +774,7 @@ const InterviewSimulation = () => {
                   </div>
                 )}
               </div>
-              <p className="text-lg font-medium text-gray-600">
+              <p className="text-lg font-medium text-white">
                 {isProcessingSpeech
                   ? "Processing speech..."
                   : isRecording
@@ -752,24 +789,27 @@ const InterviewSimulation = () => {
             </div>
 
             <div className="mt-8">
-              <p className="text-sm font-medium text-gray-700 mb-2">Preview:</p>
-              <div className="p-4 bg-gray-50 text-gray-800 rounded-lg min-h-[120px] max-h-[200px] overflow-y-auto border border-gray-200 shadow-inner">
+              <p className="text-sm font-medium text-teal-100 mb-2">Preview:</p>
+              <div className="p-4 bg-[var(--primary-black)]/60 text-white rounded-lg min-h-[120px] max-h-[200px] overflow-y-auto border border-[var(--accent-teal)]/20 shadow-inner">
                 {previewText || "Your speech will appear here..."}
               </div>
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={handleFinalSubmit}
                   disabled={!previewText.trim()}
-                  className="px-6 py-3 bg-blue-500 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors shadow-md transform hover:scale-105"
+                  className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-all shadow-lg flex items-center gap-2"
                 >
-                  Final Submit
+                  <span>Use This Response</span>
+                  <IoCheckmarkCircle className="text-lg" />
                 </button>
               </div>
             </div>
           </div>
         </div>
       )}
-      <HomeButton></HomeButton>
+      <div className="fixed bottom-6 right-6 z-10">
+        <HomeButton />
+      </div>
     </div>
   );
 };

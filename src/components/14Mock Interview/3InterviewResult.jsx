@@ -1,7 +1,9 @@
 import React, { useCallback, useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown";
 import HomeButton from "../HomeButton";
+import { IoDocumentTextOutline, IoArrowBack } from "react-icons/io5";
+import { FaRegClock } from "react-icons/fa";
 
 /**
  * Interview Result Component
@@ -9,8 +11,10 @@ import HomeButton from "../HomeButton";
  */
 const InterviewResult = () => {
   const location = useLocation(null);
+  const navigate = useNavigate();
   const { analysis, totalTime, questionTimes } = location.state || {};
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [downloadStatus, setDownloadStatus] = useState("Download PDF Report");
 
   /**
    * Formats time in seconds to a readable string
@@ -27,6 +31,7 @@ const InterviewResult = () => {
   const handleDownloadPdf = async () => {
     if (isGeneratingPdf) return;
     setIsGeneratingPdf(true);
+    setDownloadStatus("Generating PDF...");
 
     try {
       const { default: jsPDF } = await import("jspdf");
@@ -79,62 +84,91 @@ const InterviewResult = () => {
 
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
       pdf.save("Interview_Analysis.pdf");
+      
+      setDownloadStatus("Downloaded!");
+      setTimeout(() => setDownloadStatus("Download PDF Report"), 2000);
     } catch (error) {
       console.error("Failed to generate PDF:", error);
-      alert("Failed to generate PDF. Please try again.");
+      setDownloadStatus("Download Failed");
+      setTimeout(() => setDownloadStatus("Download PDF Report"), 2000);
     } finally {
       setIsGeneratingPdf(false);
     }
   };
 
+  const handleBack = () => {
+    navigate("/mock-interview");
+  };
+
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-b from-black via-secondary to-black text-white">
-      <div className="max-w-4xl mx-auto p-3">
+    <div className="min-h-screen w-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
+      
+      <div className="max-w-4xl mx-auto relative z-10">
         {/* Header */}
-        <div className="bg-secondary/30 rounded-xl p-3 mb-8">
-          <h1 className="text-4xl text-white font-bold mb-4 text-center bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-            Interview Analysis Report
-          </h1>
+        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-6">
+          <div className="flex items-center mb-4">
+            <button 
+              onClick={handleBack}
+              className="mr-4 text-[var(--accent-teal)] hover:text-white transition-colors"
+            >
+              <IoArrowBack size={24} />
+            </button>
+            <h1 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+              Interview Analysis Report
+            </h1>
+          </div>
           
           {/* Interview Duration */}
           {totalTime && (
             <div className="flex flex-wrap justify-center gap-4 mb-6">
-              <div className="bg-secondary/50 p-3 rounded-lg text-lg text-white">
-                Total Interview Duration: {formatTime(totalTime)}
+              <div className="px-6 py-3 bg-[var(--primary-black)]/60 rounded-lg border border-[var(--accent-teal)]/20 flex items-center gap-2">
+                <FaRegClock className="text-[var(--accent-teal)] text-xl" />
+                <span className="text-lg">Total Interview Duration: <span className="font-semibold text-white">{formatTime(totalTime)}</span></span>
               </div>
             </div>
           )}
+        </div>
 
-          {/* Question Response Times */}
-          {questionTimes && questionTimes.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-4 text-center">Response Times</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {questionTimes.map((item, index) => (
-                  <div key={index} className="bg-secondary/20 p-4 rounded-lg">
-                    <div className="font-medium text-gray-300 mb-2">Question {index + 1}</div>
-                    <div className="text-sm text-gray-400 mb-2">{item.question}</div>
-                    <div className="text-lg font-semibold text-blue-400">
-                      Time: {formatTime(item.timeSpent)}
-                    </div>
+        {/* Question Response Times */}
+        {questionTimes && questionTimes.length > 0 && (
+          <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-6">
+            <h2 className="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-white to-[var(--accent-teal)]">
+              Response Times
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {questionTimes.map((item, index) => (
+                <div key={index} className="p-4 rounded-lg bg-[var(--primary-black)]/60 border border-[var(--accent-teal)]/20 hover:border-[var(--accent-teal)]/40 transition-all">
+                  <div className="font-medium text-[var(--accent-teal)] mb-2">Question {index + 1}</div>
+                  <div className="text-sm text-gray-300 mb-3 line-clamp-2">{item.question}</div>
+                  <div className="flex items-center gap-2 text-white">
+                    <FaRegClock className="text-[var(--accent-teal)]" />
+                    <span className="font-semibold">{formatTime(item.timeSpent)}</span>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Analysis Content */}
-          <div id="pdf-content" className="bg-secondary/20 p-3 rounded-lg">
-            <div className="prose prose-invert max-w-none">
+        {/* Analysis Content */}
+        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-6">
+          <h2 className="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-white to-[var(--accent-teal)]">
+            Detailed Analysis
+          </h2>
+          <div id="pdf-content" className="p-6 rounded-xl bg-[var(--primary-black)]/40 border border-[var(--accent-teal)]/20">
+            <div className="prose prose-invert max-w-none prose-headings:text-[var(--accent-teal)] prose-strong:text-white prose-li:marker:text-[var(--accent-teal)]">
               <ReactMarkdown>{analysis || "No analysis data available."}</ReactMarkdown>
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
-        {/* <div className="flex flex-wrap justify-center gap-4 mt-6">
+        <div className="flex flex-wrap justify-center gap-4 mt-8 mb-6">
           <button
-            className={`bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all hover:scale-105 flex items-center gap-2 ${
+            className={`px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:opacity-90 flex items-center gap-2 ${
               isGeneratingPdf ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={handleDownloadPdf}
@@ -157,23 +191,21 @@ const InterviewResult = () => {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   />
                 </svg>
-                Generating PDF...
+                {downloadStatus}
               </>
             ) : (
               <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-                Download PDF Report
+                <IoDocumentTextOutline className="text-xl" />
+                {downloadStatus}
               </>
             )}
           </button>
-        </div> */}
-
-        {/* Home Button */}
-        <div className="mt-6">
-          <HomeButton />
         </div>
+      </div>
+
+      {/* Home Button */}
+      <div className="fixed bottom-6 right-6 z-10">
+        <HomeButton />
       </div>
     </div>
   );
