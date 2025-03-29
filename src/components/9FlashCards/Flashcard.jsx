@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import APIService from "../API";
 import { useNavigate } from "react-router";
 import HomeButton from "../HomeButton";
+import { IoDocumentTextOutline, IoClipboardOutline } from "react-icons/io5";
 
 const Flashcards = () => {
   const [loading, setLoading] = useState(false);
@@ -68,138 +69,181 @@ For date: ${date} and time: ${time}(dont display it in output)`;
       alert("There is no flashcard content to copy.");
     }
   };
+  
   const handleEnterPressed = (e) => {
     if (e.key === "Enter") {
-      handleSubmit;
+      handleSubmit(e);
     }
   };
+  
   const handleDownloadPdf = async () => {
-    const { default: jsPDF } = await import("jspdf");
-    const { default: html2canvas } = await import("html2canvas");
+    if (!flashcard) {
+      alert("Please generate flashcard content first.");
+      return;
+    }
+    
+    try {
+      const { default: jsPDF } = await import("jspdf");
+      const { default: html2canvas } = await import("html2canvas");
 
-    const input = document.getElementById("output-container");
+      const input = document.getElementById("output-container");
+      
+      // Create a temporary container with white background
+      const tempContainer = document.createElement("div");
+      tempContainer.style.width = "800px";
+      tempContainer.style.padding = "40px";
+      tempContainer.style.backgroundColor = "#ffffff";
+      tempContainer.style.color = "#000000";
+      
+      // Clone the content
+      const contentClone = input.cloneNode(true);
+      
+      // Adjust styles for PDF
+      const markdownContent = contentClone.querySelector('.markdown-content');
+      if (markdownContent) {
+        markdownContent.style.color = "#000000";
+      }
+      
+      tempContainer.appendChild(contentClone);
+      document.body.appendChild(tempContainer);
 
-    html2canvas(input, { scale: 2 })
-      .then((canvas) => {
-        const imgData = canvas.toDataURL("image/jpeg", 0.8);
-        const pdfWidth = canvas.width * 0.75; // Convert pixels to points
-        const pdfHeight = canvas.height * 0.75; // Convert pixels to points
-
-        // Create the PDF document with custom dimensions
-        const pdf = new jsPDF({
-          orientation: pdfWidth > pdfHeight ? "landscape" : "portrait",
-          unit: "pt",
-          format: [pdfWidth, pdfHeight],
-        });
-
-        pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`Flash Card.pdf`);
-      })
-      .catch((err) => {
-        console.error("Failed to generate PDF: ", err);
+      // Create PDF
+      const canvas = await html2canvas(tempContainer, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: "#ffffff"
       });
+      
+      // Remove temporary container
+      document.body.removeChild(tempContainer);
+
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
+      });
+      
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Flashcards.pdf`);
+    } catch (err) {
+      console.error("Failed to generate PDF: ", err);
+      alert("Failed to generate PDF. Please try again.");
+    }
   };
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-b from-black via-secondary to-black text-white py-10 px-6 flex flex-col lg:flex-row justify-center items-center gap-8">
-      {/* Image Section */}
-      <div className="w-full lg:w-1/3 h-auto flex justify-center">
-        <img
-          src={img1}
-          alt="Career Guidance"
-          className="w-full h-70 sm:w-2/3 md:w-1/2 lg:w-2/3 sm:h-48 md:h-56 lg:h-auto flex justify-center object-cover rounded-lg shadow-lg"
-        />
-      </div>
-      <div className="max-w-2xl w-full p-2 rounded-lg shadow-lg bg-gradient-to-r from-secondary via-20% to-black">
-        <h2
-          className="text-2xl font-bold text-center mb-6 text-white"
-          style={{ fontFamily: "var(--font-heading)" }}
-        >
-          Flash Card
-        </h2>
-
-        <form
-          onSubmit={handleSubmit}
-          onKeyDown={handleEnterPressed}
-          className="space-y-6"
-        >
-          {/* Topic Entry */}
-          <div className="space-y-2">
-            <label
-              htmlFor="topicEntry"
-              className="block text-lg font-medium text-white"
-            >
-              Specify the Topic
-            </label>
-            <input
-              type="text"
-              id="topicEntry"
-              name="topicEntry"
-              className="w-full p-3 rounded-lg bg-secondary placeholder-gray-400 text-white focus:ring-2 focus:ring-accent focus:outline-none"
-              placeholder="Springs, graphics, etc"
+    <div className="min-h-screen w-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-6 md:py-10 px-4 md:px-6 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
+      
+      <div className="max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row justify-center items-center gap-8">
+        {/* Image Section */}
+        <div className="w-full lg:w-1/3 flex justify-center mb-6 lg:mb-0">
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+            <img
+              src={img1}
+              alt="Flashcards"
+              className="relative w-full h-auto object-cover rounded-lg shadow-2xl transform transition-all duration-500 hover:scale-[1.01]"
             />
           </div>
-
-          {/* Generate Button */}
-          <div className="text-center">
-            <button
-              type="submit"
-              className="btn btn-info hover:bg-black transition-all transform hover:scale-105"
+        </div>
+        
+        {/* Content Section */}
+        <div className="w-full lg:w-2/3 max-w-2xl">
+          <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-6">
+            <h1 className="text-2xl md:text-3xl font-bold text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+              Flash Cards Generator
+            </h1>
+            
+            <form
+              onSubmit={handleSubmit}
+              onKeyDown={handleEnterPressed}
+              className="space-y-6"
             >
-              Generate
-            </button>
-          </div>
-        </form>
-
-        {/* Loading Spinner */}
-        {loading ? (
-          <div className="flex justify-center items-center mt-6">
-            <LoadingSpinner />
-          </div>
-        ) : (
-          flashcard && (
-            <>
-              <div
-                id="output-container"
-                className="mt-6 p-3 bg-secondary rounded-lg"
-              >
-                <ReactMarkdown
-                  className="text-white whitespace-pre-wrap"
-                  children={flashcard}
+              {/* Topic Entry */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="topicEntry"
+                  className="block text-lg font-medium text-white"
+                >
+                  Specify the Topic
+                </label>
+                <input
+                  type="text"
+                  id="topicEntry"
+                  name="topicEntry"
+                  className="w-full p-3 rounded-lg bg-[var(--primary-black)]/60 border border-[var(--accent-teal)]/20 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all"
+                  placeholder="Springs, graphics, etc"
                 />
               </div>
-              <div className="flex space-x-4 mt-6 justify-center">
+
+              {/* Generate Button */}
+              <div className="text-center">
                 <button
-                  className="btn btn-dark hover:bg-gray-700 transition-all transform hover:scale-105"
-                  onClick={handleCopyToClipboard}
+                  type="submit"
+                  className="px-8 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] font-medium"
                 >
-                  Copy to clipboard
-                </button>
-                <button
-                  className="btn btn-secondary hover:bg-gray-600 transition-all transform hover:scale-105"
-                  onClick={handleDownloadPdf}
-                >
-                  Download pdf
+                  Generate Flash Cards
                 </button>
               </div>
-            </>
-          )
-        )}
+            </form>
 
-        {/* Warning Alert */}
-        {warning && (
-          <div
-            className="mt-6 p-4 bg-teal-600 text-black border border-red-800 rounded-lg items-center justify-center flex text-xl"
-            role="alert"
-          >
-            Please enter a topic to generate a card!
+            {/* Warning Alert */}
+            {warning && (
+              <div className="mt-6 p-4 bg-red-500/20 border border-red-600 rounded-lg text-center text-white">
+                Please enter a topic to generate flash cards!
+              </div>
+            )}
           </div>
-        )}
 
-        {/* Home Button */}
-        <div className="mt-6">
-          <HomeButton />
+          {/* Loading Spinner */}
+          {loading ? (
+            <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm flex justify-center items-center py-20">
+              <LoadingSpinner />
+            </div>
+          ) : (
+            flashcard && (
+              <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm">
+                <div
+                  id="output-container"
+                  className="mb-6"
+                >
+                  <div className="prose prose-invert max-w-none prose-headings:text-[var(--accent-teal)] prose-a:text-[var(--accent-teal)] prose-strong:text-white markdown-content">
+                    <ReactMarkdown>{flashcard}</ReactMarkdown>
+                  </div>
+                </div>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <button
+                    className="px-6 py-3 bg-[var(--primary-black)]/60 text-white rounded-lg flex items-center gap-2 hover:bg-[var(--primary-black)]/80 transition-all border border-[var(--accent-teal)]/20"
+                    onClick={handleCopyToClipboard}
+                  >
+                    <IoClipboardOutline size={20} />
+                    <span>Copy to clipboard</span>
+                  </button>
+                  <button
+                    className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg flex items-center gap-2 hover:opacity-90 transition-all"
+                    onClick={handleDownloadPdf}
+                  >
+                    <IoDocumentTextOutline size={20} />
+                    <span>Download PDF</span>
+                  </button>
+                </div>
+              </div>
+            )
+          )}
         </div>
+      </div>
+      
+      {/* Home Button */}
+      <div className="fixed bottom-6 right-6 z-10">
+        <HomeButton />
       </div>
     </div>
   );

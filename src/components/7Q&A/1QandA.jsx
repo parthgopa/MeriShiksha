@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import HomeButton from "../HomeButton";
+import { IoArrowForward } from "react-icons/io5";
+import { FaQuestionCircle, FaCheck, FaInfoCircle } from "react-icons/fa";
 
 const QandA = () => {
   const navigate = useNavigate();
@@ -63,7 +65,6 @@ const QandA = () => {
     for (const [key, value] of Object.entries(formData.types)) {
       if (value.checked) {
         let additionalText = ""; // Store additional text based on question type
-        // console.log(key.toLowerCase());
 
         switch (key.toLowerCase().trim()) {
           case "veryshort":
@@ -100,7 +101,6 @@ const QandA = () => {
         prompt += `\n For date: ${date} and time: ${time}(dont display it in output)`;
       }
     }
-    console.log(prompt);
 
     if (subject && topic) {
       navigate("/q-and-a/2page", {
@@ -112,183 +112,213 @@ const QandA = () => {
       });
     } else {
       setWarning(true);
+      setTimeout(() => setWarning(false), 3000);
     }
 
     return prompt;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const subject = e.target[0].value;
-    const topic = e.target[1].value;
-
-    if (subject && topic) {
-      navigate("/q-and-a/2page", {
-        state: {
-          subject: subject,
-          topic: topic,
-        },
-      });
-    } else {
-      setWarning(true);
-    }
-  };
   const handleEnterPressed = (e) => {
     if (e.key === "Enter") {
       generatePrompt;
     }
   };
+
+  // Check if at least one question type is selected and has a count
+  const isFormValid = () => {
+    const hasSubjectAndTopic = formData.subject && formData.topic;
+    const hasValidQuestionType = Object.values(formData.types).some(
+      (type) => type.checked && type.count
+    );
+    return hasSubjectAndTopic && hasValidQuestionType;
+  };
+
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-b from-black via-secondary to-black text-white py-12 px-6 flex justify-center items-center">
-      <div className="max-w-2xl w-full p-8 rounded-lg shadow-lg bg-gradient-to-r from-secondary via-20% to-black">
-        <h2
-          className="text-2xl font-bold text-center mb-6 text-white"
-          style={{ fontFamily: "var(--font-heading)" }}
-        >
-          Questions & Answers
-        </h2>
-        <form
-          onSubmit={generatePrompt}
-          onKeyDown={handleEnterPressed}
-          className="space-y-6"
-        >
-          {/* Subject Entry */}
-          <div className="space-y-2">
-            <label
-              htmlFor="SubjectEntry"
-              className="block text-lg font-medium text-white"
-            >
-              Enter the Subject to study
-            </label>
-            <input
-              type="text"
-              id="SubjectEntry"
-              name="SubjectEntry"
-              className="w-full p-3 rounded-lg bg-secondary placeholder-gray-400 text-white focus:ring-2 focus:ring-accent focus:outline-none"
-              placeholder="Gravity, rockets, biopics, etc."
-            />
-          </div>
-
-          {/* Topic Entry */}
-          <div className="space-y-2">
-            <label
-              htmlFor="topicEntry"
-              className="block text-lg font-medium text-white"
-            >
-              Enter the Topic in Subject
-            </label>
-            <input
-              type="text"
-              id="topicEntry"
-              name="topicEntry"
-              className="w-full p-3 rounded-lg bg-secondary placeholder-gray-400 text-white focus:ring-2 focus:ring-accent focus:outline-none"
-              placeholder="Newton's Law, Momentum, etc."
-            />
-          </div>
-
-          <table className="w-full border-collapse border border-gray-300 text-white">
-            <thead>
-              <tr className="bg-gray-700 text-left">
-                <th className="p-2 border border-gray-500">Select</th>
-                <th className="p-2 border border-gray-500">Question Type</th>
-                <th className="p-2 border border-gray-500">Count</th>
-                <th className="p-2 border border-gray-500">Difficulty</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(formData.types).map(([key, value]) => (
-                <tr key={key} className="bg-gray-800">
-                  {/* Checkbox */}
-                  <td className="p-2 border border-gray-500 text-center">
-                    <input
-                      type="checkbox"
-                      checked={value.checked}
-                      onChange={() => handleCheckboxChange(key)}
-                      className={`rounded text-blue-600 focus:ring-blue-500  ${
-                        value.checked
-                          ? "w-4 h-4"
-                          : "opacity-50 bg-blue-500 h-4 w-4"
-                      }`}
-                    />
-                  </td>
-
-                  {/* Question Type */}
-                  <td className="p-2 border border-gray-500 capitalize">
-                    {key.replace(/([A-Z])/g, " $1").toLowerCase()}
-                  </td>
-
-                  {/* Count Input */}
-                  <td className="p-2 border border-gray-500">
-                    <input
-                      type="number"
-                      min="1"
-                      max="5"
-                      placeholder="Count"
-                      value={value.count}
-                      onChange={(e) =>
-                        handleTypeChange(key, "count", e.target.value)
-                      }
-                      disabled={!value.checked}
-                      className={`w-16 px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        value.checked
-                          ? "border-gray-300"
-                          : "bg-gray-400 cursor-not-allowed"
-                      }`}
-                    />
-                  </td>
-
-                  {/* Difficulty Select */}
-                  <td className="p-2 border border-gray-500">
-                    <select
-                      value={value.difficulty}
-                      onChange={(e) =>
-                        handleTypeChange(key, "difficulty", e.target.value)
-                      }
-                      disabled={!value.checked}
-                      className={`px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        value.checked
-                          ? "border-gray-300"
-                          : "bg-gray-400 cursor-not-allowed"
-                      }
-                      `}
-                    >
-                      <option value="">Select Level</option>
-                      <option value="Primary">Primary</option>
-                      <option value="Secondary">Secondary</option>
-                      <option value="Advanced">Advanced</option>
-                    </select>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* Submit Button */}
-          <div className="text-center">
-            <button
-              type="submit"
-              className="btn btn-info hover:bg-black transition-all transform hover:scale-105"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
-
-        {/* Warning Alert */}
-        {warning && (
-          <div
-            className="mt-6 p-4 bg-teal-600 text-black border border-red-800 rounded-lg items-center justify-center flex text-xl"
-            role="alert"
+    <div className="min-h-screen w-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
+      
+      <div className="max-w-4xl mx-auto relative z-10">
+        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm">
+          <h2 className="text-3xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+            Questions & Answers Generator
+          </h2>
+          
+          <form
+            onSubmit={generatePrompt}
+            onKeyDown={handleEnterPressed}
+            className="space-y-8"
           >
-            Please fill all the fields!
-          </div>
-        )}
+            {/* Subject Entry */}
+            <div className="space-y-2">
+              <label
+                htmlFor="SubjectEntry"
+                className="block text-lg font-medium text-white"
+              >
+                Enter the Subject
+              </label>
+              <input
+                type="text"
+                id="SubjectEntry"
+                name="SubjectEntry"
+                className="w-full p-4 rounded-xl bg-[var(--primary-black)]/60 text-white border border-[var(--accent-teal)]/20 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent placeholder-gray-400 transition-all"
+                placeholder="Physics, Mathematics, History, etc."
+                value={formData.subject}
+                onChange={(e) => handleChange("subject", e.target.value)}
+              />
+            </div>
 
-        <div className="mt-6">
-          <HomeButton />
+            {/* Topic Entry */}
+            <div className="space-y-2">
+              <label
+                htmlFor="topicEntry"
+                className="block text-lg font-medium text-white"
+              >
+                Enter the Topic
+              </label>
+              <input
+                type="text"
+                id="topicEntry"
+                name="topicEntry"
+                className="w-full p-4 rounded-xl bg-[var(--primary-black)]/60 text-white border border-[var(--accent-teal)]/20 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent placeholder-gray-400 transition-all"
+                placeholder="Newton's Laws, Algebra, World War II, etc."
+                value={formData.topic}
+                onChange={(e) => handleChange("topic", e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-4">
+                <FaQuestionCircle className="text-[var(--accent-teal)]" />
+                <h3 className="text-xl font-semibold text-white">Question Types</h3>
+              </div>
+              
+              <div className="bg-[var(--primary-black)]/40 rounded-xl p-4 border border-[var(--accent-teal)]/10">
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse text-white">
+                    <thead>
+                      <tr className="border-b border-[var(--accent-teal)]/20">
+                        <th className="p-3 text-left">Select</th>
+                        <th className="p-3 text-left">Question Type</th>
+                        <th className="p-3 text-left">Count</th>
+                        <th className="p-3 text-left">Difficulty</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(formData.types).map(([key, value]) => (
+                        <tr key={key} className="border-b border-[var(--primary-black)]/40 hover:bg-[var(--primary-black)]/20 transition-colors">
+                          {/* Checkbox */}
+                          <td className="p-3">
+                            <div className="relative">
+                              <input
+                                type="checkbox"
+                                checked={value.checked}
+                                onChange={() => handleCheckboxChange(key)}
+                                className="sr-only peer"
+                                id={`checkbox-${key}`}
+                              />
+                              <label 
+                                htmlFor={`checkbox-${key}`}
+                                className={`flex h-6 w-6 cursor-pointer items-center justify-center rounded-md border ${
+                                  value.checked 
+                                    ? 'bg-[var(--accent-teal)] border-[var(--accent-teal)]' 
+                                    : 'bg-[var(--primary-black)]/40 border-gray-600 hover:border-gray-400'
+                                } transition-colors`}
+                              >
+                                {value.checked && <FaCheck className="text-white text-sm" />}
+                              </label>
+                            </div>
+                          </td>
+
+                          {/* Question Type */}
+                          <td className="p-3 capitalize">
+                            {key.replace(/([A-Z])/g, " $1").toLowerCase()}
+                          </td>
+
+                          {/* Count Input */}
+                          <td className="p-3">
+                            <input
+                              type="number"
+                              min="1"
+                              max="5"
+                              placeholder="1-5"
+                              value={value.count}
+                              onChange={(e) =>
+                                handleTypeChange(key, "count", e.target.value)
+                              }
+                              disabled={!value.checked}
+                              className={`w-20 px-3 py-2 rounded-lg ${
+                                value.checked
+                                  ? "bg-[var(--primary-black)]/60 text-white border border-[var(--accent-teal)]/20 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)]"
+                                  : "bg-[var(--primary-black)]/20 text-gray-500 border border-gray-700 cursor-not-allowed"
+                              } transition-all`}
+                            />
+                          </td>
+
+                          {/* Difficulty Select */}
+                          <td className="p-3">
+                            <select
+                              value={value.difficulty}
+                              onChange={(e) =>
+                                handleTypeChange(key, "difficulty", e.target.value)
+                              }
+                              disabled={!value.checked}
+                              className={`px-3 py-2 rounded-lg ${
+                                value.checked
+                                  ? "bg-[var(--primary-black)]/60 text-white border border-[var(--accent-teal)]/20 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)]"
+                                  : "bg-[var(--primary-black)]/20 text-gray-500 border border-gray-700 cursor-not-allowed"
+                              } transition-all`}
+                            >
+                              <option value="Primary">Primary</option>
+                              <option value="Secondary">Secondary</option>
+                              <option value="Advanced">Advanced</option>
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {/* Info message */}
+            <div className="flex items-start gap-3 p-4 rounded-lg bg-[var(--accent-teal)]/10 border border-[var(--accent-teal)]/20">
+              <FaInfoCircle className="text-[var(--accent-teal)] text-xl mt-1" />
+              <p className="text-gray-300">
+                Select at least one question type and specify the number of questions (1-5) to generate. 
+                Choose the appropriate difficulty level for each question type.
+              </p>
+            </div>
+
+            {/* Warning Alert */}
+            {warning && (
+              <div className="p-4 bg-red-500/20 border border-red-600 rounded-xl text-center text-white animate-pulse">
+                Please fill in the subject, topic, and select at least one question type with a count.
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <div className="flex justify-center mt-8">
+              <button
+                type="submit"
+                className="px-8 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center gap-2"
+              >
+                <span>Generate Questions</span>
+                <IoArrowForward />
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
+      
+      {/* Home Button */}
+      <div className="fixed bottom-6 right-6 z-10">
+        <HomeButton />
       </div>
     </div>
   );
 };
+
 export default QandA;

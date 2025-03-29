@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router"; // Assuming React Router is used for navigation
+import { useLocation, useNavigate } from "react-router";
 import APIService from "../API";
 import LoadingSpinner from "../LoadingSpinner";
 import HomeButton from "../HomeButton";
 import BlackLoadingSpinner from "../BlackLoadingSpinner";
+import { FaArrowRight, FaArrowLeft, FaGraduationCap } from "react-icons/fa";
 
 const Assessment = () => {
   const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
@@ -145,10 +146,10 @@ const Assessment = () => {
 
   if (!mcqs) {
     return (
-      <div className="min-h-screen w-screen bg-gradient-to-b from-black via-secondary to-black text-white py-12 px-1 flex justify-center items-center">
+      <div className="min-h-screen w-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] flex justify-center items-center">
         <div className="flex flex-col items-center">
           <BlackLoadingSpinner />
-          <p className="mt-4 text-white">Loading questions...</p>
+          <p className="mt-4 text-white text-lg animate-pulse">Preparing your assessment questions...</p>
         </div>
       </div>
     );
@@ -156,78 +157,159 @@ const Assessment = () => {
 
   const questions = mcqs[currentLevel];
 
+  // Get level color
+  const getLevelColor = (level) => {
+    switch(level) {
+      case "Primary": return "from-green-500 to-green-600";
+      case "Secondary": return "from-blue-500 to-blue-600";
+      case "Advanced": return "from-purple-500 to-purple-600";
+      default: return "from-[var(--accent-teal)] to-[var(--primary-violet)]";
+    }
+  };
+
+  // Get level icon
+  const getLevelIcon = (level) => {
+    return <FaGraduationCap className="text-white" />;
+  };
+
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-b from-black via-secondary to-black text-white py-12 px-1 flex justify-center items-center">
-      <div className="container mx-auto p-4 text-center">
-        <div className="mb-8">
-          <h4 className="text-2xl font-bold mb-2 mt-0 text-center text-white">
-            Assessment Topic: {topics[currentTopicIndex]}
-          </h4>
-          <ul className="space-y-0">
-            {questions.map((q, index) => (
-              <li
-                key={index}
-                className="bg-gradient-to-r from-black via-gray to-secondary border border-white rounded-lg shadow-md p-3 text-left hover:bg-gray-900 transition-colors m-2"
-              >
-                <h4 className="text-xl font-semibold mb-4 text-white justify-self-start">
-                  {q.question}
-                </h4>
-                {Object.entries(q.options).map(([key, value]) => (
-                  <div
-                    key={key}
-                    className={`flex items-center gap-3 p-2 rounded-lg text-white border border-gray-600 cursor-pointer m-2 ${
-                      answers[currentTopicIndex]?.answers[currentLevel]?.[index]
-                        ?.selectedOption === key
-                        ? "bg-gray-600"
-                        : "hover:bg-gray-600"
-                    }`}
-                    onClick={() => handleAnswer(currentLevel, index, key)}
-                  >
-                    <input
-                      type="radio"
-                      id={`question-${index}-${key}`}
-                      name={`question-${index}`}
-                      value={key}
-                      checked={
-                        answers[currentTopicIndex]?.answers[currentLevel]?.[index]
-                          ?.selectedOption === key
-                      }
-                      onChange={() => handleAnswer(currentLevel, index, key)}
-                      className="peer hidden"
-                    />
-                    <label
-                      htmlFor={`question-${index}-${key}`}
-                      className="text-sm font-medium px-3 py-1 rounded-md transition-all w-full text-white"
-                    >
-                      {value}
-                    </label>
-                  </div>
-                ))}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-6 relative">
-            {LOading && (
-              <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-full">
-                <BlackLoadingSpinner />
-              </div>
-            )}
-            <button
-              onClick={nextStep}
-              className="px-6 py-2 btn btn-info hover:scale-105"
-              disabled={LOading}
-            >
-              {currentLevel === "Advanced" &&
-              currentTopicIndex === topics.length - 1
-                ? "Finish Assessment"
-                : currentLevel === "Advanced"
-                ? "Next Topic"
-                : "Next Level"}
-            </button>
+    <div className="min-h-screen w-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
+      
+      {LOading ? (
+        <div className="flex justify-center items-center h-screen">
+          <div className="flex flex-col items-center">
+            <BlackLoadingSpinner />
+            <p className="mt-4 text-lg animate-pulse">Loading next topic...</p>
           </div>
         </div>
-        <HomeButton />
-      </div>
+      ) : (
+        <div className="max-w-4xl mx-auto relative z-10">
+          <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm">
+            {/* Progress indicators */}
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+                  Knowledge Assessment
+                </h2>
+                
+                <div className={`px-4 py-2 rounded-lg bg-gradient-to-r ${getLevelColor(currentLevel)} flex items-center gap-2`}>
+                  {getLevelIcon(currentLevel)}
+                  <span className="font-medium">{currentLevel} Level</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2 mb-4">
+                <div className="px-4 py-2 bg-[var(--primary-black)]/60 rounded-lg border border-[var(--accent-teal)]/20 flex-grow">
+                  <span className="text-[var(--accent-teal)]">Topic:</span> {topics[currentTopicIndex]}
+                </div>
+                <div className="px-4 py-2 bg-[var(--primary-black)]/60 rounded-lg border border-[var(--accent-teal)]/20">
+                  <span className="text-[var(--accent-teal)]">Progress:</span> {currentTopicIndex + 1}/{topics.length}
+                </div>
+              </div>
+              
+              {/* Progress bar */}
+              <div className="w-full h-2 bg-[var(--primary-black)]/60 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] transition-all duration-500"
+                  style={{ 
+                    width: `${((currentTopicIndex * 3 + levels.indexOf(currentLevel) + 1) / (topics.length * 3)) * 100}%` 
+                  }}
+                ></div>
+              </div>
+            </div>
+            
+            {/* Questions */}
+            <div className="space-y-8 mb-8">
+              {questions.map((q, index) => (
+                <div 
+                  key={index}
+                  className="bg-[var(--primary-black)]/40 rounded-xl p-6 border border-[var(--accent-teal)]/10 transition-all hover:border-[var(--accent-teal)]/30"
+                >
+                  <h3 className="text-xl font-semibold mb-6 text-white">
+                    {index + 1}. {q.question}
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.entries(q.options).map(([key, value]) => (
+                      <div
+                        key={key}
+                        onClick={() => handleAnswer(currentLevel, index, key)}
+                        className={`
+                          p-4 rounded-lg border cursor-pointer transition-all transform hover:scale-[1.02]
+                          ${
+                            answers[currentTopicIndex]?.answers[currentLevel]?.[index]?.selectedOption === key
+                              ? "bg-gradient-to-r from-[var(--accent-teal)]/30 to-[var(--primary-violet)]/30 border-[var(--accent-teal)]"
+                              : "bg-[var(--primary-black)]/60 border-[var(--primary-black)]/80 hover:border-[var(--accent-teal)]/30"
+                          }
+                        `}
+                      >
+                        <label className="flex items-start gap-3 cursor-pointer w-full">
+                          <div className={`
+                            flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5
+                            ${
+                              answers[currentTopicIndex]?.answers[currentLevel]?.[index]?.selectedOption === key
+                                ? "bg-[var(--accent-teal)]"
+                                : "border-2 border-gray-400"
+                            }
+                          `}>
+                            {answers[currentTopicIndex]?.answers[currentLevel]?.[index]?.selectedOption === key && (
+                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                            )}
+                          </div>
+                          <span className="text-white">{key.toUpperCase()}. {value}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Navigation buttons */}
+            <div className="flex justify-between">
+              {currentLevel !== "Primary" || currentTopicIndex > 0 ? (
+                <button
+                  onClick={() => {
+                    if (currentLevel === "Primary") {
+                      setCurrentTopicIndex(currentTopicIndex - 1);
+                      setCurrentLevel("Advanced");
+                    } else {
+                      setCurrentLevel(levels[levels.indexOf(currentLevel) - 1]);
+                    }
+                  }}
+                  className="px-6 py-3 bg-[var(--primary-black)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] hover:bg-[var(--primary-black)]/80 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center gap-2"
+                >
+                  <FaArrowLeft className="text-[var(--accent-teal)]" />
+                  <span>Previous</span>
+                </button>
+              ) : (
+                <div></div> // Empty div to maintain flex layout
+              )}
+              
+              <button
+                onClick={nextStep}
+                className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center gap-2"
+              >
+                <span>
+                  {currentLevel === "Advanced" && currentTopicIndex === topics.length - 1
+                    ? "Complete Assessment"
+                    : "Next"
+                  }
+                </span>
+                <FaArrowRight />
+              </button>
+            </div>
+          </div>
+          
+          {/* Home Button */}
+          <div className="fixed bottom-6 right-6 z-10">
+            <HomeButton />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

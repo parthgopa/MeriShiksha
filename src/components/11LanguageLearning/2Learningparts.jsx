@@ -9,6 +9,12 @@ import HomeButton from "../HomeButton";
 
 import { HiMiniStop } from "react-icons/hi2";
 import { PiSpeakerHighFill } from "react-icons/pi";
+import { IoArrowForward } from "react-icons/io5";
+import { IoDocumentTextOutline } from "react-icons/io5";
+import { FaClipboard } from "react-icons/fa";
+import { FaQuestionCircle } from "react-icons/fa";
+import { IoMdExit } from "react-icons/io";
+
 const LearningParts = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,7 +31,8 @@ const LearningParts = () => {
   const [showQuitPopup, setShowQuitPopup] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const speechRef = useRef(null);
-
+  const [copyStatus, setCopyStatus] = useState("Copy to Clipboard");
+  const [downloadStatus, setDownloadStatus] = useState("Download PDF");
 
   const handleOnResponse = (part, response) => {
     const responseText =
@@ -67,72 +74,19 @@ const LearningParts = () => {
 
   }, [initialPrompt, currentPart]);
 
-  //   const handleNext = async () => {
-  //     if (currentPart < parts) {
-  //       cancel(); // Stop speech immediately when moving to the next part
-
-  //       const nextPart = currentPart + 1;
-
-  //       if (cacheRef.current[nextPart]) {
-  //         setResponse(cacheRef.current[nextPart].response);
-  //         setCurrentPart(nextPart);
-  //         setLoading(false);
-  //       } else {
-  //         setLoading(true); // Start spinner when making API call
-
-  //         let newPrompt = "";
-  //         if (nextPart === 2) {
-  //           newPrompt = `I'm learning ${language} language. I'm a complete beginner.
-
-  //           2. Vocabulary:
-  //     What are the 100 (or specify a number) most common words in ${language} and their meanings in English?
-  //     Provide examples of how to use these words in simple sentences.
-  //     What are some effective methods for memorizing vocabulary in  ${language}?
-  // `;
-  //         } else if (nextPart === 3) {
-  //           newPrompt = `Having learned the fundamentals of topic:'${topic}' ${
-  //             subject && `incontext of subject :'${subject}'`
-  //           }, I am ready for Part 3. Provide an overview of the advanced concepts and applications of :${topic}, explaining how it is applied in real-world scenarios and its impact on related fields.
-  //           Content Type - knowledge-based.
-  //           When the topic pertains to any law of India, please provide specific references to the relevant sections, rules, and regulations of the particular act, along with any applicable case laws or judicial precedents.For date: ${date} and time: ${time}(dont display it in output)`;
-  //         } else if (nextPart === 4) {
-  //           newPrompt = `I have completed Parts 1 to 3 of topic:'${topic}' ${
-  //             subject && `incontext of subject :'${subject}'`
-  //           }. For Part 4, provide content on the current trends, contemporary issues, and recent developments in :${topic}. Include challenges, innovations, and the evolving role of ${subject} in society.
-  //           Content Type - knowledge-based.
-  //           When the topic pertains to any law of India, please provide specific references to the relevant sections, rules, and regulations of the particular act, along with any applicable case laws or judicial precedents.For date: ${date} and time: ${time}(dont display it in output)`;
-  //         } else if (nextPart === 5) {
-  //           newPrompt = `With Parts 1 to 4 of topic:'${topic}' ${
-  //             subject && `incontext of subject :'${subject}'`
-  //           } complete, please provide content for Part 5 that explores the future prospects of :${topic}, potential career paths, and upcoming advancements. Highlight opportunities for further learning and professional growth in this field.
-  //           Content Type - knowledge-based.
-  //           When the topic pertains to any law of India, please provide specific references to the relevant sections, rules, and regulations of the particular act, along with any applicable case laws or judicial precedents.For date: ${date} and time: ${time}(dont display it in output)
-  //           `;
-  //         }
-
-  //         // console.log(newPrompt);
-
-  //         await APIService({
-  //           question: newPrompt,
-  //           onResponse: (response) => handleOnResponse(nextPart, response),
-  //         });
-
-  //         setCurrentPart(nextPart);
-  //       }
-  //     }
-  //   };
-
   const handleFinish = () => {
     cancel(); // Stop speech when finishing
     setShowQuitPopup(true);
   };
+  
   const confirmQuit = () => {
     navigate("/language-learning");
   };
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(response).then(() => {
-      alert("Copied to clipboard successfully.");
+      setCopyStatus("Copied!");
+      setTimeout(() => setCopyStatus("Copy to Clipboard"), 2000);
     });
   };
 
@@ -163,6 +117,7 @@ const LearningParts = () => {
   };
 
   const handleDownloadPdf = async () => {
+    setDownloadStatus("Preparing PDF...");
     const { default: jsPDF } = await import("jspdf");
     const { default: html2canvas } = await import("html2canvas");
 
@@ -182,11 +137,16 @@ const LearningParts = () => {
 
         pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
         pdf.save(`${language} Part -${currentPart}.pdf`);
+        setDownloadStatus("Downloaded!");
+        setTimeout(() => setDownloadStatus("Download PDF"), 2000);
       })
       .catch((err) => {
         console.error("Failed to generate PDF: ", err);
+        setDownloadStatus("Download Failed");
+        setTimeout(() => setDownloadStatus("Download PDF"), 2000);
       });
   };
+  
   const handleQuiz = () => {
     let Prompt = "";
     const nextPart = currentPart + 1;
@@ -378,151 +338,180 @@ Spanish. 'El gato es negro' means 'The cat is black'
   };
 
   return (
-    <div
-      className="min-h-screen w-screen bg-gradient-to-b from-black via-secondary to-black text-white py-12 px-6 flex flex-col items-center"
-      id="container"
-    >
-      <div className="w-full max-w-4xl bg-gradient-to-r from-secondary via-60% to-black from-65% p-2 rounded-lg shadow-lg">
-        <div className="mb-6 text-center">
-          <h4 className="text-2xl font-bold text-white mb-4">
-            {language} Language Part - {currentPart}
-          </h4>
-          <div className="flex flex-wrap justify-center items-center gap-4 mb-4">
-                <button
-                  className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
-                  onClick={handleSpeak}
-                >
-                  {isSpeaking ? "Speaking..." : <PiSpeakerHighFill />}
-                </button>
-                <button
-                  className="btn btn-info px-4 py-2 rounded-lg transition-all hover:scale-105"
-                  onClick={handleStop}
-                >
-                  <HiMiniStop />
-                </button>
-                <label className="flex items-center gap-2">
-                  Speed:
-                  <input
-                    className="w-32 rounded-lg bg-secondary text-white"
-                    type="range"
-                    min="0.5"
-                    max="2"
-                    step="0.1"
-                    value={speechRate}
-                    onChange={(e) => {
-                      const newRate = parseFloat(e.target.value);
-                      setSpeechRate(newRate);
-                      if (isSpeaking) {
-                        handleStop();
-                        // Small timeout to ensure stop completes before starting again
-                        setTimeout(() => {
-                          handleSpeak();
-                        }, 100);
-                      }
-                    }}
-                  />
-                </label>
-                <span className="text-white font-medium">{speechRate}x</span>
-                {/* Hidden Speech component controlled via ref */}
-                <div style={{ display: 'none' }}>
-                  <Speech
-                    ref={speechRef}
-                    text={currentSpeechResponse}
-                    pitch={1}
-                    rate={speechRate}
-                    volume={1}
-                    lang="en-US"
-                    voice="Google US English"
-                    style={speechStyle}
-                  />
-                </div>
+    <div className="min-h-screen w-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
+      
+      <div className="max-w-5xl mx-auto relative z-10">
+        {/* Header */}
+        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-8">
+          <div className="text-center mb-6">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+              {language} Language Learning
+            </h1>
+            <div className="flex items-center justify-center">
+              <div className="px-4 py-1 bg-[var(--primary-black)]/40 rounded-full border border-[var(--accent-teal)]/20 inline-flex items-center">
+                <span className="text-teal-100 mr-2">Part</span>
+                <span className="text-white font-bold text-xl">{currentPart}</span>
+                <span className="text-teal-100 mx-2">of</span>
+                <span className="text-white font-bold text-xl">{parts}</span>
               </div>
+            </div>
+          </div>
+          
+          <div className="flex flex-wrap justify-center items-center gap-4 mb-4">
+            <button
+              className="px-4 py-2 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] rounded-lg shadow-md transition-all hover:scale-105 flex items-center"
+              onClick={handleSpeak}
+            >
+              <PiSpeakerHighFill className="mr-2" />
+              {isSpeaking ? "Speaking..." : "Speak"}
+            </button>
+            
+            <button
+              className="px-4 py-2 bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] rounded-lg shadow-md transition-all hover:scale-105 flex items-center"
+              onClick={handleStop}
+            >
+              <HiMiniStop className="mr-2" />
+              Stop
+            </button>
+            
+            <div className="flex items-center gap-2 px-4 py-2 bg-[var(--primary-black)]/40 rounded-lg border border-[var(--accent-teal)]/20">
+              <span className="text-teal-100">Speed:</span>
+              <input
+                className="w-32 h-2 bg-[var(--primary-black)]/60 rounded-lg appearance-none cursor-pointer accent-[var(--accent-teal)]"
+                type="range"
+                min="0.5"
+                max="2"
+                step="0.1"
+                value={speechRate}
+                onChange={(e) => {
+                  const newRate = parseFloat(e.target.value);
+                  setSpeechRate(newRate);
+                  if (isSpeaking) {
+                    handleStop();
+                    // Small timeout to ensure stop completes before starting again
+                    setTimeout(() => {
+                      handleSpeak();
+                    }, 100);
+                  }
+                }}
+              />
+              <span className="text-white font-medium">{speechRate}x</span>
+            </div>
+            
+            {/* Hidden Speech component controlled via ref */}
+            <div style={{ display: 'none' }}>
+              <Speech
+                ref={speechRef}
+                text={currentSpeechResponse}
+                pitch={1}
+                rate={speechRate}
+                volume={1}
+                lang="en-US"
+                voice="Google US English"
+                style={speechStyle}
+              />
+            </div>
+          </div>
         </div>
 
         {loading ? (
-          <LoadingSpinner /> // Render spinner when loading
+          <div className="flex flex-col items-center justify-center py-16 bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm">
+            <LoadingSpinner />
+            <p className="mt-4 text-teal-100">Loading {language} content...</p>
+          </div>
         ) : (
           <>
             <div
               id="output-container"
-              className="p-2 rounded-lg bg-secondary text-white"
+              className="p-6 rounded-xl bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 border border-[var(--accent-teal)]/10 backdrop-blur-sm text-white overflow-auto max-h-[60vh] markdown-content"
             >
               <ReactMarkdown
-                className="max-w-auto text-white"
+                className="prose prose-invert max-w-none"
                 children={response}
               />
             </div>
-            <div
-              className="flex flex-wrap justify-center gap-4 mt-6"
-              id="buttonGroup"
-            >
-              {/* <button
-                className="btn btn-info px-6 py-2 rounded-lg transition-all hover:scale-105"
-                onClick={handlePrevious}
-                disabled={currentPart === 1 || loading}
-              >
-                Previous
-              </button> */}
+            
+            <div className="flex flex-wrap justify-center gap-4 mt-8">
               <button
-                className="btn btn-info px-6 py-2 rounded-lg transition-all hover:scale-105"
+                className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handleNext}
                 disabled={currentPart === parts || loading}
               >
-                Next
+                <span className="mr-2">Next Part</span>
+                <IoArrowForward />
               </button>
+              
               <button
-                className="btn btn-info px-6 py-2 rounded-lg transition-all hover:scale-105"
+                className="px-6 py-3 bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center justify-center"
                 onClick={handleQuiz}
                 disabled={currentPart === parts || loading}
               >
-                Part - {currentPart} Quiz
+                <FaQuestionCircle className="mr-2" />
+                <span>Take Quiz</span>
               </button>
+              
               <button
-                className="btn btn-info px-6 py-2 rounded-lg transition-all hover:scale-105"
+                className="px-6 py-3 bg-gradient-to-r from-[var(--primary-black)] to-[var(--primary-violet)]/70 text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center justify-center"
                 onClick={handleFinish}
-                disabled={currentPart === parts || loading}
               >
-                Finish
+                <IoMdExit className="mr-2" />
+                <span>Finish</span>
               </button>
+              
               <button
-                className="btn btn-info px-6 py-2 rounded-lg transition-all hover:scale-105"
+                className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center justify-center"
                 onClick={handleCopyToClipboard}
               >
-                Copy to Clipboard
+                <FaClipboard className="mr-2" />
+                <span>{copyStatus}</span>
               </button>
+              
               <button
-                className="btn btn-info px-6 py-2 rounded-lg transition-all hover:scale-105"
+                className="px-6 py-3 bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center justify-center"
                 onClick={handleDownloadPdf}
               >
-                Download Pdf
+                <IoDocumentTextOutline className="mr-2" />
+                <span>{downloadStatus}</span>
               </button>
             </div>
           </>
         )}
+        
         {/* Quit Confirmation Popup */}
         {showQuitPopup && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-gray-300 p-4 rounded-md text-center text-black">
-              <p>Are you sure you want to quit?</p>
-              <div className="mt-3 flex justify-center gap-4">
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+            <div className="bg-gradient-to-br from-[var(--primary-black)] to-[var(--primary-violet)]/40 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/20 backdrop-blur-sm max-w-md w-full">
+              <h3 className="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+                Quit Learning Session?
+              </h3>
+              <p className="text-teal-100 mb-6">
+                Are you sure you want to exit this learning session? Your progress will be saved.
+              </p>
+              <div className="flex justify-center gap-4">
                 <button
                   onClick={confirmQuit}
-                  className="btn btn-dark px-4 py-2 text-white rounded-md"
+                  className="px-6 py-3 bg-gradient-to-r from-red-500 to-red-700 text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none"
                 >
-                  Yes
+                  Yes, Exit
                 </button>
                 <button
                   onClick={() => setShowQuitPopup(false)}
-                  className="btn btn-success px-4 py-2 rounded-md"
+                  className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none"
                 >
-                  No
+                  Continue Learning
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        <HomeButton className="mt-6 btn btn-accent px-6 py-2 rounded-lg" />
+        {/* Home Button */}
+        <div className="fixed bottom-6 right-6 z-10">
+          <HomeButton />
+        </div>
       </div>
     </div>
   );
