@@ -237,7 +237,7 @@ const Functionalities = () => {
                 </h3>
 
                 {/* Main Title */}
-                <h1 className="font-extrabold text-transparent text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+                <h1 className="font-extrabold text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
                   AI-based Meri Shiksha
                 </h1>
 

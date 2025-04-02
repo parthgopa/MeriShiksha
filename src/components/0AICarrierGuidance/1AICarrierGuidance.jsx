@@ -53,37 +53,30 @@ Prepare your  proper report which proper advice on the subjectFor date: ${date} 
     setDownloadStarted(true);
     try {
       const { default: jsPDF } = await import("jspdf");
-      const { default: html2canvas } = await import("html2canvas");
-      const input = document.getElementById("output-container");
-      
-      const canvas = await html2canvas(input, { 
-        scale: 2,
-        backgroundColor: null,
-        logging: false
-      });
-      
-      const imgData = canvas.toDataURL("image/jpeg", 0.8);
-      const pdfWidth = canvas.width * 0.75; // Convert pixels to points
-      const pdfHeight = canvas.height * 0.75; // Convert pixels to points
-
-      // Create the PDF document with custom dimensions
-      const pdf = new jsPDF({
-        orientation: pdfWidth > pdfHeight ? "landscape" : "portrait",
-        unit: "pt",
-        format: [pdfWidth, pdfHeight],
-      });
-
-      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`AI_Career_Guidance.pdf`);
+  
+      const doc = new jsPDF();
+  
+      // Example: Extracting text from a div
+      const content = document.getElementById("output-container")?.innerText || "No content available.";
+  
+      // Add text to PDF (proper formatting for multiple lines)
+      const marginLeft = 10;
+      const marginTop = 10;
+      const maxWidth = 180; // Width constraint
+      doc.text(content, marginLeft, marginTop, { maxWidth });
+  
+      // Save the PDF
+      doc.save("AI_Career_Guidance.pdf");
     } catch (err) {
-      console.error("Failed to generate PDF: ", err);
+      console.error("Failed to generate PDF:", err);
     } finally {
       setDownloadStarted(false);
     }
   };
+  
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>

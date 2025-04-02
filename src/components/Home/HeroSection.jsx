@@ -41,7 +41,7 @@ const HeroSection = () => {
           
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
             <button 
-              className="px-8 py-3 bg-gradient-to-r from-[var(--accent-teal)] via-[var(--primary-violet)] to-[var(--accent-teal)] bg-size-200 bg-pos-0 hover:bg-pos-100 text-white rounded-lg shadow-lg transition-all duration-500 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center justify-center group"
+              className="m-2 px-8 py-3 bg-gradient-to-r from-[var(--accent-teal)] via-[var(--primary-violet)] to-[var(--accent-teal)] bg-size-200 bg-pos-0 hover:bg-pos-100 text-white rounded-lg shadow-lg transition-all duration-500 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center justify-center group"
               onClick={handleGetStarted}
             >
               <span>Get Started</span>
@@ -50,7 +50,7 @@ const HeroSection = () => {
               </svg>
             </button>
             <button 
-              className="px-8 py-3 bg-transparent border-2 border-[var(--accent-teal)] text-white rounded-lg shadow-lg hover:bg-teal-500/10 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50"
+              className="px-8 py-3 bg-gradient-to-r from-[var(--accent-teal)] via-[var(--primary-violet)] to-[var(--accent-teal)] bg-size-200 bg-pos-0 hover:bg-pos-100 border-2 border-[var(--accent-teal)] text-white rounded-lg shadow-lg hover:bg-teal-500/10 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50"
               onClick={() => navigate("/aboutUs")}
             >
               Learn More
