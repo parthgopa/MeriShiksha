@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const FunctionalityCard = ({ page, index, pageIndex }) => {
+const FunctionalityCard = ({ page, index, pageIndex, style }) => {
   const navigate = useNavigate();
   
   return (
@@ -10,11 +10,12 @@ const FunctionalityCard = ({ page, index, pageIndex }) => {
       id={`functionality-${pageIndex}`}
       className="relative bg-gradient-to-br from-[var(--accent-teal)]/80 via-[var(--primary-violet)] to-[var(--primary-black)] rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-102 cursor-pointer text-white border border-transparent hover:border-[var(--accent-teal)]/30"
       onClick={() => navigate(page.path)}
+      style={style}
     >
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)]"></div>
       <div className="p-6">
         <div className="flex items-center mb-4">
-          <h3 className="text-2xl font-bold text-white">
+          <h3 className="text-xl font-bold text-white">
             {page.title}
           </h3>
         </div>
