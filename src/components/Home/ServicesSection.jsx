@@ -96,9 +96,27 @@ const ServicesSection = ({ pages, servicesSectionRef }) => {
   // Custom pages for Empowering Tutor
   const empoweringTutorPages = [
     {
+      title: "Adaptive Learning",
+      description: "Find and fix gaps in your knowledge",
+      path: "/knowlwdgeGap-Topic-list",
+      category: "Empowering Tutor"
+    },
+    {
       title: "Lesson Planning",
       description: "Create effective lesson plans with AI",
       path: "/lesson-plan",
+      category: "Empowering Tutor"
+    },
+    {
+      title: "Study Material",
+      description: "Explore and expand your knowledge",
+      path: "/topic-learning",
+      category: "Empowering Tutor"
+    },
+    {
+      title: "Summary Notes",
+      description: "Get quick, dot-point topic summaries",
+      path: "/dotpoint-summary",
       category: "Empowering Tutor"
     },
     {
@@ -136,6 +154,12 @@ const ServicesSection = ({ pages, servicesSectionRef }) => {
       category: "Empowering Learner"
     },
     {
+      title: "Lesson Planning",
+      description: "Create effective lesson plans with AI",
+      path: "/lesson-plan",
+      category: "Empowering Learner"
+    },
+    {
       title: "Topic Learning",
       description: "Explore and expand your knowledge",
       path: "/topic-learning",
@@ -159,12 +183,7 @@ const ServicesSection = ({ pages, servicesSectionRef }) => {
       path: "/q-and-a",
       category: "Empowering Learner"
     },
-    {
-      title: "Lesson Planning",
-      description: "Create effective lesson plans with AI",
-      path: "/lesson-plan",
-      category: "Empowering Learner"
-    }
+    
   ];
 
   // Render category content
@@ -252,7 +271,7 @@ const ServicesSection = ({ pages, servicesSectionRef }) => {
     <div className="bg-[var(--primary-black)] text-white py-8 sm:py-12 md:py-16 animate-fadeIn" ref={servicesSectionRef} id="services">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8">
         <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
-          Our Services
+          Functionalities
         </h2>
 
         <div className="space-y-8">
