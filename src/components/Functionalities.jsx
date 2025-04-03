@@ -200,68 +200,6 @@ const Functionalities = () => {
         {/* Hero Section */}
         <HeroSection />
 
-        {/* Welcome Section */}
-        {welcomeVisible && (
-          <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-900 bg-opacity-80 z-50 backdrop-blur-md rounded-lg p-6 animate-fadeIn">
-            <div className="max-w-md bg-gradient-to-br from-[var(--primary-black)] to-[var(--primary-violet)] p-8 rounded-2xl shadow-2xl border border-[var(--accent-teal)]/20 transform hover:scale-102 transition-all duration-300">
-              <div className="flex flex-col items-center text-center px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 relative">
-                {/* Decorative elements */}
-                <div className="absolute top-0 left-0 w-20 h-20 bg-[var(--accent-teal)]/10 rounded-full blur-xl"></div>
-                <div className="absolute bottom-0 right-0 w-32 h-32 bg-[var(--primary-violet)]/10 rounded-full blur-xl"></div>
-
-                {/* Logo */}
-                <img
-                  src={Mylogo}
-                  alt="Meri Shiksha Logo"
-                  className="w-20 h-20 mb-6 animate-float rounded-full shadow-lg"
-                />
-
-                {/* Welcome Heading */}
-                <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2">
-                  Welcome to
-                </h3>
-
-                {/* Main Title */}
-                <h1 className="font-extrabold text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
-                  AI-based Meri Shiksha
-                </h1>
-
-                {/* Subtext */}
-                <p className="text-xl sm:text-lg md:text-xl lg:text-2xl text-teal-100 mb-2 sm:mb-4">
-                  Empowering
-                </p>
-
-                {/* Secondary Heading */}
-                <h2 className="text-md sm:text-lg md:text-xl lg:text-2xl text-white mb-6 sm:mb-8">
-                  Learners & Tutors
-                </h2>
-
-                {/* Call-to-Action Button */}
-                <button
-                  className="mt-4 text-xl text-white px-10 py-4 lg:w-auto sm:mt-6 sm:px-10 sm:py-4 sm:text-lg bg-gradient-to-r from-[var(--accent-teal)] via-[var(--primary-violet)] to-[var(--accent-teal)] bg-size-200 bg-pos-0 hover:bg-pos-100 rounded-lg shadow-lg transition-all duration-500 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 group"
-                  onClick={handleStart}
-                >
-                  <span>Get Started</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-300"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Services Section */}
         <ServicesSection
           pages={pages}
