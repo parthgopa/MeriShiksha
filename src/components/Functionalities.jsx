@@ -32,79 +32,79 @@ const Functionalities = () => {
       description: "Plan your career in AI industry",
       path: "/ai-carrier-counselling-input",
       category: "Career Crafting",
-      subcategory: "AI Career in India"
+      subcategory: "AI Career in India",
     },
     {
       title: "Career Counselling",
       description: "Get personalized career advice",
       path: "/carrier-counselling-input",
       category: "Career Crafting",
-      subcategory: "Career Counselling"
+      subcategory: "Career Counselling",
     },
     {
       title: "Job Hunt",
       description: "Find the perfect job for you",
       path: "/ai-job-hunt",
       category: "Career Crafting",
-      subcategory: "Job Hunt"
+      subcategory: "Job Hunt",
     },
     {
       title: "Language Learning",
       description: "Master new languages efficiently",
       path: "/language-learning",
       category: "Career Crafting",
-      subcategory: "Language Learning"
+      subcategory: "Language Learning",
     },
     {
       title: "Language Accelerator",
       description: "Upgrade you Vocabulary with AI talk",
       path: "/language-accelerator",
       category: "Career Crafting",
-      subcategory: "Language Learning"
+      subcategory: "Language Learning",
     },
     {
       title: "AI Mock Interview",
       description: "Practice and perfect your interview skills",
       path: "/mock-interview",
       category: "Career Crafting",
-      subcategory: "Mock Interview"
+      subcategory: "Mock Interview",
     },
     {
       title: "Knowledge Gap",
       description: "Identify and address knowledge gaps",
       path: "/knowlwdgeGap-Topic-list",
-      category: "Empowering Learner"
+      category: "Empowering Learner",
     },
     {
       title: "Topic Learning",
       description: "Explore and expand your knowledge",
       path: "/topic-learning",
-      category: "Empowering Learner"
+      category: "Empowering Learner",
     },
     {
       title: "DotPoint Summary",
       description: "Summarize and organize your knowledge",
       path: "/dotpoint-summary",
-      category: "Empowering Learner"
+      category: "Empowering Learner",
     },
     {
       title: "Lesson Planning",
       description: "Create effective lesson plans with AI",
       path: "/lesson-plan",
-      category: "Empowering Tutor"
+      category: "Empowering Tutor",
     },
     {
       title: "MCQ Generator",
       description: "Generate customized MCQs",
       path: "/generate-mcqs",
-      category: "Empowering Tutor"
+      category: "Empowering Tutor",
     },
     {
       title: "AI Q and A",
       description: "AI support for classroom management",
       path: "/q-and-a",
-      category: "Empowering Tutor"
-    }
+      category: "Empowering Tutor",
+    },
   ];
 
   const handleDrawerOpen = () => {
@@ -193,32 +193,13 @@ const Functionalities = () => {
           ))}
         </List>
       </Drawer>
-
-      {/* Main Content */}
       <div className="relative">
-        {/* Mobile Menu Button - Only visible on small screens */}
-        <div className="md:hidden fixed top-4 left-4 z-50">
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              color: "white",
-              backgroundColor: "rgba(0,0,0,0.3)",
-              "&:hover": { backgroundColor: "rgba(0,0,0,0.5)" },
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-        </div>
-
         {/* Header */}
         <Header />
-        
+
         {/* Hero Section */}
         <HeroSection />
-        
+
         {/* Welcome Section */}
         {welcomeVisible && (
           <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-900 bg-opacity-80 z-50 backdrop-blur-md rounded-lg p-6 animate-fadeIn">
@@ -227,10 +208,14 @@ const Functionalities = () => {
                 {/* Decorative elements */}
                 <div className="absolute top-0 left-0 w-20 h-20 bg-[var(--accent-teal)]/10 rounded-full blur-xl"></div>
                 <div className="absolute bottom-0 right-0 w-32 h-32 bg-[var(--primary-violet)]/10 rounded-full blur-xl"></div>
-                
+
                 {/* Logo */}
-                <img src={Mylogo} alt="Meri Shiksha Logo" className="w-20 h-20 mb-6 animate-float rounded-full shadow-lg" />
-                
+                <img
+                  src={Mylogo}
+                  alt="Meri Shiksha Logo"
+                  className="w-20 h-20 mb-6 animate-float rounded-full shadow-lg"
+                />
+
                 {/* Welcome Heading */}
                 <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2">
                   Welcome to
@@ -253,22 +238,36 @@ const Functionalities = () => {
 
                 {/* Call-to-Action Button */}
                 <button
-                  className="mt-4 text-xl text-white px-10 py-4 lg:w-auto sm:mt-6 sm:px-10 sm:py-4 sm:text-lg bg-gradient-to-r from-[var(--accent-teal)] via-[var(--primary-violet)] to-[var(--accent-teal)] bg-size-200 bg-pos-0 hover:bg-pos-100 text-white rounded-lg shadow-lg transition-all duration-500 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 group"
+                  className="mt-4 text-xl text-white px-10 py-4 lg:w-auto sm:mt-6 sm:px-10 sm:py-4 sm:text-lg bg-gradient-to-r from-[var(--accent-teal)] via-[var(--primary-violet)] to-[var(--accent-teal)] bg-size-200 bg-pos-0 hover:bg-pos-100 rounded-lg shadow-lg transition-all duration-500 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 group"
                   onClick={handleStart}
                 >
                   <span>Get Started</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-300"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
                   </svg>
                 </button>
               </div>
             </div>
           </div>
         )}
-        
+
         {/* Services Section */}
-        <ServicesSection pages={pages} servicesSectionRef={servicesSectionRef} />
-        
+        <ServicesSection
+          pages={pages}
+          servicesSectionRef={servicesSectionRef}
+        />
+
         {/* Footer */}
         <Footer />
 
@@ -276,16 +275,16 @@ const Functionalities = () => {
         <div className="fixed bottom-8 right-8 z-50">
           <button
             onClick={() => navigate("/chatbot")}
-            className="bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] p-3 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 group"
+            className="bg-black p-2 bottom-15 right-0 fixed flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)] to-[var(--accent-teal)]-0 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 group"
             aria-label="Chat with AI Assistant"
           >
             <div className="relative">
               <img
                 src={gemini}
                 alt="AI Assistant"
-                className="w-12 h-12 rounded-full object-cover"
+                className="w-10 h-10 rounded-full object-cover"
               />
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-400 rounded-full border-2 border-white animate-pulse"></div>
             </div>
             <span className="absolute bottom-full right-0 mb-2 bg-[var(--primary-black)] bg-opacity-75 text-white text-sm px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
               Chat with AI Assistant
