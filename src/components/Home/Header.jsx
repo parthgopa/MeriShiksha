@@ -29,9 +29,19 @@ const Header = () => {
         <nav className="hidden md:block">
           <ul className="flex space-x-8">
             <li><Link to="/" className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors">Home</Link></li>
-            <li><a href="#services" className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors">Services</a></li>
             <li><Link to="/aboutUs" className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors">About</Link></li>
             <li><Link to="/contactUs" className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors">Contact</Link></li>
+            <li>
+  <a 
+    href="https://youtu.be/GNJ-4Oo9gnY?si=OBUYcBt6zUvq9UiH" 
+    className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors" 
+    target="_blank" 
+    rel="noopener noreferrer"
+  >
+    AI Help
+  </a>
+            </li>
+
           </ul>
         </nav>
 
@@ -51,6 +61,16 @@ const Header = () => {
           <li><a href="#services" className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors" onClick={() => setIsMenuOpen(false)}>Services</a></li>
           <li><Link to="/aboutUs" className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors" onClick={() => setIsMenuOpen(false)}>About</Link></li>
           <li><Link to="/contactUs" className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</Link></li>
+          <li>
+            <a 
+              href="https://youtu.be/GNJ-4Oo9gnY?si=OBUYcBt6zUvq9UiH" 
+              className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              AI Help
+            </a>
+          </li>
         </ul>
       </div>
     </header>
