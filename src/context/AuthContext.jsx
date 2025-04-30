@@ -1,0 +1,108 @@
+import React, { createContext, useState, useEffect, useContext } from "react";
+import api from "../api/axios";
+
+const AuthContext = createContext();
+
+export const useAuth = () => useContext(AuthContext);
+
+export const AuthProvider = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Check if user is logged in on app load
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    if (token && user) {
+      try {
+        setCurrentUser(JSON.parse(user));
+        // Token is already set in api interceptor
+      } catch (err) {
+        console.error("Error parsing user data:", err);
+        logout();
+      }
+    }
+
+
+    
+    setLoading(false);
+  }, []);
+
+  const login = async (email, password) => {
+    setError(null);
+    try {
+      const response = await api.post("/api/login", { email, password });
+      
+      // Store token and user data
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      
+      setCurrentUser(response.data.user);
+      return response.data.user;
+    } catch (err) {
+      setError(err.response?.data?.error || "An error occurred during login");
+      throw err;
+    }
+  };
+
+  const register = async (userData) => {
+    setError(null);
+    try {
+      const response = await api.post("/api/register", userData);
+      
+      // Store token and user data
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      
+      setCurrentUser(response.data.user);
+      return response.data.user;
+    } catch (err) {
+      setError(err.response?.data?.error || "An error occurred during registration");
+      throw err;
+    }
+  };
+
+  const logout = () => {
+    // Remove token and user data from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    
+    setCurrentUser(null);
+  };
+
+  const updateProfile = async (userData) => {
+    setError(null);
+    try {
+      const response = await api.put("/api/user/profile", userData);
+      
+      // Update user data in localStorage
+      localStorage.setItem("user", JSON.stringify(response.data));
+      
+      setCurrentUser(response.data);
+      return response.data;
+    } catch (err) {
+      setError(err.response?.data?.error || "An error occurred while updating profile");
+      throw err;
+    }
+  };
+
+  const value = {
+    currentUser,
+    loading,
+    error,
+    login,
+    register,
+    logout,
+    updateProfile,
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export default AuthProvider;

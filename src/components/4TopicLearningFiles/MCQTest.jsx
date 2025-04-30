@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router";
 import APIService from "../API";
 import LoadingSpinner from "../LoadingSpinner";
@@ -11,108 +11,73 @@ const MCQTest = () => {
   const { topic, level, numMCQs, comingfrom } = location.state;
 
   const [incomingdata, setIncomingdata] = useState(comingfrom);
-  //console.log(incomingdata);
   const [questions, setQuestions] = useState([]);
   const [options, setOptions] = useState([]);
   const [correctAnswers, setCorrectAnswers] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
   const [loading, setLoading] = useState(true);
-  const date = new Date().toDateString();
-  const time = new Date().toTimeString();
+  const date = useMemo(() => new Date().toDateString(), []);
+  const time = useMemo(() => new Date().toTimeString(), []);
 
   useEffect(() => {
     const fetchMCQs = async () => {
       let prompt;
       if (incomingdata === "FromParagraph") {
-        prompt = `Generate ${numMCQs} Randomized MCQs for the Paragraph Provided =>: "${topic}" at '${level}' level. The output should be a valid JSON object in the following format:
-      {
-        "questions": ["What is the capital of France?", "What is 2 + 2?"],
-        "options": [
-          ["Berlin", "Madrid", "Paris", "Rome"],
-          ["3", "4", "5", "6"]
-        ],
-        "correctAnswers": ["Paris", "4"]
-      }. For current date :${date} and current time :${time}`;
+        prompt = `Generate ${numMCQs} Randomized MCQs for the Paragraph Provided =>: "${topic}" at '${level}' level. The output should be a valid JSON object in the following format:\n{\n  "questions": ["What is the capital of France?", "What is 2 + 2?"],\n  "options": [\n    ["Berlin", "Madrid", "Paris", "Rome"],\n    ["3", "4", "5", "6"]\n  ],\n  "correctAnswers": ["Paris", "4"]\n}. For current date :${date} and current time :${time}`;
       } else if (incomingdata === "FromTopicLearning") {
-        prompt = `Generate ${numMCQs} Randomized MCQs for the topic '${topic}' at '${level}' level. The output should be a valid JSON object in the following format:
-      {
-        "questions": ["What is the capital of France?", "What is 2 + 2?"],
-        "options": [
-          ["Berlin", "Madrid", "Paris", "Rome"],
-          ["3", "4", "5", "6"]
-        ],
-        "correctAnswers": ["Paris", "4"]
-      };  For current date :${date} and current time :${time}`;
-      } else if (incomingdata === "RetakeMCQs") {
-        prompt = `Generate ${numMCQs} Randomized MCQs for the topic '${topic}' at '${level}' level different from the previous one. The output should be a valid JSON object in the following format:
-      {
-        "questions": ["What is the capital of France?", "What is 2 + 2?"],
-        "options": [
-          ["Berlin", "Madrid", "Paris", "Rome"],
-          ["3", "4", "5", "6"]
-        ],
-        "correctAnswers": ["Paris", "4"]
-      };  For current date :${date} and current time :${time}`;
-      } else if (incomingdata === "Quiz Play") {
-        prompt = `Generate ${numMCQs} Randomized MCQs for the topic '${topic}' at '${level}' level different from the previous one. The output should be a valid JSON object in the following format:
-      {
-        "questions": ["What is the capital of France?", "What is 2 + 2?"],
-        "options": [
-          ["Berlin", "Madrid", "Paris", "Rome"],
-          ["3", "4", "5", "6"]
-        ],
-        "correctAnswers": ["Paris", "4"]
-      };  For current date :${date} and current time :${time}`;
+        prompt = `Generate ${numMCQs} Randomized MCQs for the topic '${topic}' at '${level}' level. The output should be a valid JSON object in the following format:\n{\n  "questions": ["What is the capital of France?", "What is 2 + 2?"],\n  "options": [\n    ["Berlin", "Madrid", "Paris", "Rome"],\n    ["3", "4", "5", "6"]\n  ],\n  "correctAnswers": ["Paris", "4"]\n};  For current date :${date} and current time :${time}`;
+      } else if (incomingdata === "RetakeMCQs" || incomingdata === "Quiz Play") {
+        prompt = `Generate ${numMCQs} Randomized MCQs for the topic '${topic}' at '${level}' level different from the previous one. The output should be a valid JSON object in the following format:\n{\n  "questions": ["What is the capital of France?", "What is 2 + 2?"],\n  "options": [\n    ["Berlin", "Madrid", "Paris", "Rome"],\n    ["3", "4", "5", "6"]\n  ],\n  "correctAnswers": ["Paris", "4"]\n};  For current date :${date} and current time :${time}`;
       }
-
       setLoading(true);
       await APIService({ question: prompt, onResponse: handleOnResponse });
     };
     fetchMCQs();
-  }, [numMCQs, topic, level]);
+  }, [numMCQs, topic, level, incomingdata, date, time]);
 
-  const handleOnResponse = (response) => {
+  const handleOnResponse = useCallback((response) => {
     try {
       let mcqData = response["candidates"][0]["content"]["parts"][0]["text"];
       mcqData = mcqData.slice(7, mcqData.length - 4);
       mcqData = JSON.parse(mcqData);
-
-      try {
-        setQuestions(mcqData.questions);
-        setOptions(mcqData.options);
-        setCorrectAnswers(mcqData.correctAnswers);
-      } catch (error) {
-        console.error("Error parsing JSON response:", error);
-        navigate("/error", { h2: "SOlve the error message" });
-      }
+      setQuestions(mcqData.questions);
+      setOptions(mcqData.options);
+      setCorrectAnswers(mcqData.correctAnswers);
     } catch (error) {
       console.error("Error parsing JSON response:", error);
+      navigate("/error", { h2: "SOlve the error message" });
     }
     setLoading(false);
-  };
+  }, [navigate]);
 
-  const handleAnswerChange = (questionIndex, answer) => {
-    setUserAnswers({ ...userAnswers, [questionIndex]: answer });
-  };
+  const handleAnswerChange = useCallback((questionIndex, answer) => {
+    setUserAnswers((prev) => ({ ...prev, [questionIndex]: answer }));
+  }, []);
 
-  const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
-  };
+  const handleNext = useCallback(() => {
+    setCurrentQuestionIndex((prev) => prev + 1);
+  }, []);
 
-  const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-  };
+  const handlePrevious = useCallback(() => {
+    setCurrentQuestionIndex((prev) => prev - 1);
+  }, []);
 
-  const handleFinish = () => {
+  const handleFinish = useCallback(() => {
     navigate("/final-result", {
-      state: { userAnswers, correctAnswers, questions, topic, level },
+      state: {
+        userAnswers,
+        correctAnswers,
+        questions,
+        topic,
+        level,
+      },
     });
-  };
+  }, [navigate, userAnswers, correctAnswers, questions, topic, level]);
+
+  // Memoize current options and question for performance
+  const currentOptions = useMemo(() => options[currentQuestionIndex] || [], [options, currentQuestionIndex]);
+  const currentQuestion = useMemo(() => questions[currentQuestionIndex] || '', [questions, currentQuestionIndex]);
 
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-6 md:py-10 px-4 md:px-6 relative overflow-hidden">
@@ -160,10 +125,10 @@ const MCQTest = () => {
             <>
               <div className="mb-8">
                 <h2 className="text-xl font-semibold mb-6 text-white">
-                  {questions[currentQuestionIndex]}
+                  {currentQuestion}
                 </h2>
                 <div className="space-y-4">
-                  {options[currentQuestionIndex].map((option, idx) => (
+                  {currentOptions.map((option, idx) => (
                     <div
                       key={idx}
                       className={`flex items-center p-4 rounded-lg cursor-pointer transition-all ${

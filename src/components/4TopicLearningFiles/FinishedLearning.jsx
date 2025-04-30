@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router";
 import HomeButton from "../HomeButton";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
@@ -11,26 +11,26 @@ const FinishedLearning = () => {
 
   const { topic, level } = location.state;
 
-  const handleYes = () => {
+  const handleYes = useCallback(() => {
     setShowInput(true);
-  };
+  }, []);
 
-  const handleNo = () => {
-    navigate("/topic-learning"); // Navigate back to home or any other component
-  };
+  const handleNo = useCallback(() => {
+    navigate("/topic-learning");
+  }, [navigate]);
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     const comingfrom = "FromTopicLearning";
     navigate("/mcq-test", {
       state: { topic, level, numMCQs, comingfrom: comingfrom },
-    }); // Navigate to MCQ test component with number of MCQs
-  };
+    });
+  }, [navigate, topic, level, numMCQs]);
   
-  const handleEnterPressed = (e) => {
+  const handleEnterPressed = useCallback((e) => {
     if (e.key === "Enter") {
       handleSubmit();
     }
-  };
+  }, [handleSubmit]);
 
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-6 md:py-10 px-4 md:px-6 relative overflow-hidden">
@@ -82,7 +82,7 @@ const FinishedLearning = () => {
                   id="numMCQs"
                   value={numMCQs}
                   className="w-full max-w-xs p-3 rounded-lg bg-[var(--primary-black)]/60 border border-[var(--accent-teal)]/20 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all text-center text-lg"
-                  onChange={(e) => setNumMCQs(Math.min(Math.max(e.target.value, 1), 10))}
+                  onChange={(e) => setNumMCQs(Math.min(Math.max(Number(e.target.value), 1), 10))}
                   onKeyDown={handleEnterPressed}
                   max="10"
                   min="1"

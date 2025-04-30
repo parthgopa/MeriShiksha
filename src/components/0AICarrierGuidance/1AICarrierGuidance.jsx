@@ -53,20 +53,61 @@ Prepare your  proper report which proper advice on the subjectFor date: ${date} 
     setDownloadStarted(true);
     try {
       const { default: jsPDF } = await import("jspdf");
-  
-      const doc = new jsPDF();
-  
-      // Example: Extracting text from a div
+      const autoTable = (await import("jspdf-autotable")).default;
+      
+      const pdf = new jsPDF();
+      const margin = 15;
+      let y = margin;
+      
+      // Title with colored background
+      pdf.setFillColor(46, 213, 197);
+      pdf.rect(0, y - 7, pdf.internal.pageSize.getWidth(), 14, 'F');
+      pdf.setFontSize(18);
+      pdf.setTextColor(255, 255, 255);
+      pdf.text("AI Career Guidance", margin, y);
+      y += 12;
+      
+      // Date and time
+      pdf.setFontSize(12);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(`Generated: ${new Date().toLocaleString()}`, margin, y);
+      y += 10;
+      
+      // Section Header
+      pdf.setFillColor(139, 92, 246);
+      pdf.rect(0, y - 5, pdf.internal.pageSize.getWidth(), 10, 'F');
+      pdf.setFontSize(14);
+      pdf.setTextColor(255, 255, 255);
+      pdf.text('Career Guidance Results', margin, y + 2);
+      pdf.setTextColor(0, 0, 0);
+      y += 10;
+      
+      // Get content from the output container
       const content = document.getElementById("output-container")?.innerText || "No content available.";
-  
-      // Add text to PDF (proper formatting for multiple lines)
-      const marginLeft = 10;
-      const marginTop = 10;
-      const maxWidth = 180; // Width constraint
-      doc.text(content, marginLeft, marginTop, { maxWidth });
-  
+      
+      // Split content into paragraphs and add to PDF
+      const paragraphs = content.split('\n\n');
+      
+      // Add content as a table for better formatting
+      const tableBody = paragraphs.map(para => [para]);
+      
+      autoTable(pdf, {
+        body: tableBody,
+        startY: y,
+        styles: { fontSize: 10, cellPadding: 4 },
+        bodyStyles: { textColor: 20 },
+        margin: { left: margin, right: margin },
+        theme: 'plain',
+        columnStyles: {
+          0: { cellWidth: 'auto' }
+        },
+        didDrawPage: (data) => {
+          // Add header/footer if desired
+        }
+      });
+      
       // Save the PDF
-      doc.save("AI_Career_Guidance.pdf");
+      pdf.save("AI_Career_Guidance.pdf");
     } catch (err) {
       console.error("Failed to generate PDF:", err);
     } finally {

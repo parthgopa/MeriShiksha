@@ -1,10 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useMemo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import APIService from "../API";
 import LoadingSpinner from "../LoadingSpinner";
-import ReactMarkdown from "react-markdown"; // Add this import
+import ReactMarkdown from "react-markdown"; 
 import HomeButton from "../HomeButton";
 import { IoArrowBack, IoDocumentTextOutline, IoInformationCircleOutline, IoRepeat } from "react-icons/io5";
 
@@ -17,8 +16,7 @@ const FinalResult = () => {
     navigate("/topic-learning");
     return null;
   }
-  const { userAnswers, correctAnswers, questions, topic, level } =
-    location.state;
+  const { userAnswers, correctAnswers, questions, topic, level } = location.state;
   const top = topic;
   const lev = level;
 
@@ -28,29 +26,34 @@ const FinalResult = () => {
   const [retakeQuiz, setRetakeQuiz] = useState(false);
   const retakeQuizRef = useRef(null);
   const retakemcqs = useRef("");
-  const explanationRef = useRef(null); // Ref to the explanation section
+  const explanationRef = useRef(null); 
 
-  const calculateScore = () => {
-    let score = 0;
+  // Memoize score calculation
+  const score = useMemo(() => {
+    let s = 0;
     Object.keys(userAnswers).forEach((key) => {
       if (userAnswers[key] === correctAnswers[key]) {
-        score += 1;
+        s += 1;
       }
     });
-    return score;
-  };
+    return s;
+  }, [userAnswers, correctAnswers]);
 
-  const handleDescriptionFetch = async (questionKey, question, correctAnswer) => {
+  const totalQuestions = useMemo(() => Object.keys(correctAnswers).length, [correctAnswers]);
+  const incorrectAnswers = useMemo(() => totalQuestions - score, [totalQuestions, score]);
+  const percentage = useMemo(() => Math.round((score / totalQuestions) * 100), [score, totalQuestions]);
+
+  // Memoize handlers
+  const handleDescriptionFetch = useCallback(async (questionKey, question, correctAnswer) => {
     setLoadingQuestions((prev) => ({ ...prev, [questionKey]: true }));
     setSelectedDescription(null);
-
+    setLoading(true);
     const prompt = `
       For the following question and its answer, provide a clear and concise explanation for why the correct answer is correct (if possible then give an example). Keep the explanation short and to the point.
 
       Question: ${question}
       Correct Answer: ${correctAnswer}.
     `;
-
     await APIService({
       question: prompt,
       onResponse: (response) => {
@@ -63,57 +66,19 @@ const FinalResult = () => {
         }
         setLoadingQuestions((prev) => ({ ...prev, [questionKey]: false }));
         setLoading(false);
-        setTimeout(
-          () => explanationRef.current?.scrollIntoView({ behavior: "smooth" }),
-          100
-        );
+        setTimeout(() => explanationRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
       },
     });
-  };
+  }, []);
 
-  const score = calculateScore();
-  const totalQuestions = Object.keys(correctAnswers).length;
-  const incorrectAnswers = totalQuestions - score;
-  const percentage = Math.round((score / totalQuestions) * 100);
-
-  const data = {
-    labels: ["Correct", "Incorrect"],
-    datasets: [
-      {
-        data: [score, incorrectAnswers],
-        backgroundColor: ["rgba(46, 213, 197, 0.8)", "rgba(139, 92, 246, 0.8)"],
-        borderColor: ["rgba(46, 213, 197, 1)", "rgba(139, 92, 246, 1)"],
-        borderWidth: 1,
-        hoverBackgroundColor: ["rgba(46, 213, 197, 1)", "rgba(139, 92, 246, 1)"],
-      },
-    ],
-  };
-
-  const chartOptions = {
-    plugins: {
-      legend: {
-        position: 'bottom',
-        labels: {
-          color: 'white',
-          font: {
-            size: 14
-          }
-        }
-      }
-    }
-  };
-
-  const handleReTakeQuiz = () => {
-    setRetakeQuiz(!retakeQuiz);
+  const handleReTakeQuiz = useCallback(() => {
+    setRetakeQuiz((prev) => !prev);
     if (!retakeQuiz) {
-      setTimeout(
-        () => retakeQuizRef.current?.scrollIntoView({ behavior: "smooth" }),
-        100
-      );
+      setTimeout(() => retakeQuizRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
     }
-  };
+  }, [retakeQuiz]);
 
-  const handleStartQuizClick = (event) => {
+  const handleStartQuizClick = useCallback((event) => {
     event.preventDefault();
     let retakeMCQs = retakemcqs.current.value;
     if (retakeMCQs) {
@@ -127,87 +92,78 @@ const FinalResult = () => {
     } else {
       alert("Please specify the number of MCQs to generate");
     }
-  };
+  }, [lev, navigate, top]);
 
-  const handleDownloadPdf = async () => {
+  // Fast, attractive PDF download using jsPDF + autoTable (no pie chart)
+  const handleDownloadPdf = useCallback(async () => {
     setLoading(true);
     try {
       const { default: jsPDF } = await import("jspdf");
-      const { default: html2canvas } = await import("html2canvas");
+      const autoTable = (await import("jspdf-autotable")).default;
+      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const margin = 15;
+      let y = margin;
 
-      const input = document.getElementById("result-container");
-      
-      // Create a temporary container with white background
-      const tempContainer = document.createElement("div");
-      tempContainer.style.width = "800px";
-      tempContainer.style.padding = "40px";
-      tempContainer.style.backgroundColor = "#ffffff";
-      tempContainer.style.color = "#000000";
-      
-      // Clone the content
-      const contentClone = input.cloneNode(true);
-      
-      // Adjust styles for PDF
-      const headings = contentClone.querySelectorAll('h1, h2, h3');
-      headings.forEach(heading => {
-        heading.style.color = "#000000";
-      });
-      
-      const tables = contentClone.querySelectorAll('table');
-      tables.forEach(table => {
-        table.style.borderCollapse = "collapse";
-        table.style.width = "100%";
-        
-        const cells = table.querySelectorAll('th, td');
-        cells.forEach(cell => {
-          cell.style.border = "1px solid #dddddd";
-          cell.style.padding = "8px";
-          cell.style.color = "#000000";
-        });
-        
-        const headers = table.querySelectorAll('th');
-        headers.forEach(header => {
-          header.style.backgroundColor = "#f2f2f2";
-          header.style.color = "#000000";
-        });
-      });
-      
-      tempContainer.appendChild(contentClone);
-      document.body.appendChild(tempContainer);
+      // Title Section with colored background
+      pdf.setFillColor(46, 213, 197);
+      pdf.rect(0, y - 7, pdf.internal.pageSize.getWidth(), 14, 'F');
+      pdf.setFontSize(18);
+      pdf.setTextColor(255, 255, 255);
+      pdf.text(`${topic} - Quiz Result`, margin, y);
+      y += 12;
+      pdf.setFontSize(12);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(`Level: ${level || "-"}`, margin, y);
+      y += 7;
+      pdf.text(`Score: ${score} / ${totalQuestions} (${percentage}%)`, margin, y);
+      y += 7;
+      pdf.text(`Date: ${new Date().toLocaleString()}`, margin, y);
+      y += 10;
 
-      // Create PDF
-      const canvas = await html2canvas(tempContainer, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: "#ffffff"
-      });
-      
-      // Remove temporary container
-      document.body.removeChild(tempContainer);
+      // Section Header for Table
+      pdf.setFillColor(139, 92, 246);
+      pdf.rect(0, y - 5, pdf.internal.pageSize.getWidth(), 10, 'F');
+      pdf.setFontSize(14);
+      pdf.setTextColor(255, 255, 255);
+      pdf.text('Quiz Answers Table', margin, y + 2);
+      pdf.setTextColor(0, 0, 0);
+      y += 10;
 
-      const imgData = canvas.toDataURL("image/jpeg", 1.0);
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4"
-      });
-      
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      // Prepare table data
+      const tableHead = [["#", "Question", "Your Answer", "Correct Answer", "Status"]];
+      const tableBody = Object.keys(questions).map((key, idx) => [
+        idx + 1,
+        questions[key],
+        userAnswers[key] || "No Answer",
+        correctAnswers[key],
+        userAnswers[key] === correctAnswers[key] ? "Correct" : "Incorrect"
+      ]);
 
-      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+      autoTable(pdf, {
+        head: tableHead,
+        body: tableBody,
+        startY: y,
+        styles: { fontSize: 10, cellPadding: 3 },
+        headStyles: { fillColor: [46, 213, 197], textColor: 0, fontStyle: 'bold' },
+        bodyStyles: { textColor: 20 },
+        alternateRowStyles: { fillColor: [240, 240, 240] },
+        margin: { left: margin, right: margin },
+        didDrawPage: (data) => {
+          // Add header/footer if desired
+        }
+      });
+
       pdf.save(`${topic}_Quiz_Result.pdf`);
     } catch (err) {
       console.error("Failed to generate PDF: ", err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [topic, level, score, totalQuestions, percentage, questions, userAnswers, correctAnswers]);
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     navigate("/topic-learning");
-  };
+  }, [navigate]);
 
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-6 md:py-10 px-4 md:px-6 relative overflow-hidden">
@@ -247,16 +203,6 @@ const FinalResult = () => {
         
         {/* Results Summary */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          {/* Chart */}
-          <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm">
-            <h2 className="text-xl font-semibold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] to-white">
-              Performance Summary
-            </h2>
-            <div className="w-full max-w-xs mx-auto">
-              <Pie data={data} options={chartOptions} />
-            </div>
-          </div>
-          
           {/* Score Details */}
           <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm flex flex-col justify-center">
             <h2 className="text-xl font-semibold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] to-white">
@@ -290,6 +236,30 @@ const FinalResult = () => {
               </button>
             </div>
           </div>
+        </div>
+        
+        {/* Action Buttons Section - Responsive */}
+        <div className="flex flex-wrap gap-3 justify-center md:justify-end items-center mt-8 mb-4 w-full">
+          <button
+            onClick={handleDownloadPdf}
+            disabled={loading}
+            className="px-4 py-2 rounded-lg bg-[var(--accent-teal)] text-white font-semibold shadow-md hover:bg-[var(--primary-violet)] transition-all w-full sm:w-auto text-base md:text-lg"
+          >
+            {loading ? "Generating PDF..." : "Download PDF"}
+          </button>
+          <button
+            onClick={handleBack}
+            className="px-4 py-2 rounded-lg bg-[var(--primary-black)]/80 text-[var(--accent-teal)] font-semibold shadow hover:bg-[var(--primary-black)]/90 border border-[var(--accent-teal)]/30 transition-all w-full sm:w-auto text-base md:text-lg"
+          >
+            <IoArrowBack className="inline mr-2 mb-1" /> Back to Topics
+          </button>
+          <button
+            onClick={handleReTakeQuiz}
+            ref={retakeQuizRef}
+            className="px-4 py-2 rounded-lg bg-[var(--primary-violet)] text-white font-semibold shadow-md hover:bg-[var(--accent-teal)] transition-all w-full sm:w-auto text-base md:text-lg"
+          >
+            <IoRepeat className="inline mr-2 mb-1" /> Retake Quiz
+          </button>
         </div>
         
         {/* Retake Quiz Form */}

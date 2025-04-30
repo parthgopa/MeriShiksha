@@ -6,13 +6,9 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import AuthProvider from "./context/AuthContext";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
-import ForgotPassword from "./components/Auth/ForgotPassword";
-import VerifyCode from "./components/Auth/VerifyCode";
-import ResetPassword from "./components/Auth/ResetPassword";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 
 //Functionalities Components
-
 import Functionalities from "./components/Functionalities.jsx";
 import Layout from "./components/Layout.jsx";
 import About from "./About.jsx";
@@ -76,7 +72,6 @@ import InterviewSimulation from "./components/14Mock Interview/2InterviewSimulat
 import InterviewResult from "./components/14Mock Interview/3InterviewResult.jsx";
 
 import GeminiImageAnalyzer from "./imageTrial/Demo.jsx";
-import Profile from "./components/Profile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -95,22 +90,6 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />
-  },
-  {
-    path: "/profile",
-    element: <Profile />
-  },
-  {
-    path: "/forgot-password",
-    element: <ForgotPassword />
-  },
-  {
-    path: "/verify-code",
-    element: <VerifyCode />
-  },
-  {
-    path: "/reset-password",
-    element: <ResetPassword />
   },
   {
     path: "/aboutUs",

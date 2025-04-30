@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import img4 from "../../assets/inputimages/img4.jpg";
 import { useNavigate, useLocation } from "react-router";
 import HomeButton from "../HomeButton";
@@ -23,7 +23,7 @@ const TopicLearning = () => {
     }
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { id, value } = e.target;
     // Create a mapping for the field IDs
     const fieldMap = {
@@ -31,18 +31,16 @@ const TopicLearning = () => {
       'subjectEntry': 'subject',
       'Parts': 'parts'
     };
-    
     setFormData(prev => {
       const fieldName = fieldMap[id] || id;
       const newData = { ...prev, [fieldName]: value };
       localStorage.setItem('topicLearningFormData', JSON.stringify(newData));
       return newData;
     });
-  };
+  }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
-
     let initialPrompt = `
     You are my mentor.
     I am a begineer in the topic : '${formData.topic}' ${
@@ -51,25 +49,23 @@ const TopicLearning = () => {
     When the topic pertains to any law of India, please provide specific references of the relevant sections, rules, and regulations of the particular act, along with any case laws or judicial precedents if any.
     For date: ${date} and time: ${time}(dont display it in output)
     `;
-
     let data = {
       ...formData,
       initialPrompt
     };
-
     if (formData.topic && formData.parts) {
       setWarning(false);
       navigate("/learning-topic", { state: data });
     } else {
       setWarning(true);
     }
-  };
+  }, [formData, date, time, navigate]);
 
-  const handleEnterPressed = (e) => {
+  const handleEnterPressed = useCallback((e) => {
     if (e.key === "Enter") {
       handleSubmit(e);
     }
-  };
+  }, [handleSubmit]);
 
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-6 md:py-10 px-4 md:px-6 relative overflow-hidden">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import APIService from "../API"; // Assuming you have an API service to handle it
 import { useLocation, useNavigate } from "react-router";
 import ReactMarkdown from "react-markdown"; // Add this import
@@ -20,13 +20,13 @@ const LearningTopic = () => {
   const [speechRate, setSpeechRate] = useState(1); // State for speech rate
   const cacheRef = useRef({}); // Cache object to store responses
   const [currentSpeechResponse, setSpeechResponse] = useState("");
-  const date = new Date().toDateString();
-  const time = new Date().toTimeString();
+  const date = useMemo(() => new Date().toDateString(), []);
+  const time = useMemo(() => new Date().toTimeString(), []);
   const [highlightedIndex, setHighlightedIndex] = useState(0); // State to track highlighted character index
   const [isSpeaking, setIsSpeaking] = useState(false);
   const speechRef = useRef(null);
 
-  const handleOnResponse = (part, response) => {
+  const handleOnResponse = useCallback((part, response) => {
     const responseText =
       response["candidates"][0]["content"]["parts"][0]["text"];
 
@@ -45,7 +45,7 @@ const LearningTopic = () => {
       prompt: part,
       response: responseText,
     };
-  };
+  }, []);
 
   useEffect(() => {
     const fetchInitialContent = async () => {
@@ -65,9 +65,16 @@ const LearningTopic = () => {
 
     fetchInitialContent();
 
-  }, [initialPrompt, currentPart]);
+  }, [initialPrompt, currentPart, handleOnResponse]);
 
-  const handleBack = () => {
+  const cancel = useCallback(() => {
+    if (speechRef.current && speechRef.current.cancel) {
+      speechRef.current.cancel();
+    }
+    setIsSpeaking(false);
+  }, []);
+
+  const handleBack = useCallback(() => {
     cancel();
     // Save form data before navigating back
     if (location.state) {
@@ -78,9 +85,9 @@ const LearningTopic = () => {
       }));
     }
     navigate(-1);
-  };
+  }, [cancel, location.state, navigate]);
 
-  const handleNext = async () => {
+  const handleNext = useCallback(async () => {
     if (currentPart < parts) {
       cancel(); // Stop speech immediately when moving to the next part
 
@@ -131,9 +138,9 @@ const LearningTopic = () => {
         setCurrentPart(nextPart);
       }
     }
-  };
+  }, [cancel, currentPart, parts, subject, topic, handleOnResponse, date, time]);
 
-  const handlePrevious = () => {
+  const handlePrevious = useCallback(() => {
     if (currentPart > 1) {
       cancel(); // Stop speech immediately when moving to the previous part
 
@@ -155,9 +162,9 @@ const LearningTopic = () => {
         setCurrentPart(prevPart);
       }
     }
-  };
+  }, [cancel, currentPart]);
 
-  const handleFinish = () => {
+  const handleFinish = useCallback(() => {
     cancel(); // Stop speech when finishing
     // Save form data before finishing
     if (location.state) {
@@ -170,15 +177,15 @@ const LearningTopic = () => {
     const level = "intermediate";
     const data = { topic: topic, level: level };
     navigate("/finished-learning", { state: data });
-  };
+  }, [cancel, location.state, navigate, topic, subject]);
 
-  const handleCopyToClipboard = () => {
+  const handleCopyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(response).then(() => {
       alert("Copied to clipboard successfully.");
     });
-  };
+  }, [response]);
 
-  const handleSpeak = () => {
+  const handleSpeak = useCallback(() => {
     if (currentSpeechResponse && speechRef.current) {
       if (!isSpeaking) {
         setIsSpeaking(true);
@@ -186,15 +193,15 @@ const LearningTopic = () => {
         speechRef.current.play();
       }
     }
-  };
+  }, [currentSpeechResponse, isSpeaking]);
 
-  const handleStop = () => {
+  const handleStop = useCallback(() => {
     if (isSpeaking && speechRef.current) {
       setIsSpeaking(false);
       // The pause method is called on the Speech component via ref
       speechRef.current.pause();
     }
-  };
+  }, [isSpeaking]);
 
   // Custom style for Speech component
   const speechStyle = {
@@ -207,13 +214,6 @@ const LearningTopic = () => {
     pause: {
       display: 'none', // Hide the default pause button
     },
-  };
-
-  const cancel = () => {
-    if (isSpeaking && speechRef.current) {
-      setIsSpeaking(false);
-      speechRef.current.pause();
-    }
   };
 
   return (
