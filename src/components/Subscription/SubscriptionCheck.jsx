@@ -1,0 +1,136 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import ApiLimitModal from './ApiLimitModal';
+import api from '../../api/axios';
+
+/**
+ * A reusable component that checks if a user has API calls remaining or an active subscription
+ * before allowing them to make API calls.
+ * 
+ * @param {Object} props
+ * @param {Function} props.onSuccess - Function to call when user has API calls remaining
+ * @param {Function} props.onError - Optional function to call when there's an error
+ * @param {string} props.redirectPath - Optional path to redirect to if user is not logged in
+ * @param {boolean} props.checkOnMount - Whether to check subscription on component mount
+ */
+const SubscriptionCheck = ({ 
+  onSuccess, 
+  onError, 
+  redirectPath = '/login',
+  checkOnMount = true,
+  children 
+}) => {
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
+  const { currentUser, updateProfile } = useAuth();
+  const navigate = useNavigate();
+
+  // Function to check if user can make API calls
+  const checkApiAccess = async () => {
+    if (isChecking) return; // Prevent multiple simultaneous checks
+    
+    setIsChecking(true);
+    
+    try {
+      // Check if user is logged in
+      if (!currentUser) {
+        // Redirect to login if not logged in
+        navigate(redirectPath, { state: { from: window.location.pathname } });
+        setIsChecking(false);
+        return false;
+      }
+      
+      // Check if user has unlimited API calls (subscribed user) or has remaining calls
+      const maxApiCalls = currentUser.max_api_calls;
+      console.log('Current API calls available:', maxApiCalls);
+      
+      // User has unlimited API calls (-1) or has remaining calls (> 0)
+      if (maxApiCalls === -1 || maxApiCalls > 0) {
+        // If not unlimited, decrement API call count
+        if (maxApiCalls !== -1) {
+          try {
+            const response = await api.post("/api/user/decrement-api-calls", {}, {
+              headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+            });
+            
+            // Update user in context with new API call count
+            if (response.data) {
+              updateProfile(response.data);
+            }
+          } catch (error) {
+            console.error("Error updating API call count:", error);
+            if (onError) onError(error);
+            setIsChecking(false);
+            return false;
+          }
+        }
+        
+        // Success path - user has API calls available
+        setIsChecking(false);
+        setShowLimitModal(false); // Ensure modal is hidden
+        if (onSuccess) onSuccess();
+        return true;
+      } else {
+        // User has no API calls remaining (maxApiCalls === 0)
+        console.log('No API calls remaining, showing limit modal');
+        setShowLimitModal(true);
+        setIsChecking(false);
+        if (onError) onError(new Error("No API calls remaining"));
+        return false;
+      }
+    } catch (error) {
+      console.error("Error checking API access:", error);
+      setIsChecking(false);
+      if (onError) onError(error);
+      return false;
+    }
+  };
+
+  // Check on component mount if enabled
+  useEffect(() => {
+    if (checkOnMount) {
+      // Reset modal state when component mounts
+      setShowLimitModal(false);
+      checkApiAccess();
+    }
+  }, [checkOnMount, currentUser]);
+
+  const handleCloseModal = () => {
+    setShowLimitModal(false);
+  };
+
+  // Create a wrapper component to avoid passing checkApiAccess to DOM elements
+  const ChildrenWithCheck = () => {
+    if (!children) return null;
+    
+    // If children is a React element, clone it and pass the checkApiAccess function
+    if (React.isValidElement(children)) {
+      return React.cloneElement(children, {
+        // Don't pass checkApiAccess to DOM elements
+        ...(typeof children.type !== 'string' ? { checkApiAccess } : {})
+      });
+    }
+    
+    // If children is a function, call it with checkApiAccess
+    if (typeof children === 'function') {
+      return children({ checkApiAccess });
+    }
+    
+    // Otherwise, just return the children
+    return children;
+  };
+
+  return (
+    <>
+      <ChildrenWithCheck />
+      {showLimitModal && (
+        <ApiLimitModal 
+          onClose={handleCloseModal} 
+        />
+      )}
+    </>
+  );
+};
+
+export default SubscriptionCheck;

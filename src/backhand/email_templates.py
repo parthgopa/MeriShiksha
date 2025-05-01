@@ -96,7 +96,7 @@ def get_welcome_email_template(user_name):
                     Explore interactive lessons, personalized recommendations, and a vibrant community of learners.<br>
                     If you have any questions or need help, our team is just an email away.
                 </p>
-                <a href="http://merishiksha.com" class="cta-btn">Start Learning Now</a>
+                <a href="https://merishiksha.com" class="cta-btn">Start Learning Now</a>
             </div>
             <div class='footer'>
                 &copy; {2025} MeriShiksha. All rights reserved. <br>
@@ -279,7 +279,7 @@ def get_password_reset_success_template(user_name):
                 <div class="success-icon">✓</div>
                 <h2>Password Reset Successful</h2>
                 <p class="message">Hi {user_name},<br>Your password has been successfully reset. You can now log in to your account with your new password.</p>
-                <a href="http://localhost:5173/login" class="button">Go to Login</a>
+                <a href="https://merishiksha.com" class="button">Go to Login</a>
                 <p style="margin-top: 30px;">If you did not reset your password, please contact our support team immediately.</p>
             </div>
             <div class="footer">

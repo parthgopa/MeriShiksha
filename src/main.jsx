@@ -78,6 +78,10 @@ import InterviewResult from "./components/14Mock Interview/3InterviewResult.jsx"
 import GeminiImageAnalyzer from "./imageTrial/Demo.jsx";
 import Profile from "./components/Profile.jsx";
 
+// Subscription Components
+import SubscriptionPage from "./components/Subscription/SubscriptionPage.jsx";
+import PaymentPage from "./components/Subscription/PaymentPage.jsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -111,6 +115,26 @@ const router = createBrowserRouter([
   {
     path: "/reset-password",
     element: <ResetPassword />
+  },
+  {
+    path: "/subscription",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <SubscriptionPage />
+        </Layout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/payment",
+    element: (
+      <ProtectedRoute>
+        <Layout>
+          <PaymentPage />
+        </Layout>
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/aboutUs",

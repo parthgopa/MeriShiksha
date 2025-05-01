@@ -25,7 +25,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await api.post("/api/login", formData);
+      const response = await api.post("/api/user/login", formData);
       
       // Store token and user data in localStorage
       localStorage.setItem("token", response.data.token);

@@ -46,7 +46,7 @@ const VerifyCode = () => {
     setLoading(true);
 
     try {
-      const response = await api.post("/api/verify-reset-code", { email, code });
+      const response = await api.post("/api/user/verify-reset-code", { email, code });
       
       // Store reset token in session storage
       sessionStorage.setItem("resetToken", response.data.reset_token);
@@ -67,7 +67,7 @@ const VerifyCode = () => {
     setLoading(true);
 
     try {
-      await api.post("/api/forgot-password", { email });
+      await api.post("/api/user/forgot-password", { email });
       setTimeLeft(600); // Reset timer to 10 minutes
     } catch (err) {
       setError(

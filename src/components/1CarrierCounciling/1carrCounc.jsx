@@ -5,6 +5,8 @@ import ReactMarkdown from "react-markdown";
 import APIService from "../API";
 import { useNavigate } from "react-router";
 import HomeButton from "../HomeButton";
+import { useAuth } from "../../context/AuthContext";
+import SubscriptionCheck from "../Subscription/SubscriptionCheck";
 
 const CarrierCounciling = () => {
   const [loading, setLoading] = useState(false);
@@ -18,13 +20,7 @@ const CarrierCounciling = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const interest = e.target[0].value;
-    setInterest(interest);
-
-    console.log(interest);
-
+  const processCareerGuidance = () => {
     if (!interest) {
       setWarning(true);
       return;
@@ -44,6 +40,19 @@ For date: ${date} and time: ${time}(dont display it in output)`;
 
     setLoading(true);
     APIService({ question: prompt, onResponse: handleOnResponse });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const interestValue = e.target[0].value;
+    setInterest(interestValue);
+
+    if (!interestValue) {
+      setWarning(true);
+      return;
+    }
+  
+    // The actual API call will be handled by the SubscriptionCheck component
   };
 
   const handleOnResponse = (response) => {
@@ -77,13 +86,35 @@ For date: ${date} and time: ${time}(dont display it in output)`;
     setlanguageentry(e.target.value);
   };
 
-  return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
+  // Create a wrapper component that will receive the checkApiAccess prop
+  const CareerCounselingContent = ({ checkApiAccess }) => {
+    // Call the API when the form is submitted and checkApiAccess is successful
+    const handleFormSubmit = async (e) => {
+      e.preventDefault();
+      const interestValue = e.target[0].value;
+      setInterest(interestValue);
+
+      if (!interestValue) {
+        setWarning(true);
+        return;
+      }
       
-      <div className="max-w-7xl mx-auto relative z-10">
+      // Check API access before making the call
+      if (checkApiAccess) {
+        const hasAccess = await checkApiAccess();
+        if (hasAccess) {
+          processCareerGuidance();
+        }
+      }
+    
+  }
+    return (
+      <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
+        
+        <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
@@ -111,7 +142,7 @@ For date: ${date} and time: ${time}(dont display it in output)`;
           <div className="w-full lg:w-3/5">
             <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm">
               <form
-                onSubmit={handleSubmit}
+                onSubmit={handleFormSubmit}
                 onKeyDown={handleEnterPressed}
                 className="space-y-6"
               >
@@ -213,7 +244,16 @@ For date: ${date} and time: ${time}(dont display it in output)`;
         <HomeButton />
       </div>
     </div>
+    );
+  };
+
+  return (
+    <SubscriptionCheck onSuccess={processCareerGuidance}>
+      <CareerCounselingContent />
+    </SubscriptionCheck>
   );
+
 };
+
 
 export default CarrierCounciling;

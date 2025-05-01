@@ -17,7 +17,7 @@ const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      const response = await api.post("/api/forgot-password", { email });
+      const response = await api.post("/api/user/forgot-password", { email });
       setMessage(response.data.message);
       setIsSubmitted(true);
       // Store email in session storage for the verification page

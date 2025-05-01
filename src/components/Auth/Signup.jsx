@@ -63,7 +63,7 @@ const Signup = () => {
       // Remove confirmPassword before sending to API
       const { confirmPassword, ...dataToSend } = formData;
 
-      const response = await api.post("/api/register", dataToSend);
+      const response = await api.post("/api/user/register", dataToSend);
       
       // Store token and user data in localStorage
       localStorage.setItem("token", response.data.token);

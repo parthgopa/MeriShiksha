@@ -11,12 +11,35 @@ const APIService = async ({ question, onResponse }) => {
       data: {
         contents: [{ parts: [{ text: question }] }],
       },
+      timeout: 30000, // 30 second timeout
     });
 
-    onResponse(response.data); // Invoke the callback with the response data
+    if (response.status === 200 && response.data) {
+      onResponse(response.data); // Invoke the callback with the response data
+    } else {
+      console.error("Invalid response from Gemini API:", response);
+      onResponse({
+        candidates: [{
+          content: {
+            parts: [{
+              text: "Sorry, we couldn't generate a response. Please try again later."
+            }]
+          }
+        }]
+      });
+    }
   } catch (error) {
     console.error("Error generating response:", error);
-    // onResponse("Please try again. ");
+    // Provide a fallback response structure that matches what the component expects
+    onResponse({
+      candidates: [{
+        content: {
+          parts: [{
+            text: "An error occurred while processing your request. Please try again later."
+          }]
+        }
+      }]
+    });
   }
 };
 

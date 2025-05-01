@@ -3,7 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 // Component to protect routes that require authentication
-const ProtectedRoute = ({ requireAdmin = false }) => {
+const ProtectedRoute = ({ requireAdmin = false, children }) => {
   const { currentUser, loading } = useAuth();
   
   // If still loading auth state, show nothing (or could show a spinner)
@@ -25,8 +25,8 @@ const ProtectedRoute = ({ requireAdmin = false }) => {
     return <Navigate to="/" replace />;
   }
   
-  // If authenticated (and admin if required), render the child routes
-  return <Outlet />;
+  // If authenticated (and admin if required), render children or nested routes
+  return children ? children : <Outlet />;
 };
 
 export default ProtectedRoute;

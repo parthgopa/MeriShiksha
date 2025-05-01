@@ -5,6 +5,8 @@ import APIService from "../API";
 import LoadingSpinner from "../LoadingSpinner";
 import ReactMarkdown from "react-markdown";
 import { FaDownload, FaArrowLeft, FaCopy } from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
+import SubscriptionCheck from "../Subscription/SubscriptionCheck";
 
 const PlannedPage = () => {
   const [lessonPlan, setLessonPlan] = useState("");
@@ -13,7 +15,7 @@ const PlannedPage = () => {
   const location = useLocation();
   const { subject, topic, time } = location.state;
 
-  useEffect(() => {
+  const generateLessonPlan = async () => {
     const prompt = `Generate a detailed lesson plan for the subject "${subject}" and topic "${topic}" for a duration of "${time}". The lesson plan should include the following sections:
     1. Learning Objectives: Clear, measurable objectives that students should achieve by the end of the lesson.
     2. Prerequisites: Any prior knowledge or skills students should have.
@@ -27,12 +29,9 @@ const PlannedPage = () => {
     
     Format the lesson plan in a clear, organized manner with proper headings and bullet points where appropriate. Make it comprehensive yet concise, suitable for a teacher to follow easily.`;
 
-    const APIcall = async () => {
-      setLoading(true);
-      await APIService({ question: prompt, onResponse: handleOnResponse });
-    };
-    APIcall();
-  }, [topic, subject, time]);
+    setLoading(true);
+    await APIService({ question: prompt, onResponse: handleOnResponse });
+  };
 
   const handleOnResponse = (response) => {
     try {
@@ -88,13 +87,22 @@ const PlannedPage = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-20 right-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 left-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
-      
-      <div className="max-w-4xl mx-auto relative z-10">
+  // Create a wrapper component that will receive the checkApiAccess prop
+  const LessonPlanContent = ({ checkApiAccess }) => {
+    // Call the API when the component mounts
+    React.useEffect(() => {
+      if (checkApiAccess) {
+        checkApiAccess();
+      }
+    }, [checkApiAccess]);
+  };
+    return (
+      <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-20 right-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
+        
+        <div className="max-w-4xl mx-auto relative z-10">
         <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm">
           <h2 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
             Lesson Plan: {topic}
@@ -163,6 +171,19 @@ const PlannedPage = () => {
         </div>
       </div>
     </div>
+    );
+  
+
+  // Call generateLessonPlan when the API access check is successful
+  useEffect(() => {
+    // This is just to trigger the initial API call when the component mounts
+    // The actual API call will be made after the subscription check
+  }, [topic, subject, time]);
+
+  return (
+    <SubscriptionCheck onSuccess={generateLessonPlan}>
+      <LessonPlanContent />
+    </SubscriptionCheck>
   );
 };
 
