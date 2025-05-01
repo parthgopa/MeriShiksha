@@ -25,7 +25,7 @@ const SubscriptionCheck = ({
   const [isChecking, setIsChecking] = useState(false);
   const { currentUser, updateProfile } = useAuth();
   const navigate = useNavigate();
-
+  
   // Function to check if user can make API calls
   const checkApiAccess = async () => {
     if (isChecking) return; // Prevent multiple simultaneous checks
@@ -35,6 +35,7 @@ const SubscriptionCheck = ({
     try {
       // Check if user is logged in
       if (!currentUser) {
+        console.log('No user logged in, redirecting to login');
         // Redirect to login if not logged in
         navigate(redirectPath, { state: { from: window.location.pathname } });
         setIsChecking(false);
@@ -42,21 +43,36 @@ const SubscriptionCheck = ({
       }
       
       // Check if user has unlimited API calls (subscribed user) or has remaining calls
+      // Use api_calls_remaining if available, otherwise fall back to max_api_calls
+      const apiCallsRemaining = currentUser.api_calls_remaining !== undefined ? 
+        currentUser.api_calls_remaining : currentUser.max_api_calls;
       const maxApiCalls = currentUser.max_api_calls;
-      console.log('Current API calls available:', maxApiCalls);
+      
+      console.log('Current user data:', {
+        max_api_calls: maxApiCalls,
+        api_calls_remaining: apiCallsRemaining,
+        user_id: currentUser.id
+      });
       
       // User has unlimited API calls (-1) or has remaining calls (> 0)
-      if (maxApiCalls === -1 || maxApiCalls > 0) {
+      if (maxApiCalls === -1 || apiCallsRemaining > 0) {
         // If not unlimited, decrement API call count
         if (maxApiCalls !== -1) {
           try {
+            console.log('Decrementing API call count...');
             const response = await api.post("/api/user/decrement-api-calls", {}, {
               headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
             });
             
             // Update user in context with new API call count
             if (response.data) {
+              console.log('API call decremented, new count:', response.data.max_api_calls);
               updateProfile(response.data);
+              
+              // Check if this was the last API call
+              if (response.data.max_api_calls === 0) {
+                console.log('Last API call used, will show modal on next attempt');
+              }
             }
           } catch (error) {
             console.error("Error updating API call count:", error);
@@ -64,6 +80,8 @@ const SubscriptionCheck = ({
             setIsChecking(false);
             return false;
           }
+        } else {
+          console.log('User has unlimited API calls (premium subscription)');
         }
         
         // Success path - user has API calls available
@@ -72,7 +90,7 @@ const SubscriptionCheck = ({
         if (onSuccess) onSuccess();
         return true;
       } else {
-        // User has no API calls remaining (maxApiCalls === 0)
+        // User has no API calls remaining
         console.log('No API calls remaining, showing limit modal');
         setShowLimitModal(true);
         setIsChecking(false);
@@ -87,14 +105,16 @@ const SubscriptionCheck = ({
     }
   };
 
-  // Check on component mount if enabled
+  // Check on component mount if enabled, but only once
   useEffect(() => {
+    // Only check on initial mount or when user changes
     if (checkOnMount) {
+      console.log('Component mounted, checking API access...');
       // Reset modal state when component mounts
       setShowLimitModal(false);
       checkApiAccess();
     }
-  }, [checkOnMount, currentUser]);
+  }, [checkOnMount, currentUser?.id]); // Only depend on user ID to prevent unnecessary checks
 
   const handleCloseModal = () => {
     setShowLimitModal(false);

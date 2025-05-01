@@ -75,6 +75,19 @@ export const AuthProvider = ({ children }) => {
   const updateProfile = async (userData) => {
     setError(null);
     try {
+      // If userData is directly provided (e.g., from API response), use it directly
+      if (!userData.hasOwnProperty('name')) {
+        console.log('Updating user profile with API data:', userData);
+        // Update user data in localStorage
+        const updatedUser = { ...currentUser, ...userData };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        
+        setCurrentUser(updatedUser);
+        return updatedUser;
+      }
+      
+      // Otherwise, make an API call to update the profile
+      console.log('Updating user profile with form data');
       const response = await api.put("/api/user/profile", userData);
       
       // Update user data in localStorage

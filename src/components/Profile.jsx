@@ -185,6 +185,30 @@ const Profile = () => {
                   <p className="text-sm text-gray-500">Account Created</p>
                   <p className="font-medium">{formatDateTime(user.created_at)}</p>
                 </div>
+                
+                <div>
+                  <p className="text-sm text-gray-500">Subscription Status</p>
+                  <p className="font-medium">
+                    {user.max_api_calls === -1 ? (
+                      <span className="text-green-600 font-semibold">Premium (Unlimited)</span>
+                    ) : (
+                      <span className="text-amber-600 font-semibold">Free Trial</span>
+                    )}
+                  </p>
+                </div>
+                
+                <div>
+                  <p className="text-sm text-gray-500">API Calls Remaining</p>
+                  <p className="font-medium">
+                    {user.max_api_calls === -1 ? (
+                      <span className="text-green-600">Unlimited</span>
+                    ) : (
+                      <span className={user.max_api_calls <= 5 ? "text-red-600 font-bold" : ""}>
+                        {user.max_api_calls} / 50
+                      </span>
+                    )}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

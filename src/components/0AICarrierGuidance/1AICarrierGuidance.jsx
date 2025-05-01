@@ -43,10 +43,12 @@ Prepare your proper report which proper advice on the subject for date: ${date} 
   
   // Use effect to fetch career guidance once subscription is confirmed
   useEffect(() => {
+    // Only fetch if subscription is confirmed and we're still in loading state
     if (hasSubscription && loading) {
+      console.log('Subscription confirmed, fetching career guidance...');
       fetchCareerGuidance();
     }
-  }, [hasSubscription]);
+  }, [hasSubscription]); // Remove loading from dependencies to prevent continuous calls
 
   const handleOnResponse = (response) => {
     try {
@@ -154,21 +156,22 @@ Prepare your proper report which proper advice on the subject for date: ${date} 
   };
 
   const handleSubscriptionSuccess = () => {
+    console.log('Subscription check succeeded, user has API calls available');
     setHasSubscription(true);
   };
 
   const handleSubscriptionError = (error) => {
-    console.error("Subscription check error:", error);
+    console.error("Subscription check error:", error.message);
     setLoading(false);
   };
 
   return (
-    <SubscriptionCheck 
+    <SubscriptionCheck
       onSuccess={handleSubscriptionSuccess}
       onError={handleSubscriptionError}
       checkOnMount={true}
     >
-      <div className="min-h-screen bg-gradient-to-b from-[var(--primary-black)] to-[var(--primary-violet)] text-white py-8 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen w-screen bg-[var(--primary-black)] text-white py-16 px-4">
         {/* Decorative elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
           <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>

@@ -173,7 +173,9 @@ def register():
         'email': email,
         'password': hashed_password,
         'role': role,
-        'created_at': datetime.now()
+        'created_at': datetime.now(),
+        'max_api_calls': 50,  # Initialize with 50 free API calls
+        'api_calls_remaining': 50  # Initialize remaining calls
     }
     
     # Insert user into database
@@ -225,29 +227,67 @@ def login():
     if not user or not bcrypt.check_password_hash(user['password'], password):
         return jsonify({'error': 'Invalid email or password'}), 401
     
-    # Update login tracking fields
-    now = datetime.now()
+    # Update login info
+    now = datetime.now().isoformat()
     update_fields = {}
-    if 'first_logged_in' not in user or not user.get('first_logged_in'):
+    if not user.get('first_logged_in'):
         update_fields['first_logged_in'] = now
     update_fields['last_logged_in'] = now
-    update_fields['login_count'] = user.get('login_count', 0) + 1
-    users_collection.update_one({'_id': user['_id']}, {'$set': update_fields})
+    
+    # Ensure api_calls_remaining is initialized if not present
+    if 'api_calls_remaining' not in user:
+        update_fields['api_calls_remaining'] = user.get('max_api_calls', 50)
+        
+    # Update the user document with both set and increment operations
+    users_collection.update_one(
+        {'_id': user['_id']}, 
+        {
+            '$set': update_fields, 
+            '$inc': {'login_count': 1}
+        }
+    )
     
     # Create access token
     access_token = create_access_token(identity=str(user['_id']))
     
-    # Return updated user info
-    user = users_collection.find_one({'email': email})
+    # Get updated user data
+    user = users_collection.find_one({'_id': user['_id']})
+    
+    # Get subscription status and API calls
+    max_api_calls = user.get('max_api_calls', 50)
+    api_calls_remaining = user.get('api_calls_remaining', max_api_calls)
+    
+    # Check if user has an active subscription
+    has_subscription = False
+    if max_api_calls == -1:
+        has_subscription = True  # Unlimited calls means premium subscription
+    elif user.get('subscription_end_date'):
+        # Check if subscription is still valid
+        if datetime.now() < datetime.fromisoformat(user['subscription_end_date']):
+            has_subscription = True
+    
+    # Make sure api_calls_remaining is initialized
+    if api_calls_remaining is None:
+        api_calls_remaining = max_api_calls
+        # Update user with correct api_calls_remaining
+        users_collection.update_one(
+            {'_id': user['_id']},
+            {'$set': {'api_calls_remaining': api_calls_remaining}}
+        )
+    
+    # Log the user data being returned
+    print(f"User login - ID: {user['_id']}, API calls: {api_calls_remaining}/{max_api_calls}")
     
     return jsonify({
-        'message': 'Login successful',
         'token': access_token,
         'user': {
             'id': str(user['_id']),
-            'name': user['name'],
-            'email': user['email'],
-            'role': user['role']
+            'name': user.get('name'),
+            'email': user.get('email'),
+            'role': user.get('role'),
+            'max_api_calls': max_api_calls,
+            'api_calls_remaining': api_calls_remaining,
+            'has_subscription': has_subscription
         }
     }), 200
 
@@ -397,6 +437,34 @@ def reset_password():
 @jwt_required()
 def decrement_api_calls():
     user_id = get_jwt_identity()
+    
+    # Add a timestamp check to prevent rapid consecutive API calls
+    # This prevents the same user from making multiple API calls within a short time frame
+    current_time = datetime.now()
+    last_api_call = users_collection.find_one({
+        '_id': ObjectId(user_id),
+        'last_api_call_time': {'$exists': True}
+    })
+    
+    if last_api_call and 'last_api_call_time' in last_api_call:
+        last_time = datetime.fromisoformat(last_api_call['last_api_call_time'])
+        time_diff = (current_time - last_time).total_seconds()
+        
+        # If less than 2 seconds since last API call, reject to prevent rapid decrements
+        if time_diff < 2:
+            print(f"Rate limiting API call for user {user_id} - too soon after last call ({time_diff} seconds)")
+            return jsonify({
+                'message': 'Please wait before making another request',
+                'rate_limited': True
+            }), 429
+    
+    # Update the last API call time
+    users_collection.update_one(
+        {'_id': ObjectId(user_id)},
+        {'$set': {'last_api_call_time': current_time.isoformat()}}
+    )
+    
+    # Get the user data
     user = users_collection.find_one({'_id': ObjectId(user_id)})
     
     if not user:
@@ -417,12 +485,25 @@ def decrement_api_calls():
             }), 200
     
     # If no subscription or expired subscription, decrement API calls
-    api_calls_remaining = user.get('api_calls_remaining', user.get('max_api_calls', 50))
+    max_api_calls = user.get('max_api_calls', 50)
+    api_calls_remaining = user.get('api_calls_remaining')
+    
+    # Make sure api_calls_remaining is initialized
+    if api_calls_remaining is None:
+        api_calls_remaining = max_api_calls
+        # Update user with correct api_calls_remaining
+        users_collection.update_one(
+            {'_id': ObjectId(user_id)},
+            {'$set': {'api_calls_remaining': api_calls_remaining}}
+        )
+    
+    print(f"Checking API calls - User ID: {user_id}, API calls remaining: {api_calls_remaining}/{max_api_calls}")
     
     if api_calls_remaining <= 0:
+        print(f"No API calls remaining for user {user_id}")
         return jsonify({
             'error': 'No API calls remaining',
-            'max_api_calls': user.get('max_api_calls', 50),
+            'max_api_calls': max_api_calls,
             'api_calls_remaining': 0,
             'subscription_active': False
         }), 403
@@ -434,10 +515,19 @@ def decrement_api_calls():
         {'$set': {'api_calls_remaining': new_api_calls_remaining}}
     )
     
+    print(f"API call decremented - User ID: {user_id}, New count: {new_api_calls_remaining}")
+    
+    # Get updated user data to return
+    updated_user = users_collection.find_one({'_id': ObjectId(user_id)})
+    
     return jsonify({
-        'message': 'API call processed',
-        'max_api_calls': user.get('max_api_calls', 50),
+        'id': str(updated_user['_id']),
+        'name': updated_user.get('name'),
+        'email': updated_user.get('email'),
+        'role': updated_user.get('role'),
+        'max_api_calls': updated_user.get('max_api_calls', 50),
         'api_calls_remaining': new_api_calls_remaining,
+        'message': 'API call processed',
         'subscription_active': False
     }), 200
 
