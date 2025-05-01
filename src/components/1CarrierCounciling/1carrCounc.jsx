@@ -15,34 +15,19 @@ const CarrierCounciling = () => {
   const [warning, setWarning] = useState(false);
   const [languageentry, setlanguageentry] = useState("English");
 
-  const date = new Date().toDateString();
-  const time = new Date().toTimeString();
-
   const navigate = useNavigate();
 
-  const processCareerGuidance = () => {
-    if (!interest) {
-      setWarning(true);
-      return;
+  const handleEnterPressed = (e) => {
+    if (e.key === "Enter") {
+      handleFormSubmit(e);
     }
-
-    const prompt = `Based on my interest in ${interest}, suggest the top 5 career options that will be in demand after 4 years. Provide the following details for each career option:
-
-- Career overview
-- Key responsibilities
-- Required skills and qualifications
-- Relevant courses or certifications
-- Name of reputed Indian colleges/institutes/universities with their website details
-
-Consider factors like job market demand, growth prospects, and potential salary ranges. 
-Provide the output in a concise bullet-point list format and in ${languageentry} language.
-For date: ${date} and time: ${time}(dont display it in output)`;
-
-    setLoading(true);
-    APIService({ question: prompt, onResponse: handleOnResponse });
   };
 
-  const handleSubmit = (e) => {
+  const handleLanguageChange = (e) => {
+    setlanguageentry(e.target.value);
+  };
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     const interestValue = e.target[0].value;
     setInterest(interestValue);
@@ -51,77 +36,30 @@ For date: ${date} and time: ${time}(dont display it in output)`;
       setWarning(true);
       return;
     }
-  
-    // The actual API call will be handled by the SubscriptionCheck component
+    const state = {
+      interest: interestValue,
+      language: languageentry,
+    };
+    navigate("/carrier-counselling/output", {
+      state: state,
+    });
   };
 
-  const handleOnResponse = (response) => {
-    try {
-      const content = response?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (content) {
-        setcarriercounciling(content);
-        setLoading(false);
+  return (
+    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
 
-        navigate("/carrier-counselling/output", {
-          state: { response: content },
-        });
-      } else {
-        throw new Error("Invalid response format.");
-      }
-    } catch (error) {
-      console.error("Error fetching response:", error);
-      alert("Failed to generate Counciling. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  const handleEnterPressed = (e) => {
-    if (e.key === "Enter") {
-      handleSubmit(e);
-    }
-  };
-  
-  const handleLanguageChange = (e) => {
-    setlanguageentry(e.target.value);
-  };
-
-  // Create a wrapper component that will receive the checkApiAccess prop
-  const CareerCounselingContent = ({ checkApiAccess }) => {
-    // Call the API when the form is submitted and checkApiAccess is successful
-    const handleFormSubmit = async (e) => {
-      e.preventDefault();
-      const interestValue = e.target[0].value;
-      setInterest(interestValue);
-
-      if (!interestValue) {
-        setWarning(true);
-        return;
-      }
-      
-      // Check API access before making the call
-      if (checkApiAccess) {
-        const hasAccess = await checkApiAccess();
-        if (hasAccess) {
-          processCareerGuidance();
-        }
-      }
-    
-  }
-    return (
-      <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
-        
-        <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
             Career Counselling
           </h1>
           <p className="text-xl text-teal-100 max-w-3xl mx-auto">
-            Discover your ideal career path based on your interests and skills with our AI-powered career guidance.
+            Discover your ideal career path based on your interests and skills
+            with our AI-powered career guidance.
           </p>
         </div>
 
@@ -167,13 +105,25 @@ For date: ${date} and time: ${time}(dont display it in output)`;
                       placeholder="e.g., Chemical Engineering, Chartered Accountant, Dancing"
                     />
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[var(--accent-teal)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 text-[var(--accent-teal)]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
                       </svg>
                     </div>
                   </div>
                   <p className="text-sm text-teal-100/70 italic">
-                    Write your area of interest (e.g., Computer Engineering, Law, Dance, Finance)
+                    Write your area of interest (e.g., Computer Engineering,
+                    Law, Dance, Finance)
                   </p>
                 </div>
 
@@ -197,8 +147,19 @@ For date: ${date} and time: ${time}(dont display it in output)`;
                       <option value="English">English</option>
                     </select>
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[var(--accent-teal)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 text-[var(--accent-teal)]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
                       </svg>
                     </div>
                   </div>
@@ -207,10 +168,23 @@ For date: ${date} and time: ${time}(dont display it in output)`;
                 {/* Warning Message */}
                 {warning && (
                   <div className="p-4 bg-red-500/20 border border-red-500 rounded-lg flex items-center space-x-3 animate-fadeIn">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6 text-red-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                      />
                     </svg>
-                    <span className="text-white">Please enter your interests for career planning.</span>
+                    <span className="text-white">
+                      Please enter your interests for career planning.
+                    </span>
                   </div>
                 )}
 
@@ -226,8 +200,19 @@ For date: ${date} and time: ${time}(dont display it in output)`;
                     ) : (
                       <>
                         <span className="mr-2">Generate Career Guidance</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5 transform group-hover:translate-x-1 transition-transform duration-300"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          />
                         </svg>
                       </>
                     )}
@@ -244,16 +229,7 @@ For date: ${date} and time: ${time}(dont display it in output)`;
         <HomeButton />
       </div>
     </div>
-    );
-  };
-
-  return (
-    <SubscriptionCheck onSuccess={processCareerGuidance}>
-      <CareerCounselingContent />
-    </SubscriptionCheck>
   );
-
 };
-
 
 export default CarrierCounciling;

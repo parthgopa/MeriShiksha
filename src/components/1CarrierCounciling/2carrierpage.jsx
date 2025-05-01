@@ -2,15 +2,21 @@ import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useLocation } from "react-router";
 import HomeButton from "../HomeButton";
+import SubscriptionCheck from "../Subscription/SubscriptionCheck";
+import APIService from "../API";
 
 const CareerOutput = () => {
   const location = useLocation(null);
-  const { response } = location.state;
+  const { interest, language } = location.state;
   const [copySuccess, setCopySuccess] = useState(false);
+  const [plan, setPlan] = useState("none");
   const [downloadStarted, setDownloadStarted] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const date = new Date().toDateString();
+  const time = new Date().toTimeString();
 
   const handleCopyToClipboard = () => {
-    navigator.clipboard.writeText(response);
+    navigator.clipboard.writeText(plan);
     setCopySuccess(true);
     setTimeout(() => setCopySuccess(false), 3000);
   };
@@ -48,7 +54,48 @@ const CareerOutput = () => {
     }
   };
 
+  const processCareerGuidance = () => {
+    setLoading(true);
+    let prompt = `Based on my interest in ${interest}, suggest the top 5 career options that will be in demand after 4 years. Provide the following details for each career option:
+
+- Career overview
+- Key responsibilities
+- Required skills and qualifications
+- Relevant courses or certifications
+- Name of reputed Indian colleges/institutes/universities with their website details
+
+Consider factors like job market demand, growth prospects, and potential salary ranges. 
+Provide the output in a concise bullet-point list format and in ${language} language.
+For date: ${date} and time: ${time}(dont display it in output)`;
+      console.log(prompt)
+      try {
+        APIService({ question: prompt, onResponse: handleOnResponse });
+      } catch (error) {
+        console.error("Error calling API service:", error);
+        setLoading(false);
+      }
+    };
+
+    const handleOnResponse = (response) => {
+      try {
+        if (response && response.candidates && response.candidates[0] && 
+            response.candidates[0].content && response.candidates[0].content.parts && 
+            response.candidates[0].content.parts[0]) {
+          setPlan(response.candidates[0].content.parts[0].text);
+        } else {
+          console.error("Invalid response structure:", response);
+          setPlan("Sorry, we couldn't generate a response. Please try again later.");
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching response:", error);
+        setPlan("An error occurred while processing your request. Please try again later.");
+        setLoading(false);
+      }
+    };
+
   return (
+    <SubscriptionCheck onSuccess={processCareerGuidance}>
     <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
@@ -78,7 +125,7 @@ const CareerOutput = () => {
             className="p-6 md:p-8 bg-[var(--primary-black)]/50 rounded-b-xl text-white overflow-auto max-h-[60vh] custom-scrollbar"
           >
             <ReactMarkdown 
-              children={response} 
+              children={plan} 
               className="prose prose-invert prose-headings:text-[var(--accent-teal)] prose-a:text-[var(--accent-teal)] prose-strong:text-white prose-li:marker:text-[var(--accent-teal)] max-w-none"
             />
           </div>
@@ -160,6 +207,7 @@ const CareerOutput = () => {
         <HomeButton />
       </div>
     </div>
+    </SubscriptionCheck>
   );
 };
 

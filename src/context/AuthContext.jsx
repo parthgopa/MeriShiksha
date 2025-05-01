@@ -14,7 +14,6 @@ export const AuthProvider = ({ children }) => {
     // Fetch the user details from the database. Remove it from local storage.
     api.get("/api/user/profile").then((response) => {
       setCurrentUser(response.data);
-      console.log("User details fetched successfully:", response.data)
     }).catch((error) => {
       console.error("Error fetching user details:", error);
     });

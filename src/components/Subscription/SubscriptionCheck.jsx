@@ -34,13 +34,7 @@ const SubscriptionCheck = ({
     
     try {
       // Check if user is logged in
-      if (!currentUser) {
-        console.log('No user logged in, redirecting to login');
-        // Redirect to login if not logged in
-        navigate(redirectPath, { state: { from: window.location.pathname } });
-        setIsChecking(false);
-        return false;
-      }
+      
       
       // Check if user has unlimited API calls (subscribed user) or has remaining calls
       // Use api_calls_remaining if available, otherwise fall back to max_api_calls

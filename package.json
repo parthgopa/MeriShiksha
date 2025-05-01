@@ -19,6 +19,8 @@
     "dom": "^0.0.3",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
+    "paytmchecksum": "^1.5.1",
     "react": "^18.3.1",
     "react-autosuggest": "^10.1.0",
     "react-bootstrap": "^2.10.7",
