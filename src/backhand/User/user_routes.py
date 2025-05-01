@@ -93,6 +93,7 @@ def get_profile():
         'last_logged_in': user.get('last_logged_in'),
         'login_count': user.get('login_count', 0),
         'created_at': user.get('created_at'),
+        'api_calls_remaining': user.get('api_calls_remaining', 50),
         'max_api_calls': user.get('max_api_calls', 50),
         'subscription_end_date': user.get('subscription_end_date')
     }), 200

@@ -11,22 +11,13 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Check if user is logged in on app load
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-
-    if (token && user) {
-      try {
-        setCurrentUser(JSON.parse(user));
-        // Token is already set in api interceptor
-      } catch (err) {
-        console.error("Error parsing user data:", err);
-        logout();
-      }
-    }
-
-
-    
+    // Fetch the user details from the database. Remove it from local storage.
+    api.get("/api/user/profile").then((response) => {
+      setCurrentUser(response.data);
+      console.log("User details fetched successfully:", response.data)
+    }).catch((error) => {
+      console.error("Error fetching user details:", error);
+    });
     setLoading(false);
   }, []);
 
