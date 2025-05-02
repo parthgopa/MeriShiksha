@@ -6,6 +6,7 @@ import LoadingSpinner from "../LoadingSpinner"; // Import the LoadingSpinner com
 // import { useSpeechSynthesis } from "react-speech-kit"; // Import useSpeechSynthesis
 import Speech from 'react-speech';
 import HomeButton from "../HomeButton";
+import SubscriptionCheck from "../Subscription/SubscriptionCheck";
 
 import { HiMiniStop } from "react-icons/hi2";
 import { PiSpeakerHighFill } from "react-icons/pi";
@@ -33,6 +34,7 @@ const LearningParts = () => {
   const speechRef = useRef(null);
   const [copyStatus, setCopyStatus] = useState("Copy to Clipboard");
   const [downloadStatus, setDownloadStatus] = useState("Download PDF");
+  const [hasSubscription, setHasSubscription] = useState(false);
 
   const handleOnResponse = (part, response) => {
     const responseText =
@@ -54,8 +56,21 @@ const LearningParts = () => {
     };
   };
 
+  // Subscription handlers
+  const handleSubscriptionSuccess = () => {
+    console.log('Subscription check succeeded, user has API calls available');
+    setHasSubscription(true);
+  };
+
+  const handleSubscriptionError = (error) => {
+    console.error("Subscription check error:", error.message);
+    setLoading(false);
+  };
+
   useEffect(() => {
     const fetchInitialContent = async () => {
+      if (!hasSubscription) return navigate(-1); ; // Only proceed if subscription check passed
+      
       setLoading(true); // Start spinner when making API call
 
       // Check cache for the initial part
@@ -72,7 +87,7 @@ const LearningParts = () => {
 
     fetchInitialContent();
 
-  }, [initialPrompt, currentPart]);
+  }, [initialPrompt, currentPart, hasSubscription]); // Add hasSubscription as dependency
 
   const handleFinish = () => {
     cancel(); // Stop speech when finishing
@@ -100,6 +115,14 @@ const LearningParts = () => {
   };
 
   const handleStop = () => {
+    if (isSpeaking && speechRef.current) {
+      setIsSpeaking(false);
+      speechRef.current.pause();
+    }
+  };
+  
+  // Helper function to cancel speech
+  const cancel = () => {
     if (isSpeaking && speechRef.current) {
       setIsSpeaking(false);
       speechRef.current.pause();
@@ -338,7 +361,12 @@ Spanish. 'El gato es negro' means 'The cat is black'
   };
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+    <SubscriptionCheck
+      onSuccess={handleSubscriptionSuccess}
+      onError={handleSubscriptionError}
+      checkOnMount={true}
+    >
+      <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
@@ -513,7 +541,8 @@ Spanish. 'El gato es negro' means 'The cat is black'
           <HomeButton />
         </div>
       </div>
-    </div>
+      </div>
+    </SubscriptionCheck>
   );
 };
 

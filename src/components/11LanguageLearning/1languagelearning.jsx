@@ -3,11 +3,13 @@ import { useNavigate } from "react-router";
 import HomeButton from "../HomeButton";
 import img4 from "../../assets/inputimages/learnlanguage.jpg";
 import LoadingSpinner from "../LoadingSpinner"; // Importing the LoadingSpinner component
+import SubscriptionCheck from "../Subscription/SubscriptionCheck";
 
 const LanguageSelect = () => {
   const [language, setLanguage] = useState("");
   const [loading, setLoading] = useState(false);
   const [warning, setWarning] = useState(false);
+  const [hasSubscription, setHasSubscription] = useState(false);
   const date = new Date().toDateString();
   const time = new Date().toTimeString();
 
@@ -51,8 +53,24 @@ For date: ${date} and time: ${time}(dont display it in output)
     }
   };
 
+  // Subscription handlers
+  const handleSubscriptionSuccess = () => {
+    console.log('Subscription check succeeded, user has API calls available');
+    setHasSubscription(true);
+  };
+
+  const handleSubscriptionError = (error) => {
+    console.error("Subscription check error:", error.message);
+    setLoading(false);
+  };
+
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+    <SubscriptionCheck
+      onSuccess={handleSubscriptionSuccess}
+      onError={handleSubscriptionError}
+      checkOnMount={true}
+    >
+      <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
@@ -177,6 +195,7 @@ For date: ${date} and time: ${time}(dont display it in output)
         <HomeButton />
       </div>
     </div>
+    </SubscriptionCheck>
   );
 };
 

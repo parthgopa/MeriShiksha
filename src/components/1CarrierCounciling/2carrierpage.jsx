@@ -14,6 +14,7 @@ const CareerOutput = () => {
   const [loading, setLoading] = useState(true);
   const date = new Date().toDateString();
   const time = new Date().toTimeString();
+  const [hasSubscription, setHasSubscription] = useState(false);
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(plan);
@@ -55,6 +56,7 @@ const CareerOutput = () => {
   };
 
   const processCareerGuidance = () => {
+    if (!hasSubscription) return navigate(-1);
     setLoading(true);
     let prompt = `Based on my interest in ${interest}, suggest the top 5 career options that will be in demand after 4 years. Provide the following details for each career option:
 
@@ -94,8 +96,20 @@ For date: ${date} and time: ${time}(dont display it in output)`;
       }
     };
 
+    const handleSubscriptionSuccess = () => {
+      console.log('Subscription check succeeded, user has API calls available');
+      setHasSubscription(true);
+      processCareerGuidance();
+    };
+
+    const handleSubscriptionError = (error) => {
+      console.error("Subscription check error:", error.message);
+      setLoading(false);
+      navigate(-1);
+    };
+
   return (
-    <SubscriptionCheck onSuccess={processCareerGuidance}>
+    <SubscriptionCheck onSuccess={handleSubscriptionSuccess} onError={handleSubscriptionError}>
     <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>

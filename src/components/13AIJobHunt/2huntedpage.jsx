@@ -4,6 +4,7 @@ import APIService from "../API";
 import LoadingSpinner from "../LoadingSpinner";
 import ReactMarkdown from "react-markdown";
 import HomeButton from "../HomeButton";
+import SubscriptionCheck from "../Subscription/SubscriptionCheck";
 
 // Cache key for localStorage
 const CACHE_KEY = 'jobHuntResponses';
@@ -13,6 +14,7 @@ const HuntedPage = () => {
   const [loading, setLoading] = useState(true);
   const [copyStatus, setCopyStatus] = useState("Copy to Clipboard");
   const [downloadStatus, setDownloadStatus] = useState("Download PDF");
+  const [hasSubscription, setHasSubscription] = useState(false);
   const navigate = useNavigate();
   const location = useLocation(null);
   const { initialPrompt } = location.state;
@@ -58,8 +60,21 @@ const HuntedPage = () => {
     }
   };
 
+  // Subscription handlers
+  const handleSubscriptionSuccess = () => {
+    console.log('Subscription check succeeded, user has API calls available');
+    setHasSubscription(true);
+  };
+
+  const handleSubscriptionError = (error) => {
+    console.error("Subscription check error:", error.message);
+    setLoading(false);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
+      if (!hasSubscription) return; // Only proceed if subscription check passed
+      
       setLoading(true);
 
       // Check cache first
@@ -80,7 +95,7 @@ const HuntedPage = () => {
     };
 
     fetchData();
-  }, [initialPrompt]);
+  }, [initialPrompt, hasSubscription]); // Add hasSubscription as dependency
 
   const handleOnResponse = (response) => {
     try {
@@ -141,7 +156,12 @@ const HuntedPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+    <SubscriptionCheck
+      onSuccess={handleSubscriptionSuccess}
+      onError={handleSubscriptionError}
+      checkOnMount={true}
+    >
+      <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
@@ -226,6 +246,7 @@ const HuntedPage = () => {
         <HomeButton />
       </div>
     </div>
+    </SubscriptionCheck>
   );
 };
 
