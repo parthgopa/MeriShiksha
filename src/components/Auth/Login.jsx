@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../../api/axios";
+import { useAuth } from "../../context/AuthContext";
 import Mylogo from "../../assets/MyLogonew.png";
 
 const Login = () => {
@@ -11,6 +11,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
@@ -23,24 +24,11 @@ const Login = () => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
-      const response = await api.post("/api/user/login", formData);
-      
-      // Store token and user data in localStorage
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-      
-      // Redirect based on role
-      if (response.data.user.role === "admin") {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/");
-      }
+      await login(formData.email, formData.password);
+      navigate("/");
     } catch (err) {
-      setError(
-        err.response?.data?.error || "An error occurred. Please try again."
-      );
+      setError(err.message || "Invalid login credentials.");
     } finally {
       setLoading(false);
     }

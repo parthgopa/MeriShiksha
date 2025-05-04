@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import img4 from "../../assets/inputimages/jobhunt.jpg";
 import LoadingSpinner from "../LoadingSpinner";
@@ -6,7 +6,6 @@ import HomeButton from "../HomeButton";
 import SubscriptionCheck from "../Subscription/SubscriptionCheck";
 
 const AIJobHunt = () => {
-  // Initialize state with default values
   const [formData, setFormData] = useState({
     name: "",
     education: "",
@@ -18,6 +17,8 @@ const AIJobHunt = () => {
   const [hasSubscription, setHasSubscription] = useState(false);
 
   const navigate = useNavigate();
+  const inputRef = useRef(null);
+  const activeInputId = useRef(null);
 
   // Load saved form data on component mount
   useEffect(() => {
@@ -31,20 +32,34 @@ const AIJobHunt = () => {
     }
   }, []);
 
-  // Simple direct handleChange function
-  const handleChange = (e) => {
+  // Memoized handleChange to prevent unnecessary re-renders
+  const handleChange = useCallback((e) => {
     const { id, value } = e.target;
+    activeInputId.current = id; // Track the active input
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  }, []);
 
-    // Update state directly without using prev state
-    const newData = { ...formData, [id]: value };
-    setFormData(newData);
-  };
-
-  // Use a separate effect for localStorage to avoid blocking input
+  // Debounced localStorage save
   useEffect(() => {
-    // Only update localStorage when formData changes and isn't empty
-    if (Object.values(formData).some((val) => val !== "")) {
-      localStorage.setItem("jobHuntFormData", JSON.stringify(formData));
+    const handler = setTimeout(() => {
+      if (Object.values(formData).some((val) => val !== "")) {
+        localStorage.setItem("jobHuntFormData", JSON.stringify(formData));
+      }
+    }, 300); // 300ms debounce
+
+    return () => clearTimeout(handler); // Cleanup timeout
+  }, [formData]);
+
+  // Restore focus after state update
+  useEffect(() => {
+    if (activeInputId.current && inputRef.current) {
+      const input = document.getElementById(activeInputId.current);
+      if (input) {
+        input.focus();
+        // Move cursor to end of input
+        const valueLength = input.value.length;
+        input.setSelectionRange(valueLength, valueLength);
+      }
     }
   }, [formData]);
 
@@ -55,8 +70,9 @@ const AIJobHunt = () => {
       !formData.education.trim() ||
       !formData.job.trim() ||
       !formData.domain.trim()
-    )
+    ) {
       return setWarning(true);
+    }
 
     setLoading(true);
 
@@ -89,7 +105,7 @@ Please provide me the following details of Indian companies in valid JSON object
 
     let data = {
       initialPrompt: initialPrompt,
-      formData: formData, // Include form data in navigation state
+      formData: formData,
     };
 
     setWarning(false);
@@ -175,6 +191,7 @@ Please provide me the following details of Indian companies in valid JSON object
                           onChange={handleChange}
                           className="w-full p-4 rounded-lg bg-[var(--primary-black)]/50 border border-[var(--accent-teal)]/30 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all duration-300"
                           placeholder="e.g., John Smith"
+                          ref={inputRef}
                         />
                         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                           <svg
@@ -210,6 +227,7 @@ Please provide me the following details of Indian companies in valid JSON object
                           onChange={handleChange}
                           className="w-full p-4 rounded-lg bg-[var(--primary-black)]/50 border border-[var(--accent-teal)]/30 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all duration-300"
                           placeholder="e.g., B.Tech in Computer Science"
+                          ref={inputRef}
                         />
                         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                           <svg
@@ -247,6 +265,7 @@ Please provide me the following details of Indian companies in valid JSON object
                           onChange={handleChange}
                           className="w-full p-4 rounded-lg bg-[var(--primary-black)]/50 border border-[var(--accent-teal)]/30 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all duration-300"
                           placeholder="e.g., Software Developer"
+                          ref={inputRef}
                         />
                         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                           <svg
@@ -283,6 +302,7 @@ Please provide me the following details of Indian companies in valid JSON object
                           className="w-full p-4 rounded-lg bg-[var(--primary-black)]/50 border border-[var(--accent-teal)]/30 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all duration-300"
                           placeholder="e.g., Information Technology"
                           onKeyDown={handleEnterPressed}
+                          ref={inputRef}
                         />
                         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                           <svg

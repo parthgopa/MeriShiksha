@@ -87,7 +87,7 @@ const SubscriptionPage = () => {
                 <div className="flex justify-between items-center">
                   <span>API Calls Remaining:</span>
                   <span className="font-bold text-[var(--accent-teal)]">
-                    {currentUser.max_api_calls || 0}
+                    {currentUser.api_calls_remaining || 0}
                   </span>
                 </div>
               </div>
