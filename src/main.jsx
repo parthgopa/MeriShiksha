@@ -4,6 +4,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import AuthProvider from "./context/AuthContext";
+import { SubscriptionToggleProvider } from "./context/SubscriptionToggleContext";
+import SubscriptionToggleControl from "./components/Admin/SubscriptionToggleControl";
+import AdminDashboard from "./components/Admin/Dashboard";
+import AdminUsers from "./components/Admin/AdminUsers";
+import AdminAnalytics from "./components/Admin/AdminAnalytics";
+import AdminLogin from "./components/Admin/AdminLogin";
+import AdminRegister from "./components/Admin/AdminRegister";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
 import ForgotPassword from "./components/Auth/ForgotPassword";
@@ -81,13 +88,17 @@ import Profile from "./components/Profile.jsx";
 // Subscription Components
 import SubscriptionPage from "./components/Subscription/SubscriptionPage.jsx";
 import PaymentPage from "./components/Subscription/PaymentPage.jsx";
+import Header from "./components/Home/Header.jsx";
+import Footer from "./components/Home/Footer.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <Layout>
+        <Header />
         <Functionalities />
+        <Footer />
         {/* <GeminiImageAnalyzer/> */}
       </Layout>
     ),
@@ -461,6 +472,46 @@ const router = createBrowserRouter([
       </Layout>
     ),
   },
+  {
+    path: "/admin/login",
+    element: <AdminLogin />
+  },
+  {
+    path: "/admin/register",
+    element: <AdminRegister />
+  },
+  {
+    path: "/admin/dashboard",
+    element: (
+      <Layout>
+        <AdminDashboard />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/admin/users",
+    element: (
+      <Layout>
+        <AdminUsers />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/admin/analytics",
+    element: (
+      <Layout>
+        <AdminAnalytics />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/admin/subscription-toggle",
+    element: (
+      <Layout>
+        <SubscriptionToggleControl />{" "}
+      </Layout>
+    ),
+  },
   //{
   //   path: "/paragraph-mcqs",
   //   element: (
@@ -491,7 +542,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
   <AuthProvider>
-    <RouterProvider router={router} />
+    <SubscriptionToggleProvider>
+      <RouterProvider router={router} />
+    </SubscriptionToggleProvider>
   </AuthProvider>
   // {/* </StrictMode> */}
 );

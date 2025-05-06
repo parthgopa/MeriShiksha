@@ -601,3 +601,32 @@ def change_password():
     hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
     users_collection.update_one({'_id': ObjectId(user_id)}, {'$set': {'password': hashed_password}})
     return jsonify({'message': 'Password updated successfully.'}), 200
+
+# Set user role to admin
+@user_bp.route('/set-admin-role', methods=['POST'])
+@jwt_required()
+def set_admin_role():
+    # Get user ID from JWT
+    user_id = get_jwt_identity()
+    
+    # Find user by ID
+    user = users_collection.find_one({'_id': ObjectId(user_id)})
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    # Update user role to admin
+    users_collection.update_one(
+        {'_id': ObjectId(user_id)},
+        {'$set': {'role': 'admin'}}
+    )
+    
+    # Get updated user data
+    updated_user = users_collection.find_one({'_id': ObjectId(user_id)})
+    
+    return jsonify({
+        'id': str(updated_user['_id']),
+        'name': updated_user.get('name'),
+        'email': updated_user.get('email'),
+        'role': updated_user.get('role'),
+        'message': 'User role updated to admin successfully'
+    }), 200

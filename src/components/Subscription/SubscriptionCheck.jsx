@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useSubscriptionToggle } from '../../context/SubscriptionToggleContext';
 import ApiLimitModal from './ApiLimitModal';
 import api from '../../api/axios';
 
@@ -24,6 +25,7 @@ const SubscriptionCheck = ({
   const [showLimitModal, setShowLimitModal] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const { currentUser, updateProfile } = useAuth();
+  const { wantSubscription } = useSubscriptionToggle();
   const navigate = useNavigate();
   
   // Function to check if user can make API calls
@@ -33,8 +35,16 @@ const SubscriptionCheck = ({
     setIsChecking(true);
     
     try {
-      // Check if user is logged in
+      // If subscription feature is disabled, allow access without checks
+      if (!wantSubscription) {
+        console.log('Subscription system is disabled, granting API access');
+        setIsChecking(false);
+        setShowLimitModal(false); // Ensure modal is hidden
+        if (onSuccess) onSuccess();
+        return true;
+      }
       
+      // Check if user is logged in
       
       // Check if user has unlimited API calls (subscribed user) or has remaining calls
       // Use api_calls_remaining if available, otherwise fall back to max_api_calls
@@ -45,7 +55,8 @@ const SubscriptionCheck = ({
       console.log('Current user data:', {
         max_api_calls: maxApiCalls,
         api_calls_remaining: apiCallsRemaining,
-        user_id: currentUser.id
+        user_id: currentUser.id,
+        subscription_enabled: wantSubscription
       });
       
       // User has unlimited API calls (-1) or has remaining calls (> 0)

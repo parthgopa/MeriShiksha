@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Mylogo from "../../assets/MyLogonew.png";
 import { useAuth } from "../../context/AuthContext";
+import { useSubscriptionToggle } from "../../context/SubscriptionToggleContext";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { currentUser, logout } = useAuth();
+  const { wantSubscription } = useSubscriptionToggle();
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -77,6 +79,14 @@ const Header = () => {
                 AI Help
               </a>
             </li>
+            <li>
+              <Link
+                to="/admin/login"
+                className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+              >
+                Admin Portal
+              </Link>
+            </li>
             {currentUser ? (
               <>
                 <li>
@@ -108,22 +118,26 @@ const Header = () => {
               </>
             ) : (
               <>
-                <li>
-                  <Link
-                    to="/login"
-                    className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
-                  >
-                    Login
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/signup"
+                {wantSubscription && (
+                  <>
+                    <li>
+                      <Link
+                        to="/login"
+                        className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+                      >
+                        Login
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/signup"
                     className="bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white px-4 py-2 rounded-lg hover:opacity-90 transition-colors"
                   >
                     Sign Up
                   </Link>
                 </li>
+                  </>
+                )}
               </>
             )}
           </ul>
@@ -189,6 +203,15 @@ const Header = () => {
               AI Help
             </a>
           </li>
+          <li>
+            <Link
+              to="/admin/login"
+              className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Admin Portal
+            </Link>
+          </li>
           {currentUser ? (
             <>
               <li>
@@ -222,24 +245,28 @@ const Header = () => {
             </>
           ) : (
             <>
-              <li>
-                <Link
-                  to="/login"
-                  className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Login
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/signup"
+              {wantSubscription && (
+                <>
+                  <li>
+                    <Link
+                      to="/login"
+                      className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Login
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/signup"
                   className="bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white px-4 py-2 rounded-lg hover:opacity-90 transition-colors inline-block mt-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Sign Up
                 </Link>
               </li>
+                </>
+              )}
             </>
           )}
         </ul>

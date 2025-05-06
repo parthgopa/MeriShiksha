@@ -67,10 +67,7 @@ def send_email(to_email, subject, html_content):
 
 # Import routes
 from User.user_routes import user_bp
-
-# Create Admin blueprint if it doesn't exist yet
-from flask import Blueprint
-admin_bp = Blueprint('admin', __name__)
+from Admin.admin_routes import admin_bp
 
 # Register blueprints
 app.register_blueprint(user_bp, url_prefix='/api/user')
