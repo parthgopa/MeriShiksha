@@ -82,50 +82,63 @@ import MockInterview from "./components/14Mock Interview/1mockInterview.jsx";
 import InterviewSimulation from "./components/14Mock Interview/2InterviewSimulation.jsx";
 import InterviewResult from "./components/14Mock Interview/3InterviewResult.jsx";
 
-import GeminiImageAnalyzer from "./imageTrial/Demo.jsx";
 import Profile from "./components/Profile.jsx";
-
 // Subscription Components
 import SubscriptionPage from "./components/Subscription/SubscriptionPage.jsx";
 import PaymentPage from "./components/Subscription/PaymentPage.jsx";
 import Header from "./components/Home/Header.jsx";
 import Footer from "./components/Home/Footer.jsx";
+import { Outlet } from "react-router";
+import ReviewSection from "./components/ZothernotRequired/Review.jsx"
+function AppLayout() {
+  return (
+    <>
+      <Header />
+        <Outlet />
+      <Footer />
+    </>
+  );
+}
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <Layout>
-        <Header />
-        <Functionalities />
-        <Footer />
-        {/* <GeminiImageAnalyzer/> */}
-      </Layout>
-    ),
+    element: <AppLayout />, // header/footer wrap all pages
+    children: [
+      {
+        path: "/",
+        element: (
+          <Layout>
+            <Functionalities />
+            {/* <GeminiImageAnalyzer/> */}
+          </Layout>
+        ),
+      },
+    ],
   },
   {
     path: "/login",
-    element: <Login />
+    element: <Login />,
   },
   {
     path: "/signup",
-    element: <Signup />
+    element: <Signup />,
   },
   {
     path: "/profile",
-    element: <Profile />
+    element: <Profile />,
   },
   {
     path: "/forgot-password",
-    element: <ForgotPassword />
+    element: <ForgotPassword />,
   },
   {
     path: "/verify-code",
-    element: <VerifyCode />
+    element: <VerifyCode />,
   },
   {
     path: "/reset-password",
-    element: <ResetPassword />
+    element: <ResetPassword />,
   },
   {
     path: "/subscription",
@@ -474,11 +487,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin/login",
-    element: <AdminLogin />
+    element: <AdminLogin />,
   },
   {
     path: "/admin/register",
-    element: <AdminRegister />
+    element: <AdminRegister />,
   },
   {
     path: "/admin/dashboard",
@@ -512,31 +525,14 @@ const router = createBrowserRouter([
       </Layout>
     ),
   },
-  //{
-  //   path: "/paragraph-mcqs",
-  //   element: (
-  //     <Layout>
-  //       <ParagraphMCQs />{" "}
-  //     </Layout>
-  //   ),
-  // },
-  // {
-  //   path: "/paragraph-mcqs/mcq-test",
-  //   element: (
-  //     <Layout>
-  //       <MCQTest />{" "}
-  //     </Layout>
-  //   ),
-  // },
-
-  // {
-  //   path: "/review-section",
-  //   element: (
-  //     <Layout>
-  //       <ReviewSection />{" "}
-  //     </Layout>
-  //   ),
-  // },
+  {
+    path: "/review-section",
+    element: (
+      <Layout>
+        <ReviewSection />{" "}
+      </Layout>
+    ),
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(

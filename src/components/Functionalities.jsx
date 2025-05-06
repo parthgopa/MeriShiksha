@@ -194,8 +194,6 @@ const Functionalities = () => {
         </List>
       </Drawer>
       <div className="relative">
-        {/* Header */}
-        <Header />
 
         {/* Hero Section */}
         <HeroSection />
@@ -206,8 +204,6 @@ const Functionalities = () => {
           servicesSectionRef={servicesSectionRef}
         />
 
-        {/* Footer */}
-        <Footer />
 
         {/* Alexa Chatbot Button */}
         <div className="fixed bottom-8 right-8 z-50">

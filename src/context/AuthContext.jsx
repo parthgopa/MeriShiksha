@@ -10,16 +10,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    // Fetch the user details from the database. Remove it from local storage.
-    api.get("/api/user/profile").then((response) => {
-      setCurrentUser(response.data);
-    }).catch((error) => {
-      console.error("Error fetching user details:", error);
-    });
-    setLoading(false);
-  }, []);
-
   const login = async (email, password) => {
     setError(null);
     try {

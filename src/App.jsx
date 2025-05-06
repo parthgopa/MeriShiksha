@@ -4,7 +4,6 @@ import Navbar from "./components/Navbar";
 import Danger from "./components/Danger";
 import "index.css";
 import { AuthProvider } from "./context/AuthContext";
-
 function App() {
   return (
     <AuthProvider>

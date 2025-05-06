@@ -10,7 +10,7 @@ const Header = () => {
   const { currentUser, logout } = useAuth();
   const { wantSubscription } = useSubscriptionToggle();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -87,6 +87,7 @@ const Header = () => {
                 Admin Portal
               </Link>
             </li>
+            
             {currentUser ? (
               <>
                 <li>
