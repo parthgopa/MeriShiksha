@@ -90,6 +90,7 @@ import Header from "./components/Home/Header.jsx";
 import Footer from "./components/Home/Footer.jsx";
 import { Outlet } from "react-router";
 import ReviewSection from "./components/ZothernotRequired/Review.jsx"
+import SubscriptionToggleAdmin from "./components/Admin/SubscriptionToggleAdmin.jsx";
 function AppLayout() {
   return (
     <>
@@ -521,7 +522,7 @@ const router = createBrowserRouter([
     path: "/admin/subscription-toggle",
     element: (
       <Layout>
-        <SubscriptionToggleControl />{" "}
+        <SubscriptionToggleAdmin />{" "}
       </Layout>
     ),
   },

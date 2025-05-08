@@ -1,124 +1,14 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import HomeButton from '../HomeButton';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import Mylogo from "../../assets/MyLogonew.png";
+import AdminHeader from './AdminHeader';
+import AdminFooter from './AdminFooter';
 
 const AdminDashboard = () => {
-  const { currentUser, logout } = useAuth();
-  const navigate = useNavigate();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/');
-    } catch (error) {
-      console.error('Failed to log out', error);
-    }
-  };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--primary-black)] text-white">
-      {/* Admin Header */}
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center">
-              <Link to="/" className="flex items-center">
-                <img src={Mylogo} alt="MeriShiksha Logo" className="h-10 w-auto" />
-                <div className="ml-2 flex flex-col">
-                  <span className="text-xl font-bold text-white">MeriShiksha</span>
-                  <span className="text-xs text-[var(--accent-teal)]">Admin Portal</span>
-                </div>
-              </Link>
-            </div>
-            
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/admin/dashboard" className="text-white hover:text-[var(--accent-teal)] transition-colors font-medium">
-                Dashboard
-              </Link>
-              <Link to="/admin/subscription-toggle" className="text-white hover:text-[var(--accent-teal)] transition-colors font-medium">
-                Subscriptions
-              </Link>
-              <Link to="/admin/users" className="text-white hover:text-[var(--accent-teal)] transition-colors font-medium">
-                Users
-              </Link>
-              <Link to="/admin/analytics" className="text-white hover:text-[var(--accent-teal)] transition-colors font-medium">
-                Analytics
-              </Link>
-              <button 
-                onClick={handleLogout}
-                className="ml-4 px-4 py-2 rounded-lg bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white hover:opacity-90 transition-opacity"
-              >
-                Logout
-              </button>
-            </nav>
-            
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button 
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-gray-300 hover:text-white focus:outline-none"
-              >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  {isMobileMenuOpen ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  )}
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-gray-800 border-t border-gray-700 py-2">
-            <div className="px-4 space-y-2">
-              <Link 
-                to="/admin/dashboard" 
-                className="block py-2 text-white hover:text-[var(--accent-teal)] transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Dashboard
-              </Link>
-              <Link 
-                to="/admin/subscription-toggle" 
-                className="block py-2 text-white hover:text-[var(--accent-teal)] transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Subscriptions
-              </Link>
-              <Link 
-                to="/admin/users" 
-                className="block py-2 text-white hover:text-[var(--accent-teal)] transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Users
-              </Link>
-              <Link 
-                to="/admin/analytics" 
-                className="block py-2 text-white hover:text-[var(--accent-teal)] transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Analytics
-              </Link>
-              <button 
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  handleLogout();
-                }}
-                className="w-full mt-2 py-2 rounded-lg bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white hover:opacity-90 transition-opacity"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        )}
-      </header>
+    <div className="min-h-screen w-screen flex flex-col bg-[var(--primary-black)] text-white">
+      <AdminHeader />
 
       {/* Main Content */}
       <main className="flex-grow py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -196,30 +86,7 @@ const AdminDashboard = () => {
       </div>
       </main>
       
-      {/* Footer */}
-      <footer className="bg-gray-900 border-t border-gray-800 py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center mb-4 md:mb-0">
-              <img src={Mylogo} alt="MeriShiksha Logo" className="h-8 w-auto" />
-              <span className="ml-2 text-gray-300 text-sm">
-                © {new Date().getFullYear()} MeriShiksha. All rights reserved.
-              </span>
-            </div>
-            <div className="flex space-x-6">
-              <Link to="/privacy-policy" className="text-gray-400 hover:text-[var(--accent-teal)] text-sm transition-colors">
-                Privacy Policy
-              </Link>
-              <Link to="/terms" className="text-gray-400 hover:text-[var(--accent-teal)] text-sm transition-colors">
-                Terms of Service
-              </Link>
-              <Link to="/contact" className="text-gray-400 hover:text-[var(--accent-teal)] text-sm transition-colors">
-                Contact Us
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <AdminFooter />
     </div>
   );
 };

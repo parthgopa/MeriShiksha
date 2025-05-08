@@ -2,6 +2,83 @@
 Email templates for MeriShiksha application
 """
 
+def get_contact_message_template(name, email, message):
+    """
+    Returns HTML email template for contact form submissions
+    """
+    return f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <title>New Contact Message - MeriShiksha</title>
+        <style>
+            body {{
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: #f9f9f9;
+                margin: 0;
+                padding: 0;
+                color: #222;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 40px auto;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 8px 32px rgba(20,184,166,0.12), 0 1.5px 6px rgba(110,142,251,0.08);
+                overflow: hidden;
+            }}
+            .header {{
+                background: linear-gradient(90deg, #14b8a6 0%, #6e8efb 100%);
+                color: #fff;
+                text-align: center;
+                padding: 40px 20px 20px 20px;
+            }}
+            .header h1 {{
+                margin: 0;
+                font-size: 2.2rem;
+                font-weight: bold;
+                letter-spacing: 2px;
+            }}
+            .content {{
+                padding: 32px 30px 30px 30px;
+            }}
+            .info-label {{
+                font-weight: bold;
+                color: #14b8a6;
+            }}
+            .footer {{
+                text-align: center;
+                font-size: 13px;
+                color: #888;
+                border-top: 1px solid #eee;
+                padding: 20px 0 10px 0;
+                background: #f9f9f9;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1>New Contact Message</h1>
+            </div>
+            <div class='content'>
+                <p><span class='info-label'>Name:</span> {name}</p>
+                <p><span class='info-label'>Email:</span> {email}</p>
+                <p><span class='info-label'>Message:</span></p>
+                <div style='background:#f1f5f9; border-radius:8px; padding:16px; margin-top:6px; color:#333;'>{message}</div>
+            </div>
+            <div class='footer'>
+                &copy; 2025 MeriShiksha. All rights reserved.<br>
+                This is an automated message from the contact form.
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+
 def get_welcome_email_template(user_name):
     """
     Returns HTML email template for welcoming a new user

@@ -12,6 +12,7 @@ import hashlib
 import json
 from urllib.parse import urlencode
 
+
 # Load environment variables
 load_dotenv()
 
@@ -53,7 +54,34 @@ def verify_checksum(param_dict, merchant_key, checksum):
 # Create blueprint
 user_bp = Blueprint('user', __name__)
 
+@user_bp.route('/contact-support', methods=['POST'])
+
+def contact_support():
+    from email_templates import get_contact_message_template
+    from app import send_email
+    data = request.get_json()
+    name = data.get('name', '').strip()
+    email = data.get('email', '').strip()
+    message = data.get('message', '').strip()
+    if not name or not email or not message:
+        return jsonify({'error': 'All fields are required.'}), 400
+    if not is_valid_email(email):
+        return jsonify({'error': 'Invalid email format.'}), 400
+    try:
+        html_content = get_contact_message_template(name, email, message)
+        sent = send_email('info@merishiksha.com', 'New Contact Message', html_content)
+        if sent:
+            return jsonify({'message': 'Your message has been sent successfully!'}), 200
+        else:
+            return jsonify({'error': 'Failed to send message. Please try again later.'}), 500
+    except Exception as e:
+        print(f'Error sending contact message: {e}')
+        return jsonify({'error': 'Internal server error.'}), 500
+
 # Helper functions
+
+
+
 def is_valid_email(email):
     email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(email_pattern, email) is not None

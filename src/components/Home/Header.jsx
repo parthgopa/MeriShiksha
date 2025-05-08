@@ -247,7 +247,7 @@ const Header = () => {
           ) : (
             <>
               {wantSubscription && (
-                <>
+                <>``
                   <li>
                     <Link
                       to="/login"
