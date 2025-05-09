@@ -81,4 +81,8 @@ def index():
     return jsonify({'message': 'MeriShiksha API is running'})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Use environment variable for port with a default of 5000
+    port = int(os.environ.get('PORT', 5000))
+    # Set debug to False in production
+    debug = os.environ.get('FLASK_ENV') == 'development'
+    app.run(host='0.0.0.0', port=port, debug=debug)
