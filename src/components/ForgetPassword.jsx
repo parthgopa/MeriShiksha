@@ -9,12 +9,13 @@ const ForgotPassword = () => {
   const [stage, setStage] = useState(1); // 1 for phone input, 2 for OTP input
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:5000/forgot-password",
+        backendURL + "/forgot-password",
         { phone }
       );
       if (response.status === 200) {
@@ -33,7 +34,7 @@ const ForgotPassword = () => {
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/verify-otp", {
+      const response = await axios.post(backendURL + "/verify-otp", {
         phone,
         otp,
       });

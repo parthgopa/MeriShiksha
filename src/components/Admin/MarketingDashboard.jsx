@@ -10,6 +10,7 @@ const MarketingDashboard = () => {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('campaigns');
   const navigate = useNavigate();
+  backendURL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     fetchCampaigns();
@@ -20,7 +21,7 @@ const MarketingDashboard = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/marketing/campaigns', {
+      const response = await axios.get(backendURL + "/api/marketing/campaigns", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCampaigns(response.data);
@@ -36,7 +37,7 @@ const MarketingDashboard = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/marketing/templates', {
+      const response = await axios.get(backendURL + "/api/marketing/templates", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTemplates(response.data);
@@ -51,7 +52,7 @@ const MarketingDashboard = () => {
   const handleSendCampaign = async (campaignId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/marketing/send-campaign', 
+      await axios.post(backendURL + '/api/marketing/send-campaign', 
         { campaign_id: campaignId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -67,7 +68,7 @@ const MarketingDashboard = () => {
     if (window.confirm('Are you sure you want to delete this campaign?')) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/marketing/campaigns/${campaignId}`, {
+        await axios.delete(`${backendURL}/api/marketing/campaigns/${campaignId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setCampaigns(campaigns.filter(campaign => campaign._id !== campaignId));
@@ -83,7 +84,7 @@ const MarketingDashboard = () => {
     if (window.confirm('Are you sure you want to delete this template?')) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/marketing/templates/${templateId}`, {
+        await axios.delete(`${backendURL}/api/marketing/templates/${templateId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setTemplates(templates.filter(template => template._id !== templateId));

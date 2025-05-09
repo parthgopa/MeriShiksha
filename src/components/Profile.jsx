@@ -36,7 +36,7 @@ const Profile = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "http://localhost:5000/api/user/profile",
+          backendURL + "/api/user/profile",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -65,7 +65,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        "http://localhost:5000/api/user/profile",
+        backendURL + "/api/user/profile",
         { name: user.name, email: user.email, phone: user.phone },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -87,7 +87,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        "http://localhost:5000/api/user/change-password",
+        backendURL + "/api/user/change-password",
         passwordData,
         { headers: { Authorization: `Bearer ${token}` } }
       );

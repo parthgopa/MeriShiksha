@@ -30,7 +30,7 @@ PAYTM_MERCHANT_KEY = os.environ.get('PAYTM_MERCHANT_KEY')
 PAYTM_MERCHANT_WEBSITE = os.environ.get('PAYTM_MERCHANT_WEBSITE')
 PAYTM_CHANNEL_ID = os.environ.get('PAYTM_CHANNEL_ID', 'WEB')
 PAYTM_INDUSTRY_TYPE_ID = os.environ.get('PAYTM_INDUSTRY_TYPE_ID', 'Retail')
-PAYTM_CALLBACK_URL = os.environ.get('PAYTM_CALLBACK_URL', 'http://localhost:5000/api/user/paytm-callback')
+PAYTM_CALLBACK_URL = os.environ.get('PAYTM_CALLBACK_URL', 'import.meta.env.VITE_BACKEND_URL/api/user/paytm-callback')
 
 # Paytm URLs
 PAYTM_TXN_URL = 'https://securegw-stage.paytm.in/theia/processTransaction'  # For Sandbox

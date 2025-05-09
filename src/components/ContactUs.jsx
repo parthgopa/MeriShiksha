@@ -17,6 +17,7 @@ export default function ContactUs() {
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [feedbackType, setFeedbackType] = useState("success");
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -24,7 +25,7 @@ export default function ContactUs() {
     setFeedback("");
     try {
       const res = await fetch(
-        "http://localhost:5000/api/user/contact-support",
+        backendURL + "/api/user/contact-support",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an instance of axios with a base URL pointing to your backend server
 const instance = axios.create({
-  baseURL: 'http://localhost:5000', // Change this to your Flask server port
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   headers: {
     'Content-Type': 'application/json',
   }
