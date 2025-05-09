@@ -367,3 +367,150 @@ def get_password_reset_success_template(user_name):
     </body>
     </html>
     """
+
+def get_marketing_email_template(subject, content, cta_text, cta_url):
+    """
+    Returns HTML email template for marketing campaigns
+    
+    Parameters:
+    - subject: Email subject line
+    - content: Main email content (can include HTML)
+    - cta_text: Call to action button text
+    - cta_url: Call to action button URL
+    """
+    return f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{subject} - MeriShiksha</title>
+        <style>
+            body {{
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                margin: 0;
+                padding: 0;
+                background-color: #f9f9f9;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 0;
+                background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+            }}
+            .header {{
+                background: linear-gradient(135deg, #14b8a6 0%, #6e8efb 100%);
+                text-align: center;
+                padding: 30px 20px;
+                color: white;
+            }}
+            .header h1 {{
+                margin: 0 0 10px 0;
+                font-size: 28px;
+                font-weight: bold;
+                letter-spacing: 1px;
+            }}
+            .header p {{
+                margin: 0;
+                font-size: 16px;
+                opacity: 0.9;
+            }}
+            .content {{
+                padding: 30px 25px;
+                color: #444;
+                font-size: 16px;
+            }}
+            .content h2 {{
+                color: #14b8a6;
+                margin-top: 0;
+            }}
+            .content p {{
+                margin-bottom: 20px;
+            }}
+            .cta-container {{
+                text-align: center;
+                margin: 30px 0;
+            }}
+            .cta-button {{
+                display: inline-block;
+                padding: 14px 28px;
+                background: linear-gradient(135deg, #6e8efb, #14b8a6);
+                color: white;
+                text-decoration: none;
+                border-radius: 6px;
+                font-weight: bold;
+                font-size: 16px;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 8px rgba(110, 142, 251, 0.3);
+            }}
+            .cta-button:hover {{
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(110, 142, 251, 0.4);
+            }}
+            .footer {{
+                background-color: #f5f5f5;
+                text-align: center;
+                padding: 20px;
+                color: #777;
+                font-size: 13px;
+                border-top: 1px solid #eee;
+            }}
+            .social-links {{
+                margin: 15px 0;
+            }}
+            .social-links a {{
+                display: inline-block;
+                margin: 0 8px;
+                color: #14b8a6;
+                text-decoration: none;
+            }}
+            .footer-logo {{
+                font-weight: bold;
+                color: #14b8a6;
+                font-size: 16px;
+                margin-bottom: 10px;
+                display: block;
+            }}
+            .highlight {{
+                background: linear-gradient(104deg, rgba(20, 184, 166, 0) 0.9%, rgba(20, 184, 166, 0.2) 2.4%, rgba(20, 184, 166, 0.2) 97.7%, rgba(20, 184, 166, 0) 100%);
+                padding: 0 6px;
+                font-weight: 500;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1><span style="color: #ffffff;">Meri</span>Shiksha</h1>
+                <p>{subject}</p>
+            </div>
+            <div class="content">
+                {content}
+                <div class="cta-container">
+                    <a href="{cta_url}" class="cta-button">{cta_text}</a>
+                </div>
+            </div>
+            <div class="footer">
+                <span class="footer-logo">MeriShiksha</span>
+                <p>Empowering Education with AI</p>
+                <div class="social-links">
+                    <a href="#">Facebook</a> | 
+                    <a href="#">Twitter</a> | 
+                    <a href="#">LinkedIn</a> | 
+                    <a href="#">Instagram</a>
+                </div>
+                <p>&copy; {2025} MeriShiksha. All rights reserved.</p>
+                <p style="font-size: 11px; margin-top: 15px;">
+                    If you no longer wish to receive these emails, you can 
+                    <a href="#" style="color: #777; text-decoration: underline;">unsubscribe here</a>
+                </p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """

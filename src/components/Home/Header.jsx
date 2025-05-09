@@ -13,15 +13,15 @@ const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 3500);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  
+
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
     setIsMenuOpen(false);
   };
 
@@ -87,7 +87,7 @@ const Header = () => {
                 Admin Portal
               </Link>
             </li>
-            
+
             {currentUser ? (
               <>
                 <li>
@@ -106,7 +106,7 @@ const Header = () => {
                     Logout
                   </button>
                 </li>
-                {currentUser.role === 'admin' && (
+                {currentUser.role === "admin" && (
                   <li>
                     <Link
                       to="/admin/dashboard"
@@ -132,11 +132,11 @@ const Header = () => {
                     <li>
                       <Link
                         to="/signup"
-                    className="bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white px-4 py-2 rounded-lg hover:opacity-90 transition-colors"
-                  >
-                    Sign Up
-                  </Link>
-                </li>
+                        className="bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white px-4 py-2 rounded-lg hover:opacity-90 transition-colors"
+                      >
+                        Sign Up
+                      </Link>
+                    </li>
                   </>
                 )}
               </>
@@ -155,12 +155,12 @@ const Header = () => {
 
       {/* Mobile Navigation */}
       <div
-        className={`md:hidden fixed top-0 right-0 h-full w-64 bg-[var(--primary-black)] shadow-lg transform ${
+        className={`md:hidden fixed top-0 right-0 h-full w-64 bg-gradient-to-b from-[#1a1a2e] to-[#16213e] shadow-lg transform ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 p-6`}
+        } transition-transform duration-300 p-6 z-50`}
       >
         <button
-          className="absolute top-4 right-4 text-white text-2xl"
+          className="absolute top-4 right-4 text-white text-2xl hover:text-gray-300 transition-colors"
           onClick={() => setIsMenuOpen(false)}
         >
           ✕
@@ -169,17 +169,16 @@ const Header = () => {
           <li>
             <Link
               to="/"
-              className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+              className="text-white text-lg hover:text-[#00f2e2] transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
           </li>
-
           <li>
             <Link
               to="/aboutUs"
-              className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+              className="text-white text-lg hover:text-[#00f2e2] transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               About
@@ -188,7 +187,7 @@ const Header = () => {
           <li>
             <Link
               to="/contactUs"
-              className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+              className="text-white text-lg hover:text-[#00f2e2] transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
@@ -197,7 +196,7 @@ const Header = () => {
           <li>
             <a
               href="https://youtu.be/GNJ-4Oo9gnY?si=OBUYcBt6zUvq9UiH"
-              className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+              className="text-white text-lg hover:text-[#00f2e2] transition-colors"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -207,7 +206,7 @@ const Header = () => {
           <li>
             <Link
               to="/admin/login"
-              className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+              className="text-white text-lg hover:text-[#00f2e2] transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Admin Portal
@@ -218,7 +217,7 @@ const Header = () => {
               <li>
                 <Link
                   to="/profile"
-                  className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+                  className="text-white text-lg hover:text-[#00f2e2] transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Profile
@@ -227,16 +226,16 @@ const Header = () => {
               <li>
                 <button
                   onClick={handleLogout}
-                  className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+                  className="text-white text-lg hover:text-[#00f2e2] transition-colors"
                 >
                   Logout
                 </button>
               </li>
-              {currentUser.role === 'admin' && (
+              {currentUser.role === "admin" && (
                 <li>
                   <Link
                     to="/admin/dashboard"
-                    className="text-[var(--accent-teal)] hover:text-[var(--accent-teal)]/80 transition-colors"
+                    className="text-[#00f2e2] text-lg hover:text-[#00f2e2]/80 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Admin
@@ -247,11 +246,11 @@ const Header = () => {
           ) : (
             <>
               {wantSubscription && (
-                <>``
+                <>
                   <li>
                     <Link
                       to="/login"
-                      className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+                      className="text-white text-lg hover:text-[#00f2e2] transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Login
@@ -260,12 +259,12 @@ const Header = () => {
                   <li>
                     <Link
                       to="/signup"
-                  className="bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white px-4 py-2 rounded-lg hover:opacity-90 transition-colors inline-block mt-2"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Sign Up
-                </Link>
-              </li>
+                      className="bg-gradient-to-r from-[#6b48ff] to-[#00f2e2] text-white text-lg px-6 py-2 rounded-full hover:opacity-90 transition-opacity inline-block mt-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Sign Up
+                    </Link>
+                  </li>
                 </>
               )}
             </>

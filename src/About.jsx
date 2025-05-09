@@ -1,11 +1,13 @@
 import React from "react";
 import HomeButton from "./components/HomeButton";
+import Header from "./components/Home/Header";
 
 const About = () => {
   return (
     <div className="w-screen min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-secondary to-black p-2">
       {/* About Container */}
-      <div className="bg-gray-900 shadow-xl rounded-2xl p-2 max-w-3xl w-full">
+      <Header/>
+      <div className="bg-gray-900 shadow-xl mt-20 rounded-2xl p-2 max-w-3xl w-full">
         {/* Heading */}
         <h2 className="text-4xl font-extrabold text-center text-white bg-clip-text bg-gradient-to-r from-accent to-white !m-6">
           About - MeriShiksha.com

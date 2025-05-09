@@ -11,20 +11,16 @@ const CareerOutput = () => {
   const navigate = useNavigate();
   const { interest, language } = location.state || { interest: '', language: 'English' };
   const [copySuccess, setCopySuccess] = useState(false);
-  const [plan, setPlan] = useState("none");
+  const [plan, setPlan] = useState("");
   const [downloadStarted, setDownloadStarted] = useState(false);
   const [loading, setLoading] = useState(true);
   const date = new Date().toDateString();
   const time = new Date().toTimeString();
-  const [hasSubscription, setHasSubscription] = useState(false);
-  const { wantSubscription } = useSubscriptionToggle();
   
   // Immediately start processing if subscription is disabled
   useEffect(() => {
-    if (!wantSubscription) {
-      processCareerGuidance();
-    }
-  }, [wantSubscription]);
+    processCareerGuidance();
+  }, []);
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(plan);
@@ -66,12 +62,6 @@ const CareerOutput = () => {
   };
 
   const processCareerGuidance = () => {
-    // Skip subscription check if subscription model is disabled
-    if (wantSubscription && !hasSubscription) {
-      console.log('Subscription required but user has none, navigating back');
-      return navigate(-1);
-    }
-    
     setLoading(true);
     let prompt = `Based on my interest in ${interest}, suggest the top 5 career options that will be in demand after 4 years. Provide the following details for each career option:
 
@@ -85,8 +75,6 @@ Consider factors like job market demand, growth prospects, and potential salary 
 Provide the output in a concise bullet-point list format and in ${language} language.
 For date: ${date} and time: ${time}(dont display it in output)`;
     
-    console.log('Processing career guidance with subscription model:', wantSubscription ? 'enabled' : 'disabled');
-    
     try {
       APIService({ question: prompt, onResponse: handleOnResponse });
     } catch (error) {
@@ -99,23 +87,23 @@ For date: ${date} and time: ${time}(dont display it in output)`;
     try {
       if (response && response.candidates && response.candidates[0] && 
           response.candidates[0].content && response.candidates[0].content.parts && 
-          response.candidates[0].content.parts[0]) {
+          response.candidates[0].content.parts[0] && response.candidates[0].content.parts[0].text) {
         setPlan(response.candidates[0].content.parts[0].text);
+        setLoading(false);
       } else {
-        console.error("Invalid response structure:", response);
-        setPlan("Sorry, we couldn't generate a response. Please try again later.");
+        console.error("Invalid response format:", response);
+        setPlan("Error: Could not generate career guidance. Please try again.");
+        setLoading(false);
       }
-      setLoading(false);
     } catch (error) {
-      console.error("Error fetching response:", error);
-      setPlan("An error occurred while processing your request. Please try again later.");
+      console.error("Error processing response:", error);
+      setPlan("Error: Could not generate career guidance. Please try again.");
       setLoading(false);
     }
   };
 
   const handleSubscriptionSuccess = () => {
     console.log('Subscription check succeeded, user has API calls available');
-    setHasSubscription(true);
     processCareerGuidance();
   };
 
@@ -126,13 +114,8 @@ For date: ${date} and time: ${time}(dont display it in output)`;
   };
 
   // Render with subscription check if subscription is enabled
-  if (wantSubscription) {
     return (
-      <SubscriptionCheck
-        onSuccess={handleSubscriptionSuccess}
-        onError={handleSubscriptionError}
-        checkOnMount={true}
-      >
+     
         <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
           {/* Decorative elements */}
           <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
@@ -161,10 +144,17 @@ For date: ${date} and time: ${time}(dont display it in output)`;
                 id="output-container" 
                 className="p-6 md:p-8 bg-[var(--primary-black)]/50 rounded-b-xl text-white overflow-auto max-h-[60vh] custom-scrollbar"
               >
-                <ReactMarkdown 
-                  children={plan} 
-                  className="prose prose-invert prose-headings:text-[var(--accent-teal)] prose-a:text-[var(--accent-teal)] prose-strong:text-white prose-li:marker:text-[var(--accent-teal)] max-w-none"
-                />
+                {loading ? (
+                  <div className="flex flex-col items-center justify-center py-16">
+                    <div className="w-16 h-16 border-t-4 border-[var(--accent-teal)] border-solid rounded-full animate-spin"></div>
+                    <p className="mt-4 text-xl text-[var(--accent-teal)]">Generating your career guidance...</p>
+                  </div>
+                ) : (
+                  <ReactMarkdown 
+                    children={plan} 
+                    className="prose prose-invert prose-headings:text-[var(--accent-teal)] prose-a:text-[var(--accent-teal)] prose-strong:text-white prose-li:marker:text-[var(--accent-teal)] max-w-none"
+                  />
+                )}
               </div>
               
               {/* Action Buttons */}
@@ -244,110 +234,109 @@ For date: ${date} and time: ${time}(dont display it in output)`;
             <HomeButton />
           </div>
         </div>
-      </SubscriptionCheck>
     );
   } 
   
-  // Render without subscription check if subscription is disabled
-  return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
-      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
+  // // Render without subscription check if subscription is disabled
+  // return (
+  //   <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+  //     <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+  //     <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
       
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-10">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
-            Career Guidance Results
-          </h1>
-          <p className="text-xl text-teal-100">Based on your interest in <span className="font-semibold text-white">{interest}</span></p>
-        </div>
+  //     <div className="max-w-7xl mx-auto relative z-10">
+  //       <div className="text-center mb-10">
+  //         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+  //           Career Guidance Results
+  //         </h1>
+  //         <p className="text-xl text-teal-100">Based on your interest in <span className="font-semibold text-white">{interest}</span></p>
+  //       </div>
         
-        <div id="output-container" className="bg-gradient-to-br from-[var(--primary-black)]/90 to-[var(--primary-violet)]/20 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-10">
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="w-16 h-16 border-t-4 border-[var(--accent-teal)] border-solid rounded-full animate-spin"></div>
-              <p className="mt-4 text-xl text-[var(--accent-teal)]">Generating your career guidance...</p>
-            </div>
-          ) : (
-            <div className="prose prose-lg max-w-none prose-headings:text-[var(--accent-teal)] prose-a:text-[var(--accent-teal)] prose-strong:text-white prose-strong:font-bold">
-              <ReactMarkdown>{plan}</ReactMarkdown>
-            </div>
-          )}
-        </div>
+  //       <div id="output-container" className="bg-gradient-to-br from-[var(--primary-black)]/90 to-[var(--primary-violet)]/20 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-10">
+  //         {loading ? (
+  //           <div className="flex flex-col items-center justify-center py-20">
+  //             <div className="w-16 h-16 border-t-4 border-[var(--accent-teal)] border-solid rounded-full animate-spin"></div>
+  //             <p className="mt-4 text-xl text-[var(--accent-teal)]">Generating your career guidance...</p>
+  //           </div>
+  //         ) : (
+  //           <div className="prose prose-lg max-w-none prose-headings:text-[var(--accent-teal)] prose-a:text-[var(--accent-teal)] prose-strong:text-white prose-strong:font-bold">
+  //             <ReactMarkdown>{plan}</ReactMarkdown>
+  //           </div>
+  //         )}
+  //       </div>
         
-        <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
-          <button
-            onClick={handleCopyToClipboard}
-            className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center justify-center space-x-2"
-          >
-            {copySuccess ? (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Copied!</span>
-              </>
-            ) : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                <span>Copy to Clipboard</span>
-              </>
-            )}
-          </button>
+  //       <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
+  //         <button
+  //           onClick={handleCopyToClipboard}
+  //           className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center justify-center space-x-2"
+  //         >
+  //           {copySuccess ? (
+  //             <>
+  //               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  //                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+  //               </svg>
+  //               <span>Copied!</span>
+  //             </>
+  //           ) : (
+  //             <>
+  //               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  //                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+  //               </svg>
+  //               <span>Copy to Clipboard</span>
+  //             </>
+  //           )}
+  //         </button>
           
-          <button
-            onClick={handleDownloadPdf}
-            disabled={downloadStarted}
-            className="px-6 py-3 bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 disabled:opacity-70 flex items-center justify-center space-x-2"
-          >
-            {downloadStarted ? (
-              <div className="flex items-center space-x-2">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>Preparing PDF...</span>
-              </div>
-            ) : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                <span>Download PDF</span>
-              </>
-            )}
-          </button>
-        </div>
+  //         <button
+  //           onClick={handleDownloadPdf}
+  //           disabled={downloadStarted}
+  //           className="px-6 py-3 bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 disabled:opacity-70 flex items-center justify-center space-x-2"
+  //         >
+  //           {downloadStarted ? (
+  //             <div className="flex items-center space-x-2">
+  //               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+  //               <span>Preparing PDF...</span>
+  //             </div>
+  //           ) : (
+  //             <>
+  //               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  //                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+  //               </svg>
+  //               <span>Download PDF</span>
+  //             </>
+  //           )}
+  //         </button>
+  //       </div>
         
-        <div className="mt-12 bg-gradient-to-br from-[var(--primary-black)]/60 to-[var(--primary-violet)]/10 p-6 rounded-xl border border-[var(--accent-teal)]/10">
-          <h3 className="text-xl font-bold mb-4 text-[var(--accent-teal)]">Next Steps</h3>
-          <ul className="space-y-3 text-white">
-            <li className="flex items-start">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-[var(--accent-teal)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-              <span>Research each career option thoroughly to understand the day-to-day responsibilities</span>
-            </li>
-            <li className="flex items-start">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-[var(--accent-teal)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-              <span>Connect with professionals in your fields of interest for informational interviews</span>
-            </li>
-            <li className="flex items-start">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-[var(--accent-teal)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
-              <span>Explore the suggested courses and certifications to build your skills</span>
-            </li>
-          </ul>
-        </div>
-      </div>
+  //       <div className="mt-12 bg-gradient-to-br from-[var(--primary-black)]/60 to-[var(--primary-violet)]/10 p-6 rounded-xl border border-[var(--accent-teal)]/10">
+  //         <h3 className="text-xl font-bold mb-4 text-[var(--accent-teal)]">Next Steps</h3>
+  //         <ul className="space-y-3 text-white">
+  //           <li className="flex items-start">
+  //             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-[var(--accent-teal)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  //               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+  //             </svg>
+  //             <span>Research each career option thoroughly to understand the day-to-day responsibilities</span>
+  //           </li>
+  //           <li className="flex items-start">
+  //             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-[var(--accent-teal)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  //               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+  //             </svg>
+  //             <span>Connect with professionals in your fields of interest for informational interviews</span>
+  //           </li>
+  //           <li className="flex items-start">
+  //             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-[var(--accent-teal)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  //               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+  //             </svg>
+  //             <span>Explore the suggested courses and certifications to build your skills</span>
+  //           </li>
+  //         </ul>
+  //       </div>
+  //     </div>
 
-      <div className="fixed bottom-6 right-6 z-10">
-        <HomeButton />
-      </div>
-    </div>
-  );
-};
+  //     <div className="fixed bottom-6 right-6 z-10">
+  //       <HomeButton />
+      // </div>
+    // </div>
+  //);
+//};
 
 export default CareerOutput;

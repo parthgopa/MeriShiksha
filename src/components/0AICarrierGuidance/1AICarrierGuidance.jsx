@@ -42,13 +42,15 @@ Prepare your proper report which proper advice on the subject for date: ${date} 
   };
   
   // Use effect to fetch career guidance once subscription is confirmed
-  useEffect(() => {
-    // Only fetch if subscription is confirmed and we're still in loading state
-    if (hasSubscription && loading) {
-      console.log('Subscription confirmed, fetching career guidance...');
-      fetchCareerGuidance();
-    }
-  }, [hasSubscription]); // Remove loading from dependencies to prevent continuous calls
+  useEffect(() => {      
+    fetchCareerGuidance();
+
+    // // Only fetch if subscription is confirmed and we're still in loading state
+    // if (hasSubscription && loading) {
+    //   console.log('Subscription confirmed, fetching career guidance...');
+    //   fetchCareerGuidance();
+    // }
+  }, []); // Remove loading from dependencies to prevent continuous calls
 
   const handleOnResponse = (response) => {
     try {
@@ -166,11 +168,7 @@ Prepare your proper report which proper advice on the subject for date: ${date} 
   };
 
   return (
-    <SubscriptionCheck
-      onSuccess={handleSubscriptionSuccess}
-      onError={handleSubscriptionError}
-      checkOnMount={true}
-    >
+    
       <div className="min-h-screen w-screen bg-[var(--primary-black)] text-white py-16 px-4">
         {/* Decorative elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
@@ -305,7 +303,6 @@ Prepare your proper report which proper advice on the subject for date: ${date} 
           <HomeButton />
         </div>
       </div>
-    </SubscriptionCheck>
   );
 };
 

@@ -210,10 +210,10 @@ const MockInterview = () => {
   };
 
   return (
-    <SubscriptionCheck
-      onSubscriptionSuccess={handleSubscriptionSuccess}
-      onSubscriptionError={handleSubscriptionError}
-    >
+    // <SubscriptionCheck
+    //   onSubscriptionSuccess={handleSubscriptionSuccess}
+    //   onSubscriptionError={handleSubscriptionError}
+    // >
       <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
@@ -393,7 +393,7 @@ const MockInterview = () => {
                         htmlFor="currentWorkExperience"
                         className="block text-lg font-medium text-white"
                       >
-                        Current Work Experience
+                        Current Work Experience <span className="text-sm text-teal-100/70">(Optional for Freshers)</span>
                       </label>
                       <div className="p-4 bg-[var(--primary-black)]/20 rounded-lg">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -445,10 +445,8 @@ const MockInterview = () => {
                         htmlFor="pastWorkExperience"
                         className="block text-lg font-medium text-white"
                       >
-                        Past Work Experience{" "}
-                        <span className="text-sm font-normal text-red-400">
-                          (Optional - Leave empty if you are a fresher)
-                        </span>
+                        Past Work Experience<span className="text-sm text-teal-100/70">(Optional for Freshers)</span>
+                        
                       </label>
 
                       {workExperiences.map((exp, index) => (
@@ -690,7 +688,7 @@ const MockInterview = () => {
           <HomeButton />
         </div>
       </div>
-    </SubscriptionCheck>
+    // </SubscriptionCheck>
   );
 };
 

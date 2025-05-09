@@ -14,9 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import HeroSection from "../components/Home/HeroSection";
 import ServicesSection from "../components/Home/ServicesSection";
-import Footer from "../components/Home/Footer";
-import Header from "../components/Home/Header";
-import Mylogo from "../assets/MyLogonew.png";
+
 import gemini from "../assets/geminiImage.png";
 
 const Functionalities = () => {

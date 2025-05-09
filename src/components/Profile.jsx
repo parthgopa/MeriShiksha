@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { IoPersonCircle, IoMailOutline, IoPhonePortraitOutline, IoKeyOutline, IoCalendarOutline, IoSchoolOutline } from "react-icons/io5";
+import HomeButton from "./HomeButton";
+import Footer from "./Home/Footer";
+import Header from "./Home/Header";
 
 function formatDateTime(dt) {
   if (!dt) return "-";
@@ -97,238 +101,242 @@ const Profile = () => {
   };
 
   return (
-    <div className="max-w-6xl w-screen mx-auto px-4 py-12 mt-20">
-      <div className="text-center mb-10">
-        <h2 className="text-3xl font-bold mb-2">
-          <span className="text-[var(--accent-teal)]">User</span> Profile
-        </h2>
-        <p className="text-gray-600">
-          Manage your account information and preferences
-        </p>
-      </div>
 
-      <div className="grid md:grid-cols-2 gap-8">
-        {/* Profile Information */}
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] px-6 py-4">
-            <h3 className="text-xl font-bold text-white">
-              Profile Information
-            </h3>
-          </div>
-          <form onSubmit={handleSubmit} className="p-6 space-y-4">
-            <div className="space-y-2">
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                value={user.name || ""}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={user.email || ""}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                value={user.phone || ""}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label
-                htmlFor="role"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Role
-              </label>
-              <input
-                type="text"
-                id="role"
-                value={user.role || ""}
-                disabled
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white px-6 py-3 rounded-md hover:opacity-90 transition-colors font-medium"
-            >
-              Update Profile
-            </button>
-
-            {message && (
-              <div
-                className={`mt-4 p-3 rounded-md ${
-                  message.includes("success")
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
-                }`}
-              >
-                {message}
-              </div>
-            )}
-          </form>
+    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+      {/* Decorative elements */}
+      <Header/>
+      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
+      
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+            Your Profile
+          </h1>
+          <p className="text-xl text-teal-100 max-w-3xl mx-auto">
+            Manage your personal information and account settings
+          </p>
         </div>
 
-        {/* Right Column - Account Info & Password Change */}
-        <div className="space-y-8">
-          {/* Account Information */}
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] px-6 py-4">
-              <h3 className="text-xl font-bold text-white">
-                Account Information
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Profile Information */}
+          <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm overflow-hidden">
+            <div className="bg-gradient-to-r from-[var(--primary-violet)]/80 to-[var(--accent-teal)]/80 px-6 py-4 border-b border-[var(--accent-teal)]/20">
+              <h3 className="text-2xl font-bold text-white flex items-center">
+                <IoPersonCircle className="mr-2 text-3xl" /> Profile Information
               </h3>
             </div>
-            <div className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-500">Last Login</p>
-                  <p className="font-medium">
-                    {formatDateTime(user.last_logged_in)}
-                  </p>
-                </div>
-
-                
-
-                <div>
-                  <p className="text-sm text-gray-500">API Calls Remaining</p>
-                  <p className="font-medium">
-                    {user.max_api_calls === -1 ? (
-                      <span className="text-green-600">Unlimited</span>
-                    ) : (
-                      <span
-                        className={
-                          user.max_api_calls <= 5
-                            ? "text-red-600 font-bold"
-                            : ""
-                        }
-                      >
-                        {user.api_calls_remaining} / 50
-                      </span>
-                    )}
-                  </p>
+            <form onSubmit={handleSubmit} className="p-6 space-y-6">
+              <div className="space-y-3">
+                <label
+                  htmlFor="name"
+                  className="block text-lg font-medium text-white flex items-center"
+                >
+                  <IoPersonCircle className="mr-2" /> Name
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="name"
+                    value={user.name || ""}
+                    onChange={handleChange}
+                    required
+                    className="w-full p-4 rounded-lg bg-[var(--primary-black)]/50 border border-[var(--accent-teal)]/30 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all duration-300"
+                  />
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/*Create a separate division of Subscription plan. Increase the css of it...... windsurf??*/}
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] px-6 py-4">
-              <h3 className="text-xl font-bold text-white">Subscription Status</h3>
-            </div>
-            <div className="p-6 space-y-4">
-              <p className="font-medium">
-              {user.max_api_calls === -1 ? (
-                <span className="text-green-600 font-semibold">
-                  Premium (Unlimited)
-                </span>
-              ) : (
-                <span className="text-amber-600 font-semibold">Free Trial</span>
-              )}
-            </p> 
-            </div> 
-            
-          </div>
-
-          {/* Password Change */}
-          {/* <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] px-6 py-4">
-              <h3 className="text-xl font-bold text-white">Change Password</h3>
-            </div>
-            <form onSubmit={handlePasswordSubmit} className="p-6 space-y-4">
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label
-                  htmlFor="current_password"
-                  className="block text-sm font-medium text-gray-700"
+                  htmlFor="email"
+                  className="block text-lg font-medium text-white flex items-center"
                 >
-                  Current Password
+                  <IoMailOutline className="mr-2" /> Email
                 </label>
-                <input
-                  type="password"
-                  id="current_password"
-                  name="current_password"
-                  value={passwordData.current_password}
-                  onChange={handlePasswordChange}
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent"
-                />
+                <div className="relative">
+                  <input
+                    type="email"
+                    id="email"
+                    value={user.email || ""}
+                    onChange={handleChange}
+                    required
+                    className="w-full p-4 rounded-lg bg-[var(--primary-black)]/50 border border-[var(--accent-teal)]/30 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all duration-300"
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label
-                  htmlFor="new_password"
-                  className="block text-sm font-medium text-gray-700"
+                  htmlFor="phone"
+                  className="block text-lg font-medium text-white flex items-center"
                 >
-                  New Password
+                  <IoPhonePortraitOutline className="mr-2" /> Phone
                 </label>
-                <input
-                  type="password"
-                  id="new_password"
-                  name="new_password"
-                  value={passwordData.new_password}
-                  onChange={handlePasswordChange}
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent"
-                />
+                <div className="relative">
+                  <input
+                    type="tel"
+                    id="phone"
+                    value={user.phone || ""}
+                    onChange={handleChange}
+                    className="w-full p-4 rounded-lg bg-[var(--primary-black)]/50 border border-[var(--accent-teal)]/30 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all duration-300"
+                  />
+                </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white px-6 py-3 rounded-md hover:opacity-90 transition-colors font-medium"
+                className="w-full px-8 py-4 bg-gradient-to-r from-[var(--accent-teal)] via-[var(--primary-violet)] to-[var(--accent-teal)] bg-size-200 bg-pos-0 hover:bg-pos-100 text-white rounded-lg shadow-lg transition-all duration-500 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center group"
               >
-                Update Password
+                <span>Update Profile</span>
+              </button>
+
+              {message && (
+                <div
+                  className={`mt-4 p-4 rounded-lg flex items-center ${
+                    message.includes("success")
+                      ? "bg-green-500/20 border border-green-500 text-green-100"
+                      : "bg-red-500/20 border border-red-500 text-white"
+                  }`}
+                >
+                  {message.includes("success") ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  )}
+                  <span>{message}</span>
+                </div>
+              )}
+            </form>
+          </div>
+
+        {/* Right Column - Account Info & Password Change */}
+        <div className="space-y-8">
+            {/* Account Information */}
+          <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm overflow-hidden">
+            <div className="bg-gradient-to-r from-[var(--primary-violet)]/80 to-[var(--accent-teal)]/80 px-6 py-4 border-b border-[var(--accent-teal)]/20">
+              <h3 className="text-2xl font-bold text-white flex items-center">
+                <IoSchoolOutline className="mr-2 text-3xl" /> Account Details
+              </h3>
+            </div>
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div className="bg-[var(--primary-black)]/30 p-4 rounded-lg border border-[var(--accent-teal)]/10">
+                  <p className="text-[var(--accent-teal)] mb-2 flex items-center">
+                    <IoCalendarOutline className="mr-2" /> Joined
+                  </p>
+                  <p className="font-medium text-white text-lg">
+                    {formatDateTime(user.created_at)}
+                  </p>
+                </div>
+                
+                <div className="bg-[var(--primary-black)]/30 p-4 rounded-lg border border-[var(--accent-teal)]/10">
+                  <p className="text-[var(--accent-teal)] mb-2 flex items-center">
+                    <IoCalendarOutline className="mr-2" /> Last Login
+                  </p>
+                  <p className="font-medium text-white text-lg">
+                    {formatDateTime(user.last_logged_in)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Password Change */}
+          {/* <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm overflow-hidden">
+            <div className="bg-gradient-to-r from-[var(--primary-violet)]/80 to-[var(--accent-teal)]/80 px-6 py-4 border-b border-[var(--accent-teal)]/20">
+              <h3 className="text-2xl font-bold text-white flex items-center">
+                <IoKeyOutline className="mr-2 text-3xl" /> Change Password
+              </h3>
+            </div>
+            <form onSubmit={handlePasswordSubmit} className="p-6 space-y-6">
+              <div className="space-y-3">
+                <label
+                  htmlFor="current_password"
+                  className="block text-lg font-medium text-white flex items-center"
+                >
+                  <IoKeyOutline className="mr-2" /> Current Password
+                </label>
+                <div className="relative">
+                  <input
+                    type="password"
+                    id="current_password"
+                    name="current_password"
+                    value={passwordData.current_password}
+                    onChange={handlePasswordChange}
+                    required
+                    className="w-full p-4 rounded-lg bg-[var(--primary-black)]/50 border border-[var(--accent-teal)]/30 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all duration-300"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <label
+                  htmlFor="new_password"
+                  className="block text-lg font-medium text-white flex items-center"
+                >
+                  <IoKeyOutline className="mr-2" /> New Password
+                </label>
+                <div className="relative">
+                  <input
+                    type="password"
+                    id="new_password"
+                    name="new_password"
+                    value={passwordData.new_password}
+                    onChange={handlePasswordChange}
+                    required
+                    className="w-full p-4 rounded-lg bg-[var(--primary-black)]/50 border border-[var(--accent-teal)]/30 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all duration-300"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full px-8 py-4 bg-gradient-to-r from-[var(--accent-teal)] via-[var(--primary-violet)] to-[var(--accent-teal)] bg-size-200 bg-pos-0 hover:bg-pos-100 text-white rounded-lg shadow-lg transition-all duration-500 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center group"
+              >
+                <span>Update Password</span>
               </button>
 
               {passwordMsg && (
                 <div
-                  className={`mt-4 p-3 rounded-md ${
+                  className={`mt-4 p-4 rounded-lg flex items-center ${
                     passwordMsg.includes("success")
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
+                      ? "bg-green-500/20 border border-green-500 text-green-100"
+                      : "bg-red-500/20 border border-red-500 text-white"
                   }`}
                 >
-                  {passwordMsg}
+                  {passwordMsg.includes("success") ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  )}
+                  <span>{passwordMsg}</span>
                 </div>
               )}
             </form>
           </div> */}
-        </div>
+        </div> 
+        
+      </div>
+      
+      {/* Home Button */}
+      <div className="fixed bottom-6 right-6 z-10">
+        <HomeButton />
       </div>
     </div>
+    <Footer/>
+
+  </div>  
+
   );
 };
 

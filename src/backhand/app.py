@@ -68,10 +68,12 @@ def send_email(to_email, subject, html_content):
 # Import routes
 from User.user_routes import user_bp
 from Admin.admin_routes import admin_bp
+from Marketing.marketing_routes import marketing_bp
 
 # Register blueprints
 app.register_blueprint(user_bp, url_prefix='/api/user')
 app.register_blueprint(admin_bp, url_prefix='/api/admin')
+app.register_blueprint(marketing_bp, url_prefix='/api/marketing')
 
 # Root route
 @app.route('/')

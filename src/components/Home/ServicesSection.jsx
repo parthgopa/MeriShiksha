@@ -179,6 +179,12 @@ const ServicesSection = ({ pages, servicesSectionRef }) => {
       path: "/ppt-content",
       category: "Empowering Tutor",
     },
+    {
+      title: "Lab Instructor Assistant",
+      description: "AI assistance for lab experiments and teaching",
+      path: "/lab-assistant",
+      category: "Empowering Tutor",
+    },
   ];
 
   // Custom pages for Empowering Learner
@@ -193,6 +199,12 @@ const ServicesSection = ({ pages, servicesSectionRef }) => {
       title: "Lesson Planning",
       description: "Create effective lesson plans with AI",
       path: "/lesson-plan",
+      category: "Empowering Learner",
+    },
+    {
+      title: "Lab Experiment Guide",
+      description: "Get help with lab experiments and procedures",
+      path: "/lab-assistant",
       category: "Empowering Learner",
     },
     {

@@ -55,7 +55,7 @@ export default function ContactUs() {
     <>
     <Header/>
     <div className="w-screen min-h-screen flex items-center justify-center bg-gradient-to-b from-[var(--primary-black)] via-[var(--secondary-black)] to-black p-4">
-      <div className="bg-gray-900/90 backdrop-blur-md mt-5 shadow-2xl rounded-3xl p-8 md:p-12 max-w-5xl w-full border border-gray-800">
+      <div className="bg-gray-900/90 backdrop-blur-md mt-20 shadow-2xl rounded-3xl p-8 md:p-12 max-w-5xl w-full border border-gray-800">
         {/* Heading */}
         <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
           Let's Connect – We're Here to Help!

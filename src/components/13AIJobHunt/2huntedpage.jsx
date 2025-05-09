@@ -6,24 +6,31 @@ import ReactMarkdown from "react-markdown";
 import HomeButton from "../HomeButton";
 import SubscriptionCheck from "../Subscription/SubscriptionCheck";
 
-// Cache key for localStorage
+// Cache keys for localStorage
 const CACHE_KEY = 'jobHuntResponses';
+const FORMATTED_CACHE_KEY = 'jobHuntFormattedResponses';
 
 const HuntedPage = () => {
   const [summary, setSummary] = useState("none");
   const [loading, setLoading] = useState(true);
   const [copyStatus, setCopyStatus] = useState("Copy to Clipboard");
   const [downloadStatus, setDownloadStatus] = useState("Download PDF");
-  const [hasSubscription, setHasSubscription] = useState(false);
+  const [hasSubscription, setHasSubscription] = useState(true); // Default to true to avoid loading issues
   const navigate = useNavigate();
   const location = useLocation(null);
-  const { initialPrompt } = location.state;
+  const { initialPrompt } = location.state || { initialPrompt: null };
 
   // Function to get response from cache
   const getFromCache = (prompt) => {
     try {
       const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
-      return cache[prompt];
+      const cachedData = cache[prompt];
+      
+      // Check if we have valid cached data
+      if (cachedData && Object.keys(cachedData).length > 0) {
+        return cachedData;
+      }
+      return null;
     } catch (error) {
       console.error('Error reading from cache:', error);
       return null;
@@ -41,6 +48,28 @@ const HuntedPage = () => {
     }
   };
 
+  // Function to save formatted response to cache
+  const saveFormattedToCache = (prompt, formattedData) => {
+    try {
+      const cache = JSON.parse(localStorage.getItem(FORMATTED_CACHE_KEY) || '{}');
+      cache[prompt] = formattedData;
+      localStorage.setItem(FORMATTED_CACHE_KEY, JSON.stringify(cache));
+    } catch (error) {
+      console.error('Error saving formatted data to cache:', error);
+    }
+  };
+
+  // Function to get formatted response from cache
+  const getFormattedFromCache = (prompt) => {
+    try {
+      const cache = JSON.parse(localStorage.getItem(FORMATTED_CACHE_KEY) || '{}');
+      return cache[prompt];
+    } catch (error) {
+      console.error('Error reading formatted data from cache:', error);
+      return null;
+    }
+  };
+
   // Function to format the response data into markdown
   const formatResponse = (data) => {
     try {
@@ -53,6 +82,11 @@ const HuntedPage = () => {
         formattedMarkdown += `---\n\n`;
       });
 
+      // Save the formatted response to cache
+      if (initialPrompt) {
+        saveFormattedToCache(initialPrompt, formattedMarkdown);
+      }
+
       return formattedMarkdown;
     } catch (error) {
       console.error("Error formatting response:", error);
@@ -62,7 +96,6 @@ const HuntedPage = () => {
 
   // Subscription handlers
   const handleSubscriptionSuccess = () => {
-    console.log('Subscription check succeeded, user has API calls available');
     setHasSubscription(true);
   };
 
@@ -71,40 +104,75 @@ const HuntedPage = () => {
     setLoading(false);
   };
 
+  // Load data from cache on component mount
   useEffect(() => {
-    const fetchData = async () => {
-      if (!hasSubscription) return; // Only proceed if subscription check passed
-      
+    // Check if we have a valid prompt
+    if (!initialPrompt) {
+      setLoading(false);
+      return;
+    }
+    
+    // First try to load formatted response from cache
+    const formattedCache = getFormattedFromCache(initialPrompt);
+    if (formattedCache) {
+      // Use pre-formatted data immediately
+      setSummary(formattedCache);
+      setLoading(false);
+      return;
+    }
+    
+    // If no formatted cache, try to load raw data and format it
+    const cachedData = getFromCache(initialPrompt);
+    if (cachedData) {
+      // Format and use cached data
+      const formatted = formatResponse(cachedData);
+      setSummary(formatted);
+      setLoading(false);
+    } else {
+      // If no cache at all, set loading state and prepare for API call
       setLoading(true);
-
-      // Check cache first
-      const cachedData = getFromCache(initialPrompt);
-      if (cachedData) {
-        console.log('Using cached response');
-        setSummary(formatResponse(cachedData));
+    }
+  }, []); // Empty dependency array - only run once on mount
+  
+  // Separate effect for API calls to prevent unnecessary re-fetching
+  useEffect(() => {
+    // Only make API call if we have a prompt and no cached data
+    if (!initialPrompt) return;
+    
+    const cachedData = getFromCache(initialPrompt);
+    if (cachedData) return; // Skip API call if we have cached data
+    
+    const fetchData = async () => {
+      try {
+        await APIService({
+          question: initialPrompt,
+          onResponse: handleOnResponse,
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setSummary("Error fetching job listings. Please try again.");
         setLoading(false);
-        return;
       }
-
-      // If not in cache, make API call
-      console.log('Making new API call');
-      await APIService({
-        question: initialPrompt,
-        onResponse: handleOnResponse,
-      });
     };
 
     fetchData();
-  }, [initialPrompt, hasSubscription]); // Add hasSubscription as dependency
+  }, [initialPrompt]); // Only run when initialPrompt changes
 
   const handleOnResponse = (response) => {
     try {
       let responseText = response["candidates"][0]["content"]["parts"][0]["text"];
-      // Clean the response text
-      responseText = responseText.slice(7, responseText.length - 4);
+      
+      // More robust JSON extraction using regex to find JSON content
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/); // Match anything between { and }
+      
+      if (!jsonMatch) {
+        throw new Error("Could not find valid JSON in the response");
+      }
+      
+      const jsonStr = jsonMatch[0];
       
       // Parse the JSON data
-      const parsedData = JSON.parse(responseText);
+      const parsedData = JSON.parse(jsonStr);
       
       // Save to cache
       saveToCache(initialPrompt, parsedData);
@@ -156,11 +224,7 @@ const HuntedPage = () => {
   };
 
   return (
-    <SubscriptionCheck
-      onSuccess={handleSubscriptionSuccess}
-      onError={handleSubscriptionError}
-      checkOnMount={true}
-    >
+    
       <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
@@ -246,7 +310,6 @@ const HuntedPage = () => {
         <HomeButton />
       </div>
     </div>
-    </SubscriptionCheck>
   );
 };
 

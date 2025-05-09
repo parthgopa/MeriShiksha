@@ -82,6 +82,25 @@ const AdminDashboard = () => {
               View Analytics
             </Link>
           </div>
+          
+          {/* Marketing Card */}
+          <div className="bg-gray-900 rounded-xl shadow-lg p-6 border border-gray-800 hover:border-[var(--accent-teal)] transition-all duration-300 transform hover:scale-[1.02]">
+            <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--accent-teal)]/10">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[var(--accent-teal)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-white text-center mb-2">Email Marketing</h2>
+            <p className="text-gray-400 text-center mb-6">
+              Create and manage email marketing campaigns
+            </p>
+            <Link
+              to="/admin/marketing"
+              className="block w-full px-4 py-2 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg transition-all duration-300 text-center hover:opacity-90"
+            >
+              Manage Marketing
+            </Link>
+          </div>
         </div>
       </div>
       </main>

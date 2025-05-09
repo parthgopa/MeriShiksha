@@ -1,0 +1,301 @@
+/* LanguageLearning.css - Responsive styles for language learning components */
+
+/* Base styles */
+.language-learning-container {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(to bottom right, var(--primary-black), var(--primary-violet, #4b0082)/30%, var(--primary-black));
+  color: white;
+  padding: 1.5rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.decorative-element-1 {
+  position: absolute;
+  top: 5rem;
+  left: 2.5rem;
+  width: 16rem;
+  height: 16rem;
+  background-color: rgba(var(--accent-teal-rgb, 0, 128, 128), 0.2);
+  border-radius: 50%;
+  filter: blur(3rem);
+  z-index: 0;
+}
+
+.decorative-element-2 {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  width: 20rem;
+  height: 20rem;
+  background-color: rgba(var(--primary-violet-rgb, 75, 0, 130), 0.2);
+  border-radius: 50%;
+  filter: blur(3rem);
+  z-index: 0;
+}
+
+.content-container {
+  max-width: 1024px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Header styles */
+.header-container {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(to right, var(--accent-teal, #008080), white, var(--primary-violet, #4b0082));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.page-subtitle {
+  font-size: 1.25rem;
+  color: rgba(var(--accent-teal-rgb, 0, 128, 128), 1);
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+/* Control panel styles */
+.control-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(to bottom right, rgba(var(--primary-black-rgb, 0, 0, 0), 0.7), rgba(var(--primary-violet-rgb, 75, 0, 130), 0.3));
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(var(--accent-teal-rgb, 0, 128, 128), 0.1);
+  backdrop-filter: blur(4px);
+}
+
+/* Button styles */
+.control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.control-btn:hover {
+  transform: scale(1.02);
+}
+
+.control-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(var(--accent-teal-rgb, 0, 128, 128), 0.5);
+}
+
+.control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.control-btn-icon {
+  margin-right: 0.5rem;
+}
+
+/* Button variants */
+.btn-primary {
+  background: linear-gradient(to right, var(--accent-teal, #008080), var(--primary-violet, #4b0082));
+}
+
+.btn-secondary {
+  background: linear-gradient(to right, var(--primary-violet, #4b0082), var(--accent-teal, #008080));
+}
+
+.btn-dark {
+  background: linear-gradient(to right, var(--primary-black, #000), var(--primary-violet, #4b0082)/70%);
+}
+
+/* Speech control styles */
+.speech-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(var(--primary-black-rgb, 0, 0, 0), 0.4);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(var(--accent-teal-rgb, 0, 128, 128), 0.2);
+}
+
+.speech-rate-label {
+  color: rgba(var(--accent-teal-rgb, 0, 128, 128), 1);
+}
+
+.speech-rate-slider {
+  width: 8rem;
+  height: 0.5rem;
+  background-color: rgba(var(--primary-black-rgb, 0, 0, 0), 0.6);
+  border-radius: 0.5rem;
+  appearance: none;
+  cursor: pointer;
+  accent-color: var(--accent-teal, #008080);
+}
+
+.speech-rate-value {
+  font-weight: 500;
+}
+
+/* Content area styles */
+.content-area {
+  background: linear-gradient(to bottom right, rgba(var(--primary-black-rgb, 0, 0, 0), 0.8), rgba(var(--primary-violet-rgb, 75, 0, 130), 0.2));
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(var(--accent-teal-rgb, 0, 128, 128), 0.1);
+  backdrop-filter: blur(4px);
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  color: rgba(var(--accent-teal-rgb, 0, 128, 128), 1);
+}
+
+.markdown-content {
+  overflow: auto;
+  max-height: 60vh;
+}
+
+/* Action buttons container */
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal-content {
+  background: linear-gradient(to bottom right, rgba(var(--primary-black-rgb, 0, 0, 0), 0.9), rgba(var(--primary-violet-rgb, 75, 0, 130), 0.4));
+  padding: 2rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(var(--accent-teal-rgb, 0, 128, 128), 0.2);
+  max-width: 90%;
+  width: 30rem;
+  text-align: center;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .language-learning-container {
+    padding: 1rem;
+  }
+  
+  .page-title {
+    font-size: 1.75rem;
+  }
+  
+  .page-subtitle {
+    font-size: 1rem;
+  }
+  
+  .control-panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .speech-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  /* Show only icons on small screens */
+  .btn-text {
+    display: none;
+  }
+  
+  .control-btn {
+    padding: 0.5rem;
+  }
+  
+  .control-btn-icon {
+    margin-right: 0;
+    font-size: 1.25rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .control-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  .speech-rate-slider {
+    width: 6rem;
+  }
+}
+
+/* Utility classes */
+.hidden {
+  display: none;
+}
+
+.icon-only {
+  padding: 0.5rem;
+}
+
+.icon-only .control-btn-icon {
+  margin-right: 0;
+  font-size: 1.25rem;
+}

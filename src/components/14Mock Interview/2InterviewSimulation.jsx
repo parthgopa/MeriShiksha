@@ -370,17 +370,36 @@ const InterviewSimulation = () => {
   const handleSpeak = useCallback(() => {
     if (currentSpeechResponse && speechRef.current) {
       if (!isSpeaking) {
-        setIsSpeaking(true);
-        speechRef.current.play();
+        try {
+          // Make sure any ongoing speech recognition is stopped
+          stopSpeechRecognition();
+          
+          setIsSpeaking(true);
+          speechRef.current.play();
+        } catch (error) {
+          console.error("Error playing speech:", error);
+          setIsSpeaking(false);
+        }
       }
     }
   }, [currentSpeechResponse, isSpeaking]);
 
   // Handle stop speech
   const handleStop = useCallback(() => {
-    if (isSpeaking && speechRef.current) {
-      setIsSpeaking(false);
-      speechRef.current.pause();
+    if (speechRef.current) {
+      try {
+        setIsSpeaking(false);
+        speechRef.current.pause();
+        
+        // Also cancel any ongoing speech synthesis
+        if (window.speechSynthesis) {
+          window.speechSynthesis.cancel();
+        }
+      } catch (error) {
+        console.error("Error stopping speech:", error);
+        // Force UI update even if there's an error
+        setIsSpeaking(false);
+      }
     }
   }, [isSpeaking]);
 
@@ -397,14 +416,29 @@ const InterviewSimulation = () => {
   // Speech recognition setup
   const recognitionRef = useRef(null);
   const transcriptRef = useRef("");
+  
+  // Check browser compatibility for speech recognition
+  const isSpeechRecognitionSupported = useMemo(() => {
+    return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  }, []);
 
   const startSpeechRecognition = () => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert("Speech recognition is not supported in your browser!");
-      return;
-    }
+    try {
+      // Check if there's already an active recognition session
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch (e) {
+          console.log("Error stopping previous recognition session", e);
+        }
+      }
+      
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Speech recognition is not supported in your browser!");
+        return;
+      }
 
     const recognition = new SpeechRecognition();
     recognition.interimResults = true;
@@ -461,28 +495,67 @@ const InterviewSimulation = () => {
       setIsRecording(false);
       if (transcriptRef.current) {
         setIsProcessingSpeech(true);
-        setIsProcessingSpeech(false);
+        // Add a small delay before setting processing to false to ensure UI feedback
+        setTimeout(() => {
+          setIsProcessingSpeech(false);
+        }, 500);
       }
     };
 
     recognitionRef.current = recognition;
-    recognition.start();
-  };
+    try {
+      recognition.start();
+    } catch (error) {
+      console.error("Error starting speech recognition:", error);
+      // If there's an error starting (like already running), try stopping first then starting again
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+          setTimeout(() => {
+            recognition.start();
+          }, 300);
+        } catch (stopError) {
+          console.error("Error stopping previous recognition:", stopError);
+          setIsRecording(false);
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Speech recognition initialization error:", error);
+    alert("There was an error initializing speech recognition. Please try again.");
+    setIsRecording(false);
+  }
+};
 
   const stopSpeechRecognition = () => {
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
+    try {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    } catch (error) {
+      console.error("Error stopping speech recognition:", error);
+      // Force the UI to update even if there's an error
+      setIsRecording(false);
     }
   };
 
   const handleSpeechInput = () => {
-    setShowSpeechModal(true);
-
-    // Don't reset transcript when opening modal
-    if (!transcriptRef.current) {
-      transcriptRef.current = "";
-      setPreviewText("");
+    // Check if speech recognition is supported
+    if (!isSpeechRecognitionSupported) {
+      alert("Speech recognition is not supported in your browser. Please try using Chrome, Edge, or Safari.");
+      return;
     }
+    
+    setShowSpeechModal(true);
+    
+    // Reset transcript when opening modal to start fresh
+    transcriptRef.current = "";
+    setPreviewText("");
+    
+    // Auto-start speech recognition after a short delay
+    setTimeout(() => {
+      startSpeechRecognition();
+    }, 500);
   };
 
   const handleFinalSubmit = () => {
@@ -495,14 +568,20 @@ const InterviewSimulation = () => {
   };
 
   const closeSpeechModal = () => {
-    if (isRecording) {
-      stopSpeechRecognition();
-    }
+    // Always attempt to stop recognition when closing the modal
+    stopSpeechRecognition();
+    
+    // Clean up state
     setShowSpeechModal(false);
     setIsRecording(false);
     setIsProcessingSpeech(false);
     transcriptRef.current = "";
     setPreviewText("");
+    
+    // Make sure any ongoing speech synthesis is also stopped
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
   };
 
   const handleBack = () => {
@@ -637,7 +716,7 @@ const InterviewSimulation = () => {
           <div className="space-y-6">
             {/* Question Display */}
             <div className="p-6 rounded-xl bg-gradient-to-r from-[var(--primary-black)]/60 to-[var(--primary-violet)]/20 border border-[var(--accent-teal)]/20 mb-6 shadow-lg">
-              <h3 className="text-xl font-semibold mb-3 text-[var(--accent-teal)]">Interviewer Question:</h3>
+              <h3 className="text-xl font-semibold mb-3 text-white">Interviewer Question:</h3>
               <div className="prose prose-invert max-w-none">
                 <ReactMarkdown>
                   {currentQuestion || "Loading the question..."}
@@ -654,7 +733,7 @@ const InterviewSimulation = () => {
 
             {/* Answer Section */}
             <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-white to-[var(--accent-teal)]">
+              <h3 className="text-white font-semibold">
                 Your Answer:
               </h3>
               <div className="flex flex-col gap-3">
@@ -703,7 +782,7 @@ const InterviewSimulation = () => {
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-gradient-to-br from-[var(--primary-black)] to-[var(--primary-violet)]/30 p-6 rounded-xl border border-[var(--accent-teal)]/20 shadow-2xl max-w-md w-full mx-4 overflow-y-auto max-h-[80vh]">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-[var(--accent-teal)]">
+              <h3 className="text-xl font-bold text-white">
                 Interview Tips
               </h3>
               <button

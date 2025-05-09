@@ -4,6 +4,7 @@ import APIService from "../API";
 import LoadingSpinner from "../LoadingSpinner";
 import ReactMarkdown from "react-markdown";
 import HomeButton from "../HomeButton";
+import { IoArrowBack, IoDocumentText, IoClipboard } from "react-icons/io5";
 
 const LabReport = () => {
   const [plan, setplan] = useState("none");
@@ -76,51 +77,72 @@ Safety measurement. For date: ${date} and time: ${time}(dont display it in outpu
   };
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-b from-black via-secondary to-black text-white py-12 px-6 justify-center items-center">
-      <form className="max-w-2xl mx-auto p-2 rounded-lg shadow-lg space-y-6 bg-gradient-to-r from-secondary via-20% to-black">
-        <h5
-          className="text-2xl font-bold text-center mb-6 text-white"
-          style={{ fontFamily: "var(--font-heading)" }}
-        >
-          Lab Report of Topic-{topic}
-        </h5>
-        <div className="space-y-4">
+    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
+      
+      <div className="max-w-5xl mx-auto relative z-10">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+            Lab Report: {topic}
+          </h1>
+          <p className="text-xl text-teal-100 max-w-3xl mx-auto">
+            Detailed procedure and observations for your experiment
+          </p>
+        </div>
+        
+        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-8">
           {loading ? (
-            <LoadingSpinner /> // Render spinner when loading
+            <div className="flex flex-col items-center justify-center py-16">
+              <LoadingSpinner />
+              <p className="mt-4 text-teal-100">Generating your lab report...</p>
+            </div>
           ) : (
             <div
               id="output-container"
-              className="p-2 rounded-lg bg-secondary text-white"
+              className="p-6 bg-[var(--primary-black)]/40 rounded-lg border border-[var(--accent-teal)]/20 overflow-auto max-h-[60vh]"
             >
               <ReactMarkdown
-                className="max-w-auto text-white"
+                className="prose prose-invert max-w-none"
                 children={plan}
               />
             </div>
           )}
         </div>
-      </form>
-      <div className="flex justify-between gap-4 ">
-        <button
-          className="px-6 py-2 rounded-lg bg-dark text-white hover:bg-accent transition-all transform hover:scale-105"
-          onClick={() => navigate(-1)}
-        >
-          Back
-        </button>
-        <button
-          className="px-6 py-2 rounded-lg bg-dark text-white hover:bg-accent transition-all transform hover:scale-105"
-          onClick={handleCopyToClipboard}
-        >
-          Copy to Clipboard
-        </button>
-        <button
-          className="px-6 py-2 rounded-lg bg-dark text-white hover:bg-cardaccent transition-all transform hover:scale-105"
-          onClick={handleDownloadPdf}
-        >
-          Download Pdf
-        </button>
+        
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8 mt-8">
+          <button
+            className="px-6 py-3 bg-gradient-to-r from-[var(--primary-black)] to-[var(--primary-violet)]/70 text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center justify-center"
+            onClick={() => navigate(-1)}
+          >
+            <IoArrowBack className="mr-2" />
+            <span>Back to Lab Assistant</span>
+          </button>
+          
+          <button
+            className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center justify-center"
+            onClick={handleCopyToClipboard}
+          >
+            <IoClipboard className="mr-2" />
+            <span>Copy to Clipboard</span>
+          </button>
+          
+          <button
+            className="px-6 py-3 bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center justify-center"
+            onClick={handleDownloadPdf}
+          >
+            <IoDocumentText className="mr-2" />
+            <span>Download PDF</span>
+          </button>
+        </div>
       </div>
-      <HomeButton />
+      {/* Home Button */}
+      <div className="fixed bottom-6 right-6 z-10">
+        <HomeButton />
+      </div>
     </div>
   );
 };

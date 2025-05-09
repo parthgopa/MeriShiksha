@@ -67,9 +67,29 @@ const LearningParts = () => {
     setLoading(false);
   };
 
+  // Stop speech when component unmounts
+  useEffect(() => {
+    return () => {
+      // Cleanup function to stop speech when component unmounts
+      if (speechRef.current) {
+        try {
+          speechRef.current.pause();
+          if (window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+          }
+        } catch (error) {
+          console.error("Error stopping speech on unmount:", error);
+        }
+      }
+    };
+  }, []);
+
   useEffect(() => {
     const fetchInitialContent = async () => {
-      if (!hasSubscription) return navigate(-1); ; // Only proceed if subscription check passed
+      // if (!hasSubscription) return navigate(-1); ; // Only proceed if subscription check passed
+      
+      // Stop any ongoing speech when loading new content
+      handleStop();
       
       setLoading(true); // Start spinner when making API call
 
@@ -108,25 +128,41 @@ const LearningParts = () => {
   const handleSpeak = () => {
     if (currentPart && speechRef.current) {
       if (!isSpeaking) {
-        setIsSpeaking(true);
-        speechRef.current.play();
+        // Ensure the speech component has the latest rate before playing
+        if (speechRef.current.props && speechRef.current.props.rate !== speechRate) {
+          // Force a re-render of the Speech component with the new rate
+          setSpeechResponse(prev => prev + " "); // Small change to force re-render
+          // Small delay to ensure the component updates
+          setTimeout(() => {
+            setIsSpeaking(true);
+            speechRef.current.play();
+          }, 50);
+        } else {
+          setIsSpeaking(true);
+          speechRef.current.play();
+        }
       }
     }
   };
 
   const handleStop = () => {
-    if (isSpeaking && speechRef.current) {
+    if (speechRef.current) {
       setIsSpeaking(false);
-      speechRef.current.pause();
+      try {
+        speechRef.current.pause();
+        // Additional fallback to ensure speech stops
+        if (window.speechSynthesis) {
+          window.speechSynthesis.cancel();
+        }
+      } catch (error) {
+        console.error("Error stopping speech:", error);
+      }
     }
   };
   
   // Helper function to cancel speech
   const cancel = () => {
-    if (isSpeaking && speechRef.current) {
-      setIsSpeaking(false);
-      speechRef.current.pause();
-    }
+    handleStop(); // Use the same stop handler for consistency
   };
 
   // Custom style for Speech component
@@ -177,7 +213,7 @@ const LearningParts = () => {
     let level = "intermediate";
 
     if (currentPart === 1) {
-      Prompt = `I'm learning ${language} language.I had learned full Alphabets of it.
+      Prompt = `I'm learning ${language} language.I had learned Alphabets and Numbers of it.
 
     Generate ${numMCQs} Randomized MCQs on Alphabets of ${language} language having level : ${level}. The output should be a valid JSON object in the following format:
       {
@@ -361,11 +397,7 @@ Spanish. 'El gato es negro' means 'The cat is black'
   };
 
   return (
-    <SubscriptionCheck
-      onSuccess={handleSubscriptionSuccess}
-      onError={handleSubscriptionError}
-      checkOnMount={true}
-    >
+    
       <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
@@ -417,11 +449,21 @@ Spanish. 'El gato es negro' means 'The cat is black'
                 onChange={(e) => {
                   const newRate = parseFloat(e.target.value);
                   setSpeechRate(newRate);
+                  
+                  // Always stop current speech when rate changes
                   if (isSpeaking) {
                     handleStop();
-                    // Small timeout to ensure stop completes before starting again
+                    
+                    // Create a new speech instance with the updated rate
+                    // Use a longer timeout to ensure the component fully updates
                     setTimeout(() => {
-                      handleSpeak();
+                      // Force re-render of Speech component
+                      setSpeechResponse(prev => prev.trim());
+                      
+                      // Start speaking with new rate after a small delay
+                      setTimeout(() => {
+                        handleSpeak();
+                      }, 150);
                     }, 100);
                   }
                 }}
@@ -440,6 +482,7 @@ Spanish. 'El gato es negro' means 'The cat is black'
                 lang="en-US"
                 voice="Google US English"
                 style={speechStyle}
+                key={`speech-${speechRate}`} // Add a key that changes with speech rate to force re-render
               />
             </div>
           </div>
@@ -542,7 +585,7 @@ Spanish. 'El gato es negro' means 'The cat is black'
         </div>
       </div>
       </div>
-    </SubscriptionCheck>
+    
   );
 };
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Mylogo from "../../assets/MyLogonew.png";
 import api from "../../api/axios";
+import Header from "../Home/Header";
 
 const AdminLogin = () => {
   const [formData, setFormData] = useState({
@@ -45,17 +46,17 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen w-screen flex items-center justify-center bg-[var(--primary-black)] p-4">
+      <Header/>
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/10 to-[var(--primary-black)]"></div>
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-[var(--primary-violet)] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[var(--accent-teal)] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
       </div>
 
-      <div className="w-full max-w-md z-10">
+      <div className="w-full max-w-md z-10 mt-20">
         {/* Logo and Title */}
-        <div className="text-center mb-10">
+        <div className="text-center m-0">
           <div className="flex items-center justify-center">
-            <img src={Mylogo} alt="MeriShiksha Logo" className="h-20 mx-auto mb-4" />
             <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full ml-2 uppercase">
               Admin
             </div>

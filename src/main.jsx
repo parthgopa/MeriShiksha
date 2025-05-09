@@ -11,6 +11,7 @@ import AdminUsers from "./components/Admin/AdminUsers";
 import AdminAnalytics from "./components/Admin/AdminAnalytics";
 import AdminLogin from "./components/Admin/AdminLogin";
 import AdminRegister from "./components/Admin/AdminRegister";
+import MarketingDashboard from "./components/Admin/MarketingDashboard";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
 import ForgotPassword from "./components/Auth/ForgotPassword";
@@ -523,6 +524,14 @@ const router = createBrowserRouter([
     element: (
       <Layout>
         <SubscriptionToggleAdmin />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/admin/marketing",
+    element: (
+      <Layout>
+        <MarketingDashboard />{" "}
       </Layout>
     ),
   },

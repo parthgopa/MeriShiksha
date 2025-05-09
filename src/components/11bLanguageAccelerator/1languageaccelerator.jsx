@@ -56,10 +56,10 @@ For date: ${date} and time: ${time}(dont display it in output)
   };
 
   return (
-    <SubscriptionCheck
-      onSuccess={handleSubscriptionSuccess}
-      onError={handleSubscriptionError}
-    >
+    // <SubscriptionCheck
+    //   onSuccess={handleSubscriptionSuccess}
+    //   onError={handleSubscriptionError}
+    // >
       <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
@@ -292,7 +292,7 @@ For date: ${date} and time: ${time}(dont display it in output)
           <HomeButton />
         </div>
       </div>
-    </SubscriptionCheck>
+    // </SubscriptionCheck>
   );
 };
 

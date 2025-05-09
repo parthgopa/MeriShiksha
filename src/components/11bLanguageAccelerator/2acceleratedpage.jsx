@@ -39,7 +39,7 @@ const AcceleratedPage = () => {
 
   // Initial question generation
   const getInitialQuestion = async () => {
-    if (!hasSubscription) return navigate(-1); ; // Only proceed if subscription check passed 
+    // if (!hasSubscription) return navigate(-1); ; // Only proceed if subscription check passed 
     setIsLoadingNext(true);
     try {
       await APIService({
@@ -61,7 +61,7 @@ const AcceleratedPage = () => {
 
   // Handle next question generation
   const handleNextQuestion = async () => {
-    if (!hasSubscription) return navigate(-1); ; // Only proceed if subscription check passed 
+    // if (!hasSubscription) return navigate(-1); ; // Only proceed if subscription check passed 
     if (qaHistory.length >= 20) return;
 
     // First, save the current Q&A pair
@@ -96,7 +96,7 @@ const AcceleratedPage = () => {
   };
 
   const handleAnalyze = async () => {
-    if (!hasSubscription) return navigate(-1); ; // Only proceed if subscription check passed
+    // if (!hasSubscription) return navigate(-1); ; // Only proceed if subscription check passed
     setIsAnalyzing(true);
     try {
       await APIService({
@@ -171,10 +171,10 @@ const AcceleratedPage = () => {
   };
 
   return (
-    <SubscriptionCheck
-      onSuccess={handleSubscriptionSuccess}
-      onError={handleSubscriptionError}
-    >
+    // <SubscriptionCheck
+    //   onSuccess={handleSubscriptionSuccess}
+    //   onError={handleSubscriptionError}
+    // >
       <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
@@ -414,7 +414,7 @@ const AcceleratedPage = () => {
           <HomeButton />
         </div>
       </div>
-    </SubscriptionCheck>
+    // </SubscriptionCheck>
   );
 };
 

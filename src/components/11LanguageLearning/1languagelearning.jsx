@@ -22,7 +22,7 @@ const LanguageSelect = () => {
     setLoading(true);
     let initialPrompt = `I'm learning ${language} language. I'm a complete beginner.
 
-1. Alphabet learning:
+1. Alphabet and Numbers learning:
 Provide the sounds and shapes of the alphabets in ${language} language by reviewing each letter and its pronunciation. Following format: Letter, Shape, Pronunciation (approximate), Example Word, Example Word Translation, Notes.
 
 Provide the output in bullet points.
@@ -65,11 +65,7 @@ For date: ${date} and time: ${time}(dont display it in output)
   };
 
   return (
-    <SubscriptionCheck
-      onSuccess={handleSubscriptionSuccess}
-      onError={handleSubscriptionError}
-      checkOnMount={true}
-    >
+    
       <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
@@ -195,7 +191,6 @@ For date: ${date} and time: ${time}(dont display it in output)
         <HomeButton />
       </div>
     </div>
-    </SubscriptionCheck>
   );
 };
 

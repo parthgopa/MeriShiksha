@@ -24,6 +24,7 @@ const SubscriptionPage = () => {
             Unlock unlimited access to all MeriShiksha's AI-powered learning tools
           </p>
         </div>
+        
 
         {/* Two-column layout for larger screens */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-center gap-8 mt-4">
