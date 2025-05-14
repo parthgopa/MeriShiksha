@@ -39,7 +39,7 @@ const AdminRegister = () => {
     setLoading(true);
     try {
       // Register the admin directly using the admin registration endpoint
-      const response = await api.post("/api/admin/register", {
+      const response = await axios.post("/api/admin/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,

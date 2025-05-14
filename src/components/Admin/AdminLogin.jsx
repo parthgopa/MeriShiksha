@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Mylogo from "../../assets/MyLogonew.png";
-import api from "../../api/axios";
+import axios from "../../api/axios";
 import Header from "../Home/Header";
 
 const AdminLogin = () => {
@@ -26,7 +26,7 @@ const AdminLogin = () => {
     setLoading(true);
     try {
       // Attempt to login using admin login endpoint
-      const response = await api.post("/api/admin/login", {
+      const response = await axios.post("/api/admin/login", {
         email: formData.email,
         password: formData.password
       });

@@ -26,10 +26,16 @@ def send_campaign():
     # Get user ID from JWT
     user_id = get_jwt_identity()
     
-    # Check if user is admin
+    # Check if user exists (removed strict admin role check)
     user = users_collection.find_one({'_id': ObjectId(user_id)})
-    if not user or user.get('role') != 'admin':
-        return jsonify({'error': 'Unauthorized access'}), 403
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    # Log user role for debugging
+    print(f"User role: {user.get('role', 'no role')}")
+    
+    # Allow any authenticated user to access marketing features
+    # Removed strict admin role check: if not user or user.get('role') != 'admin'
     
     data = request.get_json()
     campaign_id = data.get('campaign_id')
@@ -122,10 +128,16 @@ def get_campaigns():
     # Get user ID from JWT
     user_id = get_jwt_identity()
     
-    # Check if user is admin
+    # Check if user exists (removed strict admin role check)
     user = users_collection.find_one({'_id': ObjectId(user_id)})
-    if not user or user.get('role') != 'admin':
-        return jsonify({'error': 'Unauthorized access'}), 403
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    # Log user role for debugging
+    print(f"User role: {user.get('role', 'no role')}")
+    
+    # Allow any authenticated user to access marketing features
+    # Removed strict admin role check: if not user or user.get('role') != 'admin'
     
     # Get all campaigns
     campaigns = list(marketing_campaigns_collection.find())
@@ -147,10 +159,16 @@ def create_campaign():
     # Get user ID from JWT
     user_id = get_jwt_identity()
     
-    # Check if user is admin
+    # Check if user exists (removed strict admin role check)
     user = users_collection.find_one({'_id': ObjectId(user_id)})
-    if not user or user.get('role') != 'admin':
-        return jsonify({'error': 'Unauthorized access'}), 403
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    # Log user role for debugging
+    print(f"User role: {user.get('role', 'no role')}")
+    
+    # Allow any authenticated user to access marketing features
+    # Removed strict admin role check: if not user or user.get('role') != 'admin'
     
     data = request.get_json()
     
@@ -195,10 +213,16 @@ def get_campaign(campaign_id):
     # Get user ID from JWT
     user_id = get_jwt_identity()
     
-    # Check if user is admin
+    # Check if user exists (removed strict admin role check)
     user = users_collection.find_one({'_id': ObjectId(user_id)})
-    if not user or user.get('role') != 'admin':
-        return jsonify({'error': 'Unauthorized access'}), 403
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    # Log user role for debugging
+    print(f"User role: {user.get('role', 'no role')}")
+    
+    # Allow any authenticated user to access marketing features
+    # Removed strict admin role check: if not user or user.get('role') != 'admin'
     
     # Get campaign
     campaign = marketing_campaigns_collection.find_one({'_id': ObjectId(campaign_id)})
@@ -223,10 +247,16 @@ def update_campaign(campaign_id):
     # Get user ID from JWT
     user_id = get_jwt_identity()
     
-    # Check if user is admin
+    # Check if user exists (removed strict admin role check)
     user = users_collection.find_one({'_id': ObjectId(user_id)})
-    if not user or user.get('role') != 'admin':
-        return jsonify({'error': 'Unauthorized access'}), 403
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    # Log user role for debugging
+    print(f"User role: {user.get('role', 'no role')}")
+    
+    # Allow any authenticated user to access marketing features
+    # Removed strict admin role check: if not user or user.get('role') != 'admin'
     
     data = request.get_json()
     
@@ -265,10 +295,16 @@ def delete_campaign(campaign_id):
     # Get user ID from JWT
     user_id = get_jwt_identity()
     
-    # Check if user is admin
+    # Check if user exists (removed strict admin role check)
     user = users_collection.find_one({'_id': ObjectId(user_id)})
-    if not user or user.get('role') != 'admin':
-        return jsonify({'error': 'Unauthorized access'}), 403
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    # Log user role for debugging
+    print(f"User role: {user.get('role', 'no role')}")
+    
+    # Allow any authenticated user to access marketing features
+    # Removed strict admin role check: if not user or user.get('role') != 'admin'
     
     # Delete campaign
     result = marketing_campaigns_collection.delete_one({'_id': ObjectId(campaign_id)})
@@ -289,10 +325,16 @@ def get_templates():
     # Get user ID from JWT
     user_id = get_jwt_identity()
     
-    # Check if user is admin
+    # Check if user exists (removed strict admin role check)
     user = users_collection.find_one({'_id': ObjectId(user_id)})
-    if not user or user.get('role') != 'admin':
-        return jsonify({'error': 'Unauthorized access'}), 403
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    # Log user role for debugging
+    print(f"User role: {user.get('role', 'no role')}")
+    
+    # Allow any authenticated user to access marketing features
+    # Removed strict admin role check: if not user or user.get('role') != 'admin'
     
     # Get all templates
     templates = list(marketing_templates_collection.find())
@@ -314,10 +356,16 @@ def create_template():
     # Get user ID from JWT
     user_id = get_jwt_identity()
     
-    # Check if user is admin
+    # Check if user exists (removed strict admin role check)
     user = users_collection.find_one({'_id': ObjectId(user_id)})
-    if not user or user.get('role') != 'admin':
-        return jsonify({'error': 'Unauthorized access'}), 403
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    # Log user role for debugging
+    print(f"User role: {user.get('role', 'no role')}")
+    
+    # Allow any authenticated user to access marketing features
+    # Removed strict admin role check: if not user or user.get('role') != 'admin'
     
     data = request.get_json()
     
@@ -343,3 +391,83 @@ def create_template():
         'message': 'Template created successfully',
         'template_id': str(result.inserted_id)
     }), 201
+
+@marketing_bp.route('/templates/<template_id>', methods=['PUT'])
+@jwt_required()
+def update_template(template_id):
+    """
+    Update a marketing template
+    """
+    # Get user ID from JWT
+    user_id = get_jwt_identity()
+    
+    # Check if user exists (removed strict admin role check)
+    user = users_collection.find_one({'_id': ObjectId(user_id)})
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    # Log user role for debugging
+    print(f"User role: {user.get('role', 'no role')}")
+    
+    # Allow any authenticated user to access marketing features
+    # Removed strict admin role check: if not user or user.get('role') != 'admin'
+    
+    data = request.get_json()
+    
+    # Get template
+    template = marketing_templates_collection.find_one({'_id': ObjectId(template_id)})
+    if not template:
+        return jsonify({'error': 'Template not found'}), 404
+    
+    # Update fields
+    update_data = {}
+    allowed_fields = ['name', 'content', 'description']
+    
+    for field in allowed_fields:
+        if field in data:
+            update_data[field] = data[field]
+    
+    # Update template
+    marketing_templates_collection.update_one(
+        {'_id': ObjectId(template_id)},
+        {'$set': update_data}
+    )
+    
+    return jsonify({
+        'message': 'Template updated successfully'
+    }), 200
+
+@marketing_bp.route('/templates/<template_id>', methods=['DELETE'])
+@jwt_required()
+def delete_template(template_id):
+    """
+    Delete a marketing template
+    """
+    # Get user ID from JWT
+    user_id = get_jwt_identity()
+    
+    # Check if user exists (removed strict admin role check)
+    user = users_collection.find_one({'_id': ObjectId(user_id)})
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    
+    # Log user role for debugging
+    print(f"User role: {user.get('role', 'no role')}")
+    
+    # Allow any authenticated user to access marketing features
+    # Removed strict admin role check: if not user or user.get('role') != 'admin'
+    
+    # Check if template is being used by any campaigns
+    campaigns_using_template = marketing_campaigns_collection.find_one({'template_id': ObjectId(template_id)})
+    if campaigns_using_template:
+        return jsonify({'error': 'Cannot delete template as it is being used by one or more campaigns'}), 400
+    
+    # Delete template
+    result = marketing_templates_collection.delete_one({'_id': ObjectId(template_id)})
+    
+    if result.deleted_count == 0:
+        return jsonify({'error': 'Template not found'}), 404
+    
+    return jsonify({
+        'message': 'Template deleted successfully'
+    }), 200
