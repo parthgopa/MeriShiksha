@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { IoPersonCircle, IoMailOutline, IoPhonePortraitOutline, IoKeyOutline, IoCalendarOutline, IoSchoolOutline } from "react-icons/io5";
+import {
+  IoPersonCircle,
+  IoMailOutline,
+  IoPhonePortraitOutline,
+  IoKeyOutline,
+  IoCalendarOutline,
+  IoSchoolOutline,
+} from "react-icons/io5";
 import HomeButton from "./HomeButton";
 import Footer from "./Home/Footer";
 import Header from "./Home/Header";
@@ -29,18 +36,16 @@ const Profile = () => {
     new_password: "",
   });
   const [passwordMsg, setPasswordMsg] = useState("");
+  backendURL = import.meta.env.VITE_BACKEND_URL; 
 
   useEffect(() => {
     // Fetch user data when the component mounts
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          backendURL + "/api/user/profile",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await axios.get(backendURL + "/api/user/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (response.status === 200) {
           setUser(response.data);
         } else {
@@ -101,13 +106,12 @@ const Profile = () => {
   };
 
   return (
-
     <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
       {/* Decorative elements */}
-      <Header/>
+      <Header />
       <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
-      
+
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-12">
@@ -200,12 +204,34 @@ const Profile = () => {
                   }`}
                 >
                   {message.includes("success") ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6 mr-2 text-green-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6 mr-2 text-red-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                      />
                     </svg>
                   )}
                   <span>{message}</span>
@@ -214,41 +240,40 @@ const Profile = () => {
             </form>
           </div>
 
-        {/* Right Column - Account Info & Password Change */}
-        <div className="space-y-8">
+          {/* Right Column - Account Info & Password Change */}
+          <div className="space-y-8">
             {/* Account Information */}
-          <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm overflow-hidden">
-            <div className="bg-gradient-to-r from-[var(--primary-violet)]/80 to-[var(--accent-teal)]/80 px-6 py-4 border-b border-[var(--accent-teal)]/20">
-              <h3 className="text-2xl font-bold text-white flex items-center">
-                <IoSchoolOutline className="mr-2 text-3xl" /> Account Details
-              </h3>
-            </div>
-            <div className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
-                <div className="bg-[var(--primary-black)]/30 p-4 rounded-lg border border-[var(--accent-teal)]/10">
-                  <p className="text-[var(--accent-teal)] mb-2 flex items-center">
-                    <IoCalendarOutline className="mr-2" /> Joined
-                  </p>
-                  <p className="font-medium text-white text-lg">
-                    {formatDateTime(user.created_at)}
-                  </p>
-                </div>
-                
-                <div className="bg-[var(--primary-black)]/30 p-4 rounded-lg border border-[var(--accent-teal)]/10">
-                  <p className="text-[var(--accent-teal)] mb-2 flex items-center">
-                    <IoCalendarOutline className="mr-2" /> Last Login
-                  </p>
-                  <p className="font-medium text-white text-lg">
-                    {formatDateTime(user.last_logged_in)}
-                  </p>
+            <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm overflow-hidden">
+              <div className="bg-gradient-to-r from-[var(--primary-violet)]/80 to-[var(--accent-teal)]/80 px-6 py-4 border-b border-[var(--accent-teal)]/20">
+                <h3 className="text-2xl font-bold text-white flex items-center">
+                  <IoSchoolOutline className="mr-2 text-3xl" /> Account Details
+                </h3>
+              </div>
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-[var(--primary-black)]/30 p-4 rounded-lg border border-[var(--accent-teal)]/10">
+                    <p className="text-[var(--accent-teal)] mb-2 flex items-center">
+                      <IoCalendarOutline className="mr-2" /> Joined
+                    </p>
+                    <p className="font-medium text-white text-lg">
+                      {formatDateTime(user.created_at)}
+                    </p>
+                  </div>
+
+                  <div className="bg-[var(--primary-black)]/30 p-4 rounded-lg border border-[var(--accent-teal)]/10">
+                    <p className="text-[var(--accent-teal)] mb-2 flex items-center">
+                      <IoCalendarOutline className="mr-2" /> Last Login
+                    </p>
+                    <p className="font-medium text-white text-lg">
+                      {formatDateTime(user.last_logged_in)}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Password Change */}
-          {/* <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm overflow-hidden">
+            {/* Password Change */}
+            {/* <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm overflow-hidden">
             <div className="bg-gradient-to-r from-[var(--primary-violet)]/80 to-[var(--accent-teal)]/80 px-6 py-4 border-b border-[var(--accent-teal)]/20">
               <h3 className="text-2xl font-bold text-white flex items-center">
                 <IoKeyOutline className="mr-2 text-3xl" /> Change Password
@@ -324,19 +349,16 @@ const Profile = () => {
               )}
             </form>
           </div> */}
-        </div> 
-        
+          </div>
+        </div>
+
+        {/* Home Button */}
+        <div className="fixed bottom-6 right-6 z-10">
+          <HomeButton />
+        </div>
       </div>
-      
-      {/* Home Button */}
-      <div className="fixed bottom-6 right-6 z-10">
-        <HomeButton />
-      </div>
+      <Footer />
     </div>
-    <Footer/>
-
-  </div>  
-
   );
 };
 
