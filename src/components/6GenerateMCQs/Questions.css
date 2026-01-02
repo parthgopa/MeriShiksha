@@ -1,0 +1,408 @@
+/* Questions.css - Mobile-first responsive design */
+
+/* CSS Variables for consistent theming */
+:root {
+  --primary-black: #0a0a0a;
+  --primary-violet: #6366f1;
+  --accent-teal: #14b8a6;
+  --text-white: #ffffff;
+  --text-gray: #9ca3af;
+  --bg-glass: rgba(10, 10, 10, 0.8);
+  --bg-card: rgba(10, 10, 10, 0.6);
+  --border-accent: rgba(20, 184, 166, 0.2);
+  --shadow-glow: 0 0 20px rgba(20, 184, 166, 0.1);
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Loading screen */
+.questions-loading {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary-black) 0%, rgba(99, 102, 241, 0.3) 50%, var(--primary-black) 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.questions-loading-content {
+  text-align: center;
+}
+
+.questions-loading-text {
+  margin-top: 1rem;
+  color: var(--text-white);
+  font-size: 1.125rem;
+  animation: pulse 2s infinite;
+}
+
+/* Main container */
+.questions-container {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary-black) 0%, rgba(99, 102, 241, 0.3) 50%, var(--primary-black) 100%);
+  color: var(--text-white);
+  padding: 1rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Decorative background elements */
+.questions-container::before {
+  content: '';
+  position: absolute;
+  top: 5rem;
+  right: 2rem;
+  width: 16rem;
+  height: 16rem;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(3rem);
+  z-index: 0;
+}
+
+.questions-container::after {
+  content: '';
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  width: 20rem;
+  height: 20rem;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(3rem);
+  z-index: 0;
+}
+
+/* Content wrapper */
+.questions-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+  padding: 2rem 0;
+}
+
+/* Main card */
+.questions-card {
+  background: linear-gradient(135deg, var(--bg-glass) 0%, rgba(99, 102, 241, 0.2) 100%);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-glow);
+  border: 1px solid var(--border-accent);
+  backdrop-filter: blur(10px);
+  margin-bottom: 2rem;
+}
+
+/* Header section */
+.questions-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.questions-title-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.questions-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-teal) 0%, var(--text-white) 50%, var(--primary-violet) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+
+.questions-level-badge {
+  padding: 0.5rem 1rem;
+  background: var(--bg-card);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-accent);
+  color: var(--accent-teal);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Info badges */
+.questions-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.questions-info-badge {
+  padding: 0.5rem 1rem;
+  background: var(--bg-card);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-accent);
+  font-size: 0.875rem;
+}
+
+.questions-info-label {
+  color: var(--accent-teal);
+  font-weight: 500;
+}
+
+/* Questions output container */
+.questions-output {
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-accent);
+  margin-bottom: 1.5rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* Custom scrollbar */
+.questions-output::-webkit-scrollbar {
+  width: 8px;
+}
+
+.questions-output::-webkit-scrollbar-track {
+  background: rgba(20, 184, 166, 0.1);
+  border-radius: 4px;
+}
+
+.questions-output::-webkit-scrollbar-thumb {
+  background: var(--accent-teal);
+  border-radius: 4px;
+}
+
+.questions-output::-webkit-scrollbar-thumb:hover {
+  background: rgba(20, 184, 166, 0.8);
+}
+
+/* Markdown content styling */
+.questions-markdown {
+  color: var(--text-white);
+  line-height: 1.6;
+}
+
+.questions-markdown h1,
+.questions-markdown h2,
+.questions-markdown h3,
+.questions-markdown h4,
+.questions-markdown h5,
+.questions-markdown h6 {
+  color: var(--accent-teal);
+  margin: 1rem 0 0.5rem 0;
+}
+
+.questions-markdown strong {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+.questions-markdown ul,
+.questions-markdown ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.questions-markdown li {
+  margin: 0.25rem 0;
+}
+
+.questions-markdown li::marker {
+  color: var(--accent-teal);
+}
+
+/* Action buttons */
+.questions-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.questions-actions-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.questions-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--primary-black);
+  color: var(--text-white);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  min-height: 48px; /* Accessibility - minimum touch target */
+}
+
+.questions-btn:hover {
+  background: rgba(10, 10, 10, 0.8);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.questions-btn:active {
+  transform: translateY(0);
+}
+
+.questions-btn-back {
+  background: var(--primary-black);
+}
+
+.questions-btn-copy {
+  background: var(--primary-black);
+  position: relative;
+}
+
+.questions-btn-copy.copied {
+  background: #059669;
+}
+
+.questions-btn-answers {
+  background: var(--primary-black);
+}
+
+.questions-btn-icon {
+  color: var(--accent-teal);
+  font-size: 1.125rem;
+}
+
+.questions-btn-icon.success {
+  color: #10b981;
+}
+
+/* Answer section */
+.questions-answer-section {
+  margin-top: 2rem;
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .questions-container {
+    padding: 2rem;
+  }
+  
+  .questions-content {
+    padding: 3rem 0;
+  }
+  
+  .questions-card {
+    padding: 2rem;
+  }
+  
+  .questions-title-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .questions-title {
+    font-size: 2.25rem;
+  }
+  
+  .questions-actions-row {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .questions-actions-row:first-child {
+    justify-content: flex-start;
+  }
+  
+  .questions-actions-row:last-child {
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+  
+  .questions-btn {
+    min-width: 120px;
+  }
+  
+  .questions-output {
+    padding: 2rem;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .questions-title {
+    font-size: 2.5rem;
+  }
+  
+  .questions-card {
+    padding: 3rem;
+  }
+  
+  .questions-actions {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .questions-actions-row {
+    flex-direction: row;
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1280px) {
+  .questions-container {
+    padding: 3rem;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.questions-btn:focus-visible {
+  outline: 2px solid var(--accent-teal);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .questions-card {
+    border: 2px solid var(--accent-teal);
+  }
+  
+  .questions-btn {
+    border: 2px solid var(--text-white);
+  }
+}
+
+/* Print styles */
+@media print {
+  .questions-actions,
+  .questions-container::before,
+  .questions-container::after {
+    display: none;
+  }
+  
+  .questions-container {
+    background: white;
+    color: black;
+  }
+  
+  .questions-card {
+    background: white;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}

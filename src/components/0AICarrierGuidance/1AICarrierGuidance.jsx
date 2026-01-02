@@ -58,6 +58,7 @@ Prepare your proper report which proper advice on the subject for date: ${date} 
           response.candidates[0].content && response.candidates[0].content.parts && 
           response.candidates[0].content.parts[0]) {
         setPlan(response.candidates[0].content.parts[0].text);
+        console.log(response)
       } else {
         console.error("Invalid response structure:", response);
         setPlan("Sorry, we couldn't generate a response. Please try again later.");

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import img4 from "../../assets/inputimages/img4.jpg";
 import { useNavigate, useLocation } from "react-router";
 import HomeButton from "../HomeButton";
+import "./TopicLearning.css";
 
 const TopicLearning = () => {
   const location = useLocation();
@@ -68,43 +69,37 @@ const TopicLearning = () => {
   }, [handleSubmit]);
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-6 md:py-10 px-4 md:px-6 relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
-      
-      <div className="max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row justify-center items-center gap-8">
+    <div className="topic-learning-container">
+      <div className="topic-learning-content">
         {/* Image Section */}
-        <div className="w-full lg:w-1/3 flex justify-center mb-6 lg:mb-0">
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+        <div className="topic-learning-image-section">
+          <div className="topic-learning-image-container">
+            <div className="topic-learning-image-glow"></div>
             <img
               src={img4}
               alt="Topic Learning"
-              className="relative w-full h-auto object-cover rounded-lg shadow-2xl transform transition-all duration-500 hover:scale-[1.01]"
+              className="topic-learning-image"
             />
           </div>
         </div>
         
         {/* Form Section */}
-        <div className="w-full lg:w-2/3 max-w-2xl">
+        <div className="topic-learning-form-section">
           <form
             onSubmit={handleSubmit}
             onKeyDown={handleEnterPressed}
-            className="w-full mb-5 p-6 md:p-8 rounded-xl shadow-2xl bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 border border-[var(--accent-teal)]/10 backdrop-blur-sm"
+            className="topic-learning-form"
           >
-            <h2
-              className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]"
-            >
+            <h2 className="topic-learning-title">
               Topic Learning
             </h2>
 
-            <div className="space-y-6">
+            <div className="topic-learning-fields">
               {/* Topic Entry */}
-              <div className="space-y-2">
+              <div className="topic-learning-field">
                 <label
                   htmlFor="topicEntry"
-                  className="block text-base md:text-lg font-medium text-white"
+                  className="topic-learning-label"
                 >
                   Specify the Topic
                 </label>
@@ -113,16 +108,16 @@ const TopicLearning = () => {
                   id="topicEntry"
                   value={formData.topic}
                   onChange={handleChange}
-                  className="w-full p-3 rounded-lg bg-[var(--primary-black)]/60 border border-[var(--accent-teal)]/20 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all"
+                  className="topic-learning-input"
                   placeholder="e.g., Algebra, Photosynthesis"
                 />
               </div>
 
               {/* Subject Entry */}
-              <div className="space-y-2">
+              <div className="topic-learning-field">
                 <label
                   htmlFor="subjectEntry"
-                  className="block text-base md:text-lg font-medium text-white"
+                  className="topic-learning-label"
                 >
                   Enter Related Subject (Optional)
                 </label>
@@ -131,16 +126,16 @@ const TopicLearning = () => {
                   id="subjectEntry"
                   value={formData.subject}
                   onChange={handleChange}
-                  className="w-full p-3 rounded-lg bg-[var(--primary-black)]/60 border border-[var(--accent-teal)]/20 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all"
+                  className="topic-learning-input"
                   placeholder="e.g., Mathematics, Science"
                 />
               </div>
 
               {/* Parts Entry */}
-              <div className="space-y-2">
+              <div className="topic-learning-field">
                 <label
                   htmlFor="Parts"
-                  className="block text-base md:text-lg font-medium text-white"
+                  className="topic-learning-label"
                 >
                   Divide Topic into Sections (up to 5)
                 </label>
@@ -149,7 +144,7 @@ const TopicLearning = () => {
                   id="Parts"
                   value={formData.parts}
                   onChange={handleChange}
-                  className="w-full p-3 rounded-lg bg-[var(--primary-black)]/60 border border-[var(--accent-teal)]/20 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all"
+                  className="topic-learning-input"
                   placeholder="e.g., 3"
                   max="5"
                   min="1"
@@ -157,10 +152,10 @@ const TopicLearning = () => {
               </div>
 
               {/* Submit Button */}
-              <div className="flex justify-center mt-6">
+              <div className="topic-learning-submit-container">
                 <button
                   type="submit"
-                  className="px-8 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] font-medium"
+                  className="topic-learning-submit-btn"
                 >
                   Start Learning
                 </button>
@@ -168,7 +163,7 @@ const TopicLearning = () => {
             </div>
 
             {warning && (
-              <div className="mt-6 p-4 bg-red-500/20 border border-red-600 rounded-lg text-center text-white">
+              <div className="topic-learning-warning">
                 Please fill all the required fields!
               </div>
             )}
@@ -177,7 +172,7 @@ const TopicLearning = () => {
       </div>
       
       {/* Home Button */}
-      <div className="fixed bottom-6 right-6 z-10">
+      <div className="topic-learning-home-btn">
         <HomeButton />
       </div>
     </div>

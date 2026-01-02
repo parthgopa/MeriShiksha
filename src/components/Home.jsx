@@ -9,6 +9,7 @@ const Home = () => {
     <div>
       <FirstPage />
       <Functionalities />
+      
       <img
         src={exampleImage}
         alt="Description of image"

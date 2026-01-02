@@ -1,0 +1,288 @@
+/* GenerateMCQs.css - Mobile-first responsive design */
+
+/* CSS Variables for consistent theming */
+:root {
+  --primary-black: #0a0a0a;
+  --primary-violet: #6366f1;
+  --accent-teal: #14b8a6;
+  --text-white: #ffffff;
+  --text-gray: #9ca3af;
+  --bg-glass: rgba(10, 10, 10, 0.8);
+  --bg-card: rgba(10, 10, 10, 0.6);
+  --border-accent: rgba(20, 184, 166, 0.2);
+  --shadow-glow: 0 0 20px rgba(20, 184, 166, 0.1);
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Main container */
+.mcq-container {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary-black) 0%, rgba(99, 102, 241, 0.3) 50%, var(--primary-black) 100%);
+  color: var(--text-white);
+  padding: 1rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Decorative background elements */
+.mcq-container::before {
+  content: '';
+  position: absolute;
+  top: 5rem;
+  left: 2rem;
+  width: 16rem;
+  height: 16rem;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(3rem);
+  z-index: 0;
+}
+
+.mcq-container::after {
+  content: '';
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  width: 20rem;
+  height: 20rem;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(3rem);
+  z-index: 0;
+}
+
+/* Content wrapper */
+.mcq-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+/* Form card */
+.mcq-form-card {
+  width: 100%;
+  max-width: 600px;
+  background: linear-gradient(135deg, var(--bg-glass) 0%, rgba(99, 102, 241, 0.2) 100%);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-glow);
+  border: 1px solid var(--border-accent);
+  backdrop-filter: blur(10px);
+}
+
+/* Form title */
+.mcq-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, var(--accent-teal) 0%, var(--text-white) 50%, var(--primary-violet) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+
+/* Form */
+.mcq-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Form group */
+.mcq-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Labels */
+.mcq-label {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--text-white);
+  margin-bottom: 0.25rem;
+}
+
+/* Input fields */
+.mcq-input,
+.mcq-select {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--bg-card);
+  color: var(--text-white);
+  border: 1px solid var(--border-accent);
+  font-size: 1rem;
+  transition: var(--transition-smooth);
+  outline: none;
+}
+
+.mcq-input::placeholder {
+  color: var(--text-gray);
+}
+
+.mcq-input:focus,
+.mcq-select:focus {
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+  transform: translateY(-1px);
+}
+
+.mcq-select option {
+  background: var(--primary-black);
+  color: var(--text-white);
+}
+
+/* Warning message */
+.mcq-warning {
+  padding: 1rem;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid #dc2626;
+  border-radius: 0.75rem;
+  text-align: center;
+  color: var(--text-white);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* Submit button */
+.mcq-submit-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.mcq-submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, var(--accent-teal) 0%, var(--primary-violet) 100%);
+  color: var(--text-white);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3);
+}
+
+.mcq-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(20, 184, 166, 0.4);
+}
+
+.mcq-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Home button positioning */
+.mcq-home-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 20;
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .mcq-container {
+    padding: 2rem;
+  }
+  
+  .mcq-content {
+    padding: 3rem 0;
+  }
+  
+  .mcq-form-card {
+    padding: 3rem;
+  }
+  
+  .mcq-title {
+    font-size: 2.25rem;
+  }
+  
+  .mcq-container::before {
+    width: 20rem;
+    height: 20rem;
+    left: 3rem;
+  }
+  
+  .mcq-container::after {
+    width: 24rem;
+    height: 24rem;
+    right: 3rem;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .mcq-content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+  }
+  
+  .mcq-form-card {
+    max-width: 700px;
+  }
+  
+  .mcq-title {
+    font-size: 2.5rem;
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1280px) {
+  .mcq-container {
+    padding: 3rem;
+  }
+  
+  .mcq-form-card {
+    padding: 4rem;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.mcq-input:focus-visible,
+.mcq-select:focus-visible,
+.mcq-submit-btn:focus-visible {
+  outline: 2px solid var(--accent-teal);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .mcq-form-card {
+    border: 2px solid var(--accent-teal);
+  }
+  
+  .mcq-input,
+  .mcq-select {
+    border: 2px solid var(--text-white);
+  }
+}

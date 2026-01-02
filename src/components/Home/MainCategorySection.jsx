@@ -1,4 +1,3 @@
-import React from 'react';
 import CategorySection from './CategorySection';
 
 const MainCategorySection = ({ title, pages, category, subcategories = [] }) => {

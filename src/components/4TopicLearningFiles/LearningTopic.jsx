@@ -8,6 +8,7 @@ import Speech from "react-speech";
 import { HiMiniStop } from "react-icons/hi2";
 import { PiSpeakerHighFill } from "react-icons/pi";
 import { IoArrowBack, IoArrowForward, IoCheckmarkDone, IoDocumentText } from "react-icons/io5";
+import "./LearningTopic.css";
 
 const LearningTopic = () => {
   const navigate = useNavigate();
@@ -27,6 +28,8 @@ const LearningTopic = () => {
   const speechRef = useRef(null);
 
   const handleOnResponse = useCallback((part, response) => {
+    // console.log(response)
+
     const responseText =
       response["candidates"][0]["content"]["parts"][0]["text"];
 
@@ -217,138 +220,136 @@ const LearningTopic = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-6 md:py-10 px-4 md:px-6 relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
-      
-      <div className="max-w-7xl mx-auto relative z-10">
+    <div className="learning-topic-container w-screen">
+      <div className="learning-topic-content">
         {/* Header */}
-        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <button 
-              onClick={handleBack}
-              className="text-[var(--accent-teal)] hover:text-white transition-colors flex items-center gap-2"
-            >
-              <IoArrowBack size={20} />
-              <span>Back</span>
-            </button>
-            <h1 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
-              {topic}
-            </h1>
-            <button
-              onClick={handleCopyToClipboard}
-              className="text-[var(--accent-teal)] hover:text-white transition-colors flex items-center gap-2"
-            >
-              <IoDocumentText size={20} />
-              <span>Copy</span>
-            </button>
+        <div className="learning-topic-header">
+          <div className="learning-topic-title">
+            {topic}
+          </div>
+          <div className="learning-topic-subtitle">
+            Part {currentPart} of {parts}
           </div>
           
-          {/* Progress Bar */}
-          <div className="w-full h-2 bg-[var(--primary-black)]/60 rounded-full mb-4 overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] transition-all"
-              style={{
-                width: `${(currentPart / parts) * 100}%`,
-              }}
-            />
+          <div className="learning-topic-progress">
+            <div className="learning-topic-progress-text">
+              Progress: {Math.round((currentPart / parts) * 100)}%
+            </div>
           </div>
           
-          {/* Part Navigation */}
-          <div className="flex justify-center gap-2 mb-2">
-            {Array.from({ length: parts }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  cancel();
-                  setCurrentPart(i + 1);
-                }}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                  currentPart === i + 1
-                    ? "bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white"
-                    : "bg-[var(--primary-black)]/40 text-gray-300 hover:bg-[var(--primary-black)]/60"
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
           
-          {/* Speech Controls */}
-          <div className="flex justify-center gap-4 mt-4">
-            <button
-              onClick={handleSpeak}
-              disabled={loading || isSpeaking}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-all ${
-                isSpeaking
-                  ? "bg-[var(--primary-black)]/60 text-gray-400 cursor-not-allowed"
-                  : "bg-[var(--primary-black)]/40 text-[var(--accent-teal)] hover:bg-[var(--primary-black)]/60"
-              }`}
-            >
-              <PiSpeakerHighFill size={20} />
-              <span>Listen</span>
-            </button>
-            <button
-              onClick={handleStop}
-              disabled={!isSpeaking}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-all ${
-                !isSpeaking
-                  ? "bg-[var(--primary-black)]/60 text-gray-400 cursor-not-allowed"
-                  : "bg-[var(--primary-black)]/40 text-red-400 hover:bg-[var(--primary-black)]/60"
-              }`}
-            >
-              <HiMiniStop size={20} />
-              <span>Stop</span>
-            </button>
-          </div>
         </div>
         
         {/* Content */}
-        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-6">
+        <div className="learning-topic-content-card">
           {loading ? (
-            <div className="flex justify-center items-center py-20">
+            <div className="learning-topic-loading">
               <LoadingSpinner />
             </div>
           ) : (
-            <div className="prose prose-invert max-w-none prose-headings:text-[var(--accent-teal)] prose-a:text-[var(--accent-teal)] prose-strong:text-white">
-              <ReactMarkdown>{response}</ReactMarkdown>
+            <div className="learning-topic-content-area">
+              <div className="learning-topic-markdown">
+                <ReactMarkdown>{response}</ReactMarkdown>
+              </div>
             </div>
           )}
-        </div>
-        
-        {/* Navigation Buttons */}
-        <div className="flex justify-between items-center gap-4 mb-6">
-          <button
-            onClick={handlePrevious}
-            disabled={currentPart === 1}
-            className={`px-6 py-3 rounded-lg flex items-center gap-2 transition-all ${
-              currentPart === 1
-                ? "bg-[var(--primary-black)]/60 text-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white hover:opacity-90"
-            }`}
-          >
-            <IoArrowBack size={20} />
-            <span>Previous</span>
-          </button>
           
-          {currentPart < parts ? (
-            <button
-              onClick={handleNext}
-              className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg flex items-center gap-2 hover:opacity-90 transition-all"
-            >
-              <span>Next</span>
-              <IoArrowForward size={20} />
-            </button>
-          ) : (
-            <button
-              onClick={handleFinish}
-              className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg flex items-center gap-2 hover:opacity-90 transition-all"
-            >
-              <span>Finish</span>
-              <IoCheckmarkDone size={20} />
-            </button>
-          )}
+          {/* Controls */}
+          <div className="learning-topic-controls">
+            {/* Speech Controls */}
+            <div className="learning-topic-speech-controls">
+              <div className="learning-topic-speech-title">
+                Audio Controls
+              </div>
+              <div className="learning-topic-speech-buttons">
+                <button
+                  onClick={handleSpeak}
+                  disabled={loading || isSpeaking}
+                  className={`learning-topic-speech-btn play ${
+                    isSpeaking ? "disabled" : ""
+                  }`}
+                >
+                  <PiSpeakerHighFill size={20} />
+                  <span>Listen</span>
+                </button>
+                <button
+                  onClick={handleStop}
+                  disabled={!isSpeaking}
+                  className={`learning-topic-speech-btn stop ${
+                    !isSpeaking ? "disabled" : ""
+                  }`}
+                >
+                  <HiMiniStop size={20} />
+                  <span>Stop</span>
+                </button>
+              </div>
+              <div className="learning-topic-speed-control">
+                <label className="learning-topic-speed-label">
+                  Speed: {speechRate}x
+                </label>
+                <input
+                  type="range"
+                  min="0.5"
+                  max="2"
+                  step="0.1"
+                  value={speechRate}
+                  onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
+                  className="learning-topic-speed-slider"
+                />
+              </div>
+            </div>
+        
+            {/* Navigation */}
+            <div className="learning-topic-navigation">
+              <div className="learning-topic-nav-row">
+                <button 
+                  onClick={handleBack}
+                  className="learning-topic-nav-btn back"
+                >
+                  <IoArrowBack size={20} />
+                  <span>Back</span>
+                </button>
+                <button
+                  onClick={handleCopyToClipboard}
+                  className="learning-topic-nav-btn back"
+                >
+                  <IoDocumentText size={20} />
+                  <span>Copy</span>
+                </button>
+              </div>
+              
+              <div className="learning-topic-nav-row">
+                <button
+                  onClick={handlePrevious}
+                  disabled={currentPart === 1}
+                  className={`learning-topic-nav-btn back ${
+                    currentPart === 1 ? "disabled" : ""
+                  }`}
+                >
+                  <IoArrowBack size={20} />
+                  <span>Previous</span>
+                </button>
+                
+                {currentPart < parts ? (
+                  <button
+                    onClick={handleNext}
+                    className="learning-topic-nav-btn next"
+                  >
+                    <span>Next</span>
+                    <IoArrowForward size={20} />
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleFinish}
+                    className="learning-topic-nav-btn finish"
+                  >
+                    <span>Finish</span>
+                    <IoCheckmarkDone size={20} />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
@@ -368,7 +369,7 @@ const LearningTopic = () => {
       </div>
       
       {/* Home Button */}
-      <div className="fixed bottom-6 right-6 z-10">
+      <div className="learning-topic-home-btn">
         <HomeButton />
       </div>
     </div>

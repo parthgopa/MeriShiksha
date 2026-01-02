@@ -1,6 +1,6 @@
-import styles from "./Answer.module.css";
 import React, { useState } from "react";
 import { FaTimes, FaCopy, FaCheckCircle } from "react-icons/fa";
+import "./Answers.css";
 
 const Answer = ({ correctAnswers, closeAnswer }) => {
   const [copySuccess, setCopySuccess] = useState(false);
@@ -15,14 +15,14 @@ const Answer = ({ correctAnswers, closeAnswer }) => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+    <div className="answers-card">
+      <div className="answers-header">
+        <h3 className="answers-title">
           Correct Answers
         </h3>
         <button 
           onClick={closeAnswer}
-          className="p-2 rounded-full bg-[var(--primary-black)]/60 hover:bg-[var(--primary-black)] transition-all text-white"
+          className="answers-close-btn"
           aria-label="Close answers"
         >
           <FaTimes />
@@ -31,36 +31,45 @@ const Answer = ({ correctAnswers, closeAnswer }) => {
 
       <div 
         id="answer-container"
-        className="bg-[var(--primary-black)]/60 p-6 rounded-xl border border-[var(--accent-teal)]/20 mb-6 max-h-[60vh] overflow-y-auto custom-scrollbar"
+        className="answers-container"
       >
-        {correctAnswers.map((answer, index) => (
-          <div 
-            key={index} 
-            className="mb-4 p-3 rounded-lg bg-[var(--primary-black)]/40 border-l-4 border-[var(--accent-teal)]"
-          >
-            <div className="flex items-start gap-2">
-              <span className="inline-flex justify-center items-center w-6 h-6 rounded-full bg-[var(--accent-teal)]/20 text-[var(--accent-teal)] text-sm font-bold">
-                {index + 1}
-              </span>
-              <p className="text-white">{answer}</p>
+        {correctAnswers.length > 0 ? (
+          correctAnswers.map((answer, index) => (
+            <div 
+              key={index} 
+              className="answers-item"
+            >
+              <div className="answers-item-content">
+                <span className="answers-item-number">
+                  {index + 1}
+                </span>
+                <p className="answers-item-text">{answer}</p>
+              </div>
             </div>
+          ))
+        ) : (
+          <div className="answers-empty">
+            <div className="answers-empty-icon">📝</div>
+            <div className="answers-empty-text">No answers available</div>
+            <div className="answers-empty-subtext">Please generate questions first</div>
           </div>
-        ))}
+        )}
       </div>
 
-      <div className="flex justify-end">
+      <div className="answers-actions">
         <button
           onClick={copyToClipboard}
-          className="px-6 py-3 bg-[var(--primary-black)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] hover:bg-[var(--primary-black)]/80 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center gap-2"
+          className={`answers-copy-btn ${copySuccess ? 'copied' : ''}`}
+          disabled={correctAnswers.length === 0}
         >
           {copySuccess ? (
             <>
-              <FaCheckCircle className="text-green-400" />
+              <FaCheckCircle className="answers-copy-icon success" />
               <span>Copied!</span>
             </>
           ) : (
             <>
-              <FaCopy className="text-[var(--accent-teal)]" />
+              <FaCopy className="answers-copy-icon" />
               <span>Copy All Answers</span>
             </>
           )}

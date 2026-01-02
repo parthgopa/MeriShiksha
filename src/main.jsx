@@ -324,6 +324,15 @@ const router = createBrowserRouter([
       </Layout>
     ),
   },
+  
+  {
+    path: "/generate-mcqs/questions",
+    element: (
+      <Layout>
+        <QuizPlayQuiz />{" "}
+      </Layout>
+    ),
+  },
   {
     path: "/questions",
     element: (

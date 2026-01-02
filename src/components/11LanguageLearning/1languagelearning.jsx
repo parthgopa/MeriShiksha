@@ -137,7 +137,7 @@ For date: ${date} and time: ${time}(dont display it in output)
                   <div className="pt-2">
                     <p className="text-sm text-teal-100/70 mb-2">Popular choices:</p>
                     <div className="flex flex-wrap gap-2">
-                      {["Spanish", "French", "German", "Japanese", "Mandarin"].map((lang) => (
+                      {["English", "Spanish", "French", "German", "Japanese", "Mandarin"].map((lang) => (
                         <button
                           key={lang}
                           type="button"

@@ -131,11 +131,11 @@ Please provide me the following details of Indian companies in valid JSON object
   };
 
   return (
-    <SubscriptionCheck
-      onSuccess={handleSubscriptionSuccess}
-      onError={handleSubscriptionError}
-      checkOnMount={true}
-    >
+    // <SubscriptionCheck
+    //   onSuccess={handleSubscriptionSuccess}
+    //   onError={handleSubscriptionError}
+    //   checkOnMount={true}
+    // >
       <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
@@ -388,7 +388,7 @@ Please provide me the following details of Indian companies in valid JSON object
           <HomeButton />
         </div>
       </div>
-    </SubscriptionCheck>
+    // </SubscriptionCheck>
   );
 };
 

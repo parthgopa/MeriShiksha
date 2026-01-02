@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import APIService from "../API";
-// import LoadingSpinner from "../LoadingSpinner";
-import HomeButton from "../HomeButton";
 import LoadingSpinner from "../LoadingSpinner";
+import HomeButton from "../HomeButton";
+import { IoArrowBack, IoArrowForward, IoCheckmarkCircle } from "react-icons/io5";
+import "./Quiz.css";
 
 const QuizPlayQuiz = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { subject, topic, level, numMCQs, comingfrom } = location.state;
-
   const [incomingdata, setIncomingdata] = useState(comingfrom);
-  //console.log(incomingdata);
   const [questions, setQuestions] = useState([]);
   const [options, setOptions] = useState([]);
   const [correctAnswers, setCorrectAnswers] = useState([]);
@@ -36,6 +35,7 @@ const QuizPlayQuiz = () => {
       };  For current date :${date} and current time :${time}`;
       }
 
+
       setLoading(true);
       await APIService({ question: prompt, onResponse: handleOnResponse });
     };
@@ -47,6 +47,7 @@ const QuizPlayQuiz = () => {
       let mcqData = response["candidates"][0]["content"]["parts"][0]["text"];
       mcqData = mcqData.slice(7, mcqData.length - 4);
       mcqData = JSON.parse(mcqData);
+      console.log(mcqData);
 
       try {
         setQuestions(mcqData.questions);
@@ -85,116 +86,143 @@ const QuizPlayQuiz = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-b from-black via-secondary to-black text-white py-12 px-6 flex justify-center items-center">
-      <div className="max-w-4xl w-full p-8 rounded-lg shadow-lg bg-gradient-to-r from-secondary via-20% to-black">
-        <h4 className="text-xl font-bold mb-4 text-white">{`MCQ Quiz : ${topic}`}</h4>
-        <div>
-          {loading ? (
+    <div className="quiz-container">
+      <div className="quiz-content">
+        {/* Header */}
+        <div className="quiz-header">
+          <div className="quiz-header-top">
+            {/* <button 
+              onClick={() => navigate(-1)}
+              className="quiz-back-btn"
+            >
+              <IoArrowBack size={20} />
+            </button> */}
+            <h1 className="quiz-title">
+              MCQ Quiz
+            </h1>
+            <div className="quiz-spacer"></div>
+          </div>
+          
+          <div className="quiz-header-info">
+            <h2 className="quiz-topic">Topic: <span className="quiz-topic-name">{topic}</span></h2>
+            <p className="quiz-meta">Subject: {subject} | Level: {level}</p>
+            <div className="quiz-divider"></div>
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="quiz-loading">
             <LoadingSpinner />
-          ) : (
-            <>
-              <div className="w-full h-4 bg-gray-700 rounded-full mb-6 overflow-hidden">
+            <p className="quiz-loading-text">Generating quiz questions...</p>
+          </div>
+        ) : (
+          <>
+            {/* Progress Section */}
+            <div className="quiz-progress-section">
+              <div className="quiz-progress-header">
+                <span className="quiz-progress-label">Progress</span>
+                <span className="quiz-progress-count">
+                  {currentQuestionIndex + 1} of {questions.length}
+                </span>
+              </div>
+              <div className="quiz-progress-bar-container">
                 <div
-                  className="h-full bg-white transition-all"
+                  className="quiz-progress-bar"
                   style={{
-                    width: `${
-                      ((currentQuestionIndex + 1) / questions.length) * 100
-                    }%`,
+                    width: `${((currentQuestionIndex + 1) / questions.length) * 100}%`,
                   }}
                 />
               </div>
+            </div>
 
-              {/* MCQ Section */}
-              <div className="mb-8">
-                <h5 className="text-lg font-semibold mb-4">{`(${
-                  currentQuestionIndex + 1
-                }/${questions.length}) ${questions[currentQuestionIndex]}`}</h5>
-                <div className="space-y-4">
-                  {options[currentQuestionIndex].map((option, idx) => (
-                    <div
-                      key={idx}
-                      className={`flex items-center gap-3 p-2 rounded-lg text-white border border-gray-600 cursor-pointer 
-      ${
-        userAnswers[currentQuestionIndex] === option
-          ? "bg-white text-black"
-          : "hover:bg-gray-600"
-      }`}
-                      onClick={() =>
-                        handleAnswerChange(currentQuestionIndex, option)
-                      }
-                    >
-                      <input
-                        type="radio"
-                        id={`mcq-${currentQuestionIndex}-option-${idx}`}
-                        name={`mcq-${currentQuestionIndex}`}
-                        value={option}
-                        checked={userAnswers[currentQuestionIndex] === option}
-                        onChange={() =>
-                          handleAnswerChange(currentQuestionIndex, option)
-                        }
-                        className="peer hidden"
-                      />
-                      <label
-                        htmlFor={`mcq-${currentQuestionIndex}-option-${idx}`}
-                        className={`text-sm font-medium px-3 py-1 rounded-md transition-all w-full 
-        ${
-          userAnswers[currentQuestionIndex] === option
-            ? "text-black"
-            : "text-white"
-        }`}
-                      >
-                        {option}
-                      </label>
-                    </div>
-                  ))}
+            {/* Question Section */}
+            <div className="quiz-question-section">
+              <div className="quiz-question-header">
+                <div className="quiz-question-badge">
+                  Question {currentQuestionIndex + 1}
                 </div>
+                <h3 className="quiz-question-text">
+                  {questions[currentQuestionIndex]}
+                </h3>
               </div>
 
-              {/* Button Group */}
-              <div className="flex justify-between items-center gap-4">
+              {/* Options */}
+              <div className="quiz-options">
+                {options[currentQuestionIndex]?.map((option, idx) => (
+                  <div
+                    key={idx}
+                    className={`quiz-option ${
+                      userAnswers[currentQuestionIndex] === option
+                        ? "selected"
+                        : "unselected"
+                    }`}
+                    onClick={() => handleAnswerChange(currentQuestionIndex, option)}
+                  >
+                    <div className="quiz-option-content">
+                      <div className="quiz-option-radio">
+                        {userAnswers[currentQuestionIndex] === option && (
+                          <div className="quiz-option-radio-dot"></div>
+                        )}
+                      </div>
+                      <span className="quiz-option-text">{option}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Navigation Buttons */}
+            <div className="quiz-navigation">
+              <button
+                onClick={handlePrevious}
+                disabled={currentQuestionIndex === 0}
+                className="quiz-nav-btn previous"
+              >
+                <IoArrowBack size={18} />
+                Previous
+              </button>
+
+              <div className="quiz-progress-dots">
+                {questions.map((_, idx) => (
+                  <div
+                    key={idx}
+                    className={`quiz-progress-dot ${
+                      idx === currentQuestionIndex
+                        ? "current"
+                        : userAnswers[idx]
+                        ? "answered"
+                        : "unanswered"
+                    }`}
+                  />
+                ))}
+              </div>
+
+              {currentQuestionIndex === questions.length - 1 ? (
                 <button
-                  className={`btn btn-info transition-all ${
-                    currentQuestionIndex === 0
-                      ? "opacity-50 cursor-not-allowed"
-                      : ""
-                  }`}
-                  onClick={handlePrevious}
-                  disabled={currentQuestionIndex === 0}
+                  onClick={handleFinish}
+                  className="quiz-nav-btn finish"
                 >
-                  Previous
+                  <IoCheckmarkCircle size={18} />
+                  Finish Quiz
                 </button>
+              ) : (
                 <button
-                  className={`btn btn-info transition-all ${
-                    currentQuestionIndex === questions.length - 1
-                      ? "opacity-50 cursor-not-allowed"
-                      : ""
-                  }`}
                   onClick={handleNext}
                   disabled={currentQuestionIndex === questions.length - 1}
+                  className="quiz-nav-btn next"
                 >
                   Next
+                  <IoArrowForward size={18} />
                 </button>
-                <button
-                  className={`btn btn-info transition-all ${
-                    currentQuestionIndex !== questions.length - 1
-                      ? "opacity-50 cursor-not-allowed"
-                      : ""
-                  }`}
-                  onClick={handleFinish}
-                  disabled={currentQuestionIndex !== questions.length - 1}
-                >
-                  Finish
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-        {/* Progress Bar */}
+              )}
+            </div>
+          </>
+        )}
+      </div>
 
-        {/* Home Button */}
-        <div className="mt-6">
-          <HomeButton />
-        </div>
+      {/* Home Button */}
+      <div className="quiz-home-btn">
+        <HomeButton />
       </div>
     </div>
   );

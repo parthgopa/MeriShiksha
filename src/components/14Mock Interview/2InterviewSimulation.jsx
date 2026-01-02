@@ -416,6 +416,8 @@ const InterviewSimulation = () => {
   // Speech recognition setup
   const recognitionRef = useRef(null);
   const transcriptRef = useRef("");
+  const isManualStop = useRef(false);
+  const restartTimeoutRef = useRef(null);
   
   // Check browser compatibility for speech recognition
   const isSpeechRecognitionSupported = useMemo(() => {
@@ -424,6 +426,12 @@ const InterviewSimulation = () => {
 
   const startSpeechRecognition = () => {
     try {
+      // Clear any existing restart timeout
+      if (restartTimeoutRef.current) {
+        clearTimeout(restartTimeoutRef.current);
+        restartTimeoutRef.current = null;
+      }
+
       // Check if there's already an active recognition session
       if (recognitionRef.current) {
         try {
@@ -440,95 +448,109 @@ const InterviewSimulation = () => {
         return;
       }
 
-    const recognition = new SpeechRecognition();
-    recognition.interimResults = true;
-    recognition.lang = "en-US";
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true; // Keep listening continuously
+      recognition.interimResults = true;
+      recognition.lang = "en-US";
+      recognition.maxAlternatives = 1;
 
-    recognition.onstart = () => {
-      setIsRecording(true);
-      if (!transcriptRef.current) {
-        setPreviewText("");
-      }
-    };
+      recognition.onstart = () => {
+        setIsRecording(true);
+        setIsProcessingSpeech(false);
+        isManualStop.current = false;
+      };
 
-    let finalTranscript = transcriptRef.current || "";
-    let interimTranscript = "";
+      let finalTranscript = transcriptRef.current || "";
+      let interimTranscript = "";
 
-    recognition.onresult = (event) => {
-      interimTranscript = "";
+      recognition.onresult = (event) => {
+        interimTranscript = "";
 
-      // Process only new results
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
-
-        if (event.results[i].isFinal) {
-          // Only append if it's not already in finalTranscript
-          if (!finalTranscript.includes(transcript)) {
-            finalTranscript += (finalTranscript ? " " : "") + transcript;
+        // Process all results
+        for (let i = 0; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            // Only add new final results (avoid duplicates)
+            if (i >= event.resultIndex) {
+              finalTranscript += transcript + " ";
+            }
+          } else {
+            interimTranscript += transcript;
           }
-        } else {
-          interimTranscript = transcript;
         }
-      }
 
-      // Clean up any double spaces and trim
-      finalTranscript = finalTranscript.replace(/\s+/g, " ").trim();
+        // Update preview with final + interim results
+        const fullText = (finalTranscript + interimTranscript).trim();
+        setPreviewText(fullText);
+        
+        // Update the ref with only final transcript
+        transcriptRef.current = finalTranscript.trim();
+      };
 
-      // Update preview with final + interim transcripts
-      const displayText = (
-        finalTranscript + (interimTranscript ? " " + interimTranscript : "")
-      ).trim();
-      setPreviewText(displayText);
-      transcriptRef.current = finalTranscript;
-    };
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        
+        if (event.error === "aborted") {
+          return;
+        }
+        
+        // Handle specific errors
+        if (event.error === "no-speech") {
+          // Don't show error for no speech, just continue listening
+          return;
+        }
+        
+        if (event.error === "network") {
+          alert("Network error occurred. Please check your internet connection.");
+        } else if (event.error === "not-allowed") {
+          alert("Microphone access denied. Please allow microphone access and try again.");
+        }
+        
+        setIsRecording(false);
+        setIsProcessingSpeech(false);
+      };
 
-    recognition.onerror = (event) => {
-      if (event.error === "aborted") {
-        return;
-      }
-      console.error("Speech recognition error:", event.error);
+      recognition.onend = () => {
+        // Only restart if it wasn't manually stopped and we're still supposed to be recording
+        if (!isManualStop.current && isRecording) {
+          // Restart recognition after a short delay to maintain continuous listening
+          restartTimeoutRef.current = setTimeout(() => {
+            if (!isManualStop.current && isRecording) {
+              startSpeechRecognition();
+            }
+          }, 100);
+        } else {
+          setIsRecording(false);
+          if (transcriptRef.current.trim()) {
+            setIsProcessingSpeech(true);
+            setTimeout(() => {
+              setIsProcessingSpeech(false);
+            }, 500);
+          }
+        }
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+      
+    } catch (error) {
+      console.error("Speech recognition initialization error:", error);
+      alert("There was an error initializing speech recognition. Please try again.");
       setIsRecording(false);
       setIsProcessingSpeech(false);
-    };
-
-    recognition.onend = () => {
-      setIsRecording(false);
-      if (transcriptRef.current) {
-        setIsProcessingSpeech(true);
-        // Add a small delay before setting processing to false to ensure UI feedback
-        setTimeout(() => {
-          setIsProcessingSpeech(false);
-        }, 500);
-      }
-    };
-
-    recognitionRef.current = recognition;
-    try {
-      recognition.start();
-    } catch (error) {
-      console.error("Error starting speech recognition:", error);
-      // If there's an error starting (like already running), try stopping first then starting again
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.stop();
-          setTimeout(() => {
-            recognition.start();
-          }, 300);
-        } catch (stopError) {
-          console.error("Error stopping previous recognition:", stopError);
-          setIsRecording(false);
-        }
-      }
     }
-  } catch (error) {
-    console.error("Speech recognition initialization error:", error);
-    alert("There was an error initializing speech recognition. Please try again.");
-    setIsRecording(false);
-  }
-};
+  };
 
   const stopSpeechRecognition = () => {
     try {
+      isManualStop.current = true;
+      
+      // Clear any pending restart timeout
+      if (restartTimeoutRef.current) {
+        clearTimeout(restartTimeoutRef.current);
+        restartTimeoutRef.current = null;
+      }
+      
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
@@ -551,11 +573,8 @@ const InterviewSimulation = () => {
     // Reset transcript when opening modal to start fresh
     transcriptRef.current = "";
     setPreviewText("");
-    
-    // Auto-start speech recognition after a short delay
-    setTimeout(() => {
-      startSpeechRecognition();
-    }, 500);
+    setIsRecording(false);
+    setIsProcessingSpeech(false);
   };
 
   const handleFinalSubmit = () => {
@@ -868,11 +887,47 @@ const InterviewSimulation = () => {
             </div>
 
             <div className="mt-8">
-              <p className="text-sm font-medium text-teal-100 mb-2">Preview:</p>
+              <div className="flex justify-between items-center mb-2">
+                <p className="text-sm font-medium text-teal-100">Preview:</p>
+                {previewText.trim() && (
+                  <button
+                    onClick={() => {
+                      transcriptRef.current = "";
+                      setPreviewText("");
+                    }}
+                    className="text-xs px-2 py-1 bg-[var(--primary-black)]/60 text-[var(--accent-teal)] rounded hover:bg-[var(--primary-black)]/80 transition-colors"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
               <div className="p-4 bg-[var(--primary-black)]/60 text-white rounded-lg min-h-[120px] max-h-[200px] overflow-y-auto border border-[var(--accent-teal)]/20 shadow-inner">
                 {previewText || "Your speech will appear here..."}
               </div>
-              <div className="mt-6 flex justify-end">
+              
+              {/* Instructions */}
+              <div className="mt-4 p-3 bg-[var(--primary-violet)]/10 rounded-lg border border-[var(--accent-teal)]/10">
+                <p className="text-xs text-gray-300">
+                  💡 <strong>Tip:</strong> Click the microphone to start recording. The system will continue listening until you click stop. You can speak naturally with pauses.
+                </p>
+              </div>
+              
+              <div className="mt-6 flex justify-between gap-3">
+                <button
+                  onClick={() => {
+                    if (isRecording) {
+                      stopSpeechRecognition();
+                    }
+                    setShowSpeechModal(false);
+                    setIsRecording(false);
+                    setIsProcessingSpeech(false);
+                    transcriptRef.current = "";
+                    setPreviewText("");
+                  }}
+                  className="px-4 py-2 bg-[var(--primary-black)]/60 text-gray-300 rounded-lg hover:bg-[var(--primary-black)]/80 transition-all"
+                >
+                  Cancel
+                </button>
                 <button
                   onClick={handleFinalSubmit}
                   disabled={!previewText.trim()}

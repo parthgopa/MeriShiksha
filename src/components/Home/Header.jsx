@@ -13,7 +13,7 @@ const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 3500);
+      setIsScrolled(window.scrollY > 200);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -27,9 +27,9 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 h-20 ${
         isScrolled
-          ? "bg-[var(--primary-black)]/90 backdrop-blur-md shadow-lg"
+          ? "bg-[var(--primary-black)]/80 backdrop-blur-md shadow-lg"
           : "bg-transparent"
       }`}
     >
@@ -48,7 +48,7 @@ const Header = () => {
             <li>
               <Link
                 to="/"
-                className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+                className="text-white hover:text-[var(--accent-teal)] transition-colors"
               >
                 Home
               </Link>
@@ -56,7 +56,7 @@ const Header = () => {
             <li>
               <Link
                 to="/aboutUs"
-                className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+                className="text-white hover:text-[var(--accent-teal)] transition-colors"
               >
                 About
               </Link>
@@ -64,7 +64,7 @@ const Header = () => {
             <li>
               <Link
                 to="/contactUs"
-                className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+                className="text-white hover:text-[var(--accent-teal)] transition-colors"
               >
                 Contact
               </Link>
@@ -72,28 +72,28 @@ const Header = () => {
             <li>
               <a
                 href="https://youtu.be/GNJ-4Oo9gnY?si=OBUYcBt6zUvq9UiH"
-                className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+                className="text-white hover:text-[var(--accent-teal)] transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 AI Help
               </a>
             </li>
-            <li>
+            {/* <li>
               <Link
                 to="/admin/login"
-                className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+                className="text-white hover:text-[var(--accent-teal)] transition-colors"
               >
                 Admin Portal
               </Link>
-            </li>
+            </li> */}
 
             {currentUser ? (
               <>
                 <li>
                   <Link
                     to="/profile"
-                    className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+                    className="text-white hover:text-[var(--accent-teal)] transition-colors"
                   >
                     Profile
                   </Link>
@@ -101,7 +101,7 @@ const Header = () => {
                 <li>
                   <button
                     onClick={handleLogout}
-                    className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+                    className="text-white hover:text-[var(--accent-teal)] transition-colors"
                   >
                     Logout
                   </button>
@@ -124,7 +124,7 @@ const Header = () => {
                     <li>
                       <Link
                         to="/login"
-                        className="text-gray-300 hover:text-[var(--accent-teal)] transition-colors"
+                        className="text-white hover:text-[var(--accent-teal)] transition-colors"
                       >
                         Login
                       </Link>
@@ -160,7 +160,7 @@ const Header = () => {
         } transition-transform duration-300 p-6 z-50`}
       >
         <button
-          className="absolute top-4 right-4 text-white text-2xl hover:text-gray-300 transition-colors"
+          className="absolute top-4 right-4 text-white text-2xl hover:text-[var(--accent-teal)] transition-colors"
           onClick={() => setIsMenuOpen(false)}
         >
           ✕
@@ -169,7 +169,7 @@ const Header = () => {
           <li>
             <Link
               to="/"
-              className="text-white text-lg hover:text-[#00f2e2] transition-colors"
+              className="text-white text-lg hover:text-[var(--accent-teal)] transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
@@ -178,7 +178,7 @@ const Header = () => {
           <li>
             <Link
               to="/aboutUs"
-              className="text-white text-lg hover:text-[#00f2e2] transition-colors"
+              className="text-white text-lg hover:text-[var(--accent-teal)] transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               About
@@ -187,7 +187,7 @@ const Header = () => {
           <li>
             <Link
               to="/contactUs"
-              className="text-white text-lg hover:text-[#00f2e2] transition-colors"
+              className="text-white text-lg hover:text-[var(--accent-teal)] transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
@@ -196,28 +196,28 @@ const Header = () => {
           <li>
             <a
               href="https://youtu.be/GNJ-4Oo9gnY?si=OBUYcBt6zUvq9UiH"
-              className="text-white text-lg hover:text-[#00f2e2] transition-colors"
+              className="text-white text-lg hover:text-[var(--accent-teal)] transition-colors"
               target="_blank"
               rel="noopener noreferrer"
             >
               AI Help
             </a>
           </li>
-          <li>
+          {/* <li>
             <Link
               to="/admin/login"
-              className="text-white text-lg hover:text-[#00f2e2] transition-colors"
+              className="text-white text-lg hover:text-[var(--accent-teal)] transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Admin Portal
             </Link>
-          </li>
+          </li> */}
           {currentUser ? (
             <>
               <li>
                 <Link
                   to="/profile"
-                  className="text-white text-lg hover:text-[#00f2e2] transition-colors"
+                  className="text-white text-lg hover:text-[var(--accent-teal)] transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Profile
@@ -226,7 +226,7 @@ const Header = () => {
               <li>
                 <button
                   onClick={handleLogout}
-                  className="text-white text-lg hover:text-[#00f2e2] transition-colors"
+                  className="text-white text-lg hover:text-[var(--accent-teal)] transition-colors"
                 >
                   Logout
                 </button>
@@ -235,7 +235,7 @@ const Header = () => {
                 <li>
                   <Link
                     to="/admin/dashboard"
-                    className="text-[#00f2e2] text-lg hover:text-[#00f2e2]/80 transition-colors"
+                    className="text-[var(--accent-teal)] text-lg hover:text-[var(--accent-teal)]/80 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Admin

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import img7 from "../../assets/inputimages/img7.jpg";
 import { useState } from "react";
 import HomeButton from "../HomeButton";
+import "./QuizPlay.css";
 const QuizPlay = () => {
   const [levelentry, setlevelentry] = useState("Primary");
 
@@ -17,8 +18,9 @@ const QuizPlay = () => {
     const comingfrom = "FromQuizPlay";
     // console.log(subject, topic, level, numMCQs);
 
+    console.log(subject, topic, level, numMCQs, comingfrom);
     if (subject && topic && level && numMCQs) {
-      navigate("/quiz-play/quiz", {
+      navigate("/generate-mcqs/quiz", {
         state: {
           subject: subject,
           topic: topic,
@@ -40,124 +42,129 @@ const QuizPlay = () => {
     setlevelentry(e.target.value);
   };
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-b from-black via-secondary to-black text-white py-10 px-6 flex flex-col lg:flex-row justify-center items-center gap-8">
-      {/* Image Section */}
-      <div className="w-full lg:w-1/3 h-auto flex justify-center">
-        <img
-          src={img7}
-          alt="Career Guidance"
-          className="w-full h-70 sm:w-2/3 md:w-1/2 lg:w-2/3 sm:h-48 md:h-56 lg:h-auto flex justify-center object-cover rounded-lg shadow-lg"
-        />
-      </div>
-      <div className="max-w-2xl w-full p-8 rounded-lg shadow-lg bg-gradient-to-r from-secondary via-20% to-black">
-        <h2
-          className="text-2xl font-bold text-center mb-6 text-white"
-          style={{ fontFamily: "var(--font-heading)" }}
-        >
-          Quiz Play
-        </h2>
-        <form
-          onSubmit={handleSubmit}
-          onKeyDown={handleEnterPressed}
-          className="space-y-6"
-        >
-          {/* Subject Entry */}
-          <div className="space-y-2">
-            <label
-              htmlFor="SubjectEntry"
-              className="block text-lg font-medium text-white"
-            >
-              Enter Your Subject
-            </label>
-            <input
-              type="text"
-              id="SubjectEntry"
-              name="SubjectEntry"
-              className="w-full p-3 rounded-lg bg-secondary placeholder-gray-400 text-white focus:ring-2 focus:ring-accent focus:outline-none"
-              placeholder="e.g., Mathematics, Science"
+    <div className="quiz-play-container">
+      <div className="quiz-play-content">
+        {/* Image Section */}
+        <div className="quiz-play-image-section">
+          <div className="quiz-play-image-container">
+            <img
+              src={img7}
+              alt="Quiz Play"
+              className="quiz-play-image"
             />
           </div>
-
-          {/* Topic Entry */}
-          <div className="space-y-2">
-            <label
-              htmlFor="topicEntry"
-              className="block text-lg font-medium text-white"
-            >
-              Specify the Topic
-            </label>
-            <input
-              type="text"
-              id="topicEntry"
-              name="topicEntry"
-              className="w-full p-3 rounded-lg bg-secondary placeholder-gray-400 text-white focus:ring-2 focus:ring-accent focus:outline-none"
-              placeholder="e.g., Numbers, Photosynthesis"
-            />
-          </div>
-
-          {/* Difficulty Level */}
-          <div className="space-y-2">
-            <label
-              htmlFor="topicLevel"
-              className="block text-lg font-medium text-white"
-            >
-              Select Difficulty Level
-            </label>
-            <select
-              id="topicLevel"
-              value={levelentry}
-              onChange={handleLevelChange}
-              className="w-full p-3 rounded-lg bg-secondary text-white focus:ring-2 focus:ring-accent focus:outline-none"
-            >
-              <option value="Primary">Primary</option>
-              <option value="Secondary">Secondary</option>
-              <option value="Advance">Advance</option>
-            </select>
-          </div>
-
-          {/* Number of MCQs */}
-          <div className="space-y-2">
-            <label
-              htmlFor="NumberofMCQEntry"
-              className="block text-lg font-medium text-white"
-            >
-              How many MCQs would you like to generate? (max 15)
-            </label>
-            <input
-              type="number"
-              id="NumberofMCQEntry"
-              name="NumberofMCQEntry"
-              className="w-full p-3 rounded-lg bg-secondary placeholder-gray-400 text-white focus:ring-2 focus:ring-accent focus:outline-none"
-              placeholder="e.g., 5"
-              min="1"
-              max="15"
+        </div>
+        
+        {/* Form Section */}
+        <div className="quiz-play-form-section">
+          <div className="quiz-play-form-card">
+            <h2 className="quiz-play-title">
+              Quiz Play
+            </h2>
             
-            />
-          </div>
-
-          {/* Submit Button */}
-          <div className="text-center">
-            <button
-              type="submit"
-              className="btn btn-info hover:bg-black transition-all transform hover:scale-105"
+            <form
+              onSubmit={handleSubmit}
+              onKeyDown={handleEnterPressed}
+              className="quiz-play-form"
             >
-              Submit
-            </button>
-          </div>
-        </form>
+              {/* Subject Entry */}
+              <div className="quiz-play-field">
+                <label
+                  htmlFor="SubjectEntry"
+                  className="quiz-play-label"
+                >
+                  Enter Your Subject
+                </label>
+                <input
+                  type="text"
+                  id="SubjectEntry"
+                  name="SubjectEntry"
+                  className="quiz-play-input"
+                  placeholder="e.g., Mathematics, Science"
+                />
+              </div>
 
-        {/* Warning Alert */}
-        {warning && (
-          <div
-            className="mt-6 p-4 bg-teal-600 text-black border border-red-800 rounded-lg items-center justify-center flex text-xl"
-            role="alert"
-          >
-            Please fill all the fields!
-          </div>
-        )}
+              {/* Topic Entry */}
+              <div className="quiz-play-field">
+                <label
+                  htmlFor="topicEntry"
+                  className="quiz-play-label"
+                >
+                  Specify the Topic
+                </label>
+                <input
+                  type="text"
+                  id="topicEntry"
+                  name="topicEntry"
+                  className="quiz-play-input"
+                  placeholder="e.g., Numbers, Photosynthesis"
+                />
+              </div>
 
-        <div className="mt-6">
-          <HomeButton />
+              {/* Difficulty Level */}
+              <div className="quiz-play-field">
+                <label
+                  htmlFor="topicLevel"
+                  className="quiz-play-label"
+                >
+                  Select Difficulty Level
+                </label>
+                <select
+                  id="topicLevel"
+                  value={levelentry}
+                  onChange={handleLevelChange}
+                  className="quiz-play-select"
+                >
+                  <option value="Primary">Primary</option>
+                  <option value="Secondary">Secondary</option>
+                  <option value="Advance">Advance</option>
+                </select>
+              </div>
+
+              {/* Number of MCQs */}
+              <div className="quiz-play-field">
+                <label
+                  htmlFor="NumberofMCQEntry"
+                  className="quiz-play-label"
+                >
+                  How many MCQs would you like to generate? (max 15)
+                </label>
+                <input
+                  type="number"
+                  id="NumberofMCQEntry"
+                  name="NumberofMCQEntry"
+                  className="quiz-play-input"
+                  placeholder="e.g., 5"
+                  min="1"
+                  max="15"
+                />
+              </div>
+
+              {/* Submit Button */}
+              <div className="quiz-play-submit-container">
+                <button
+                  type="submit"
+                  className="quiz-play-submit-btn"
+                >
+                  Start Quiz
+                </button>
+              </div>
+            </form>
+
+            {/* Warning Alert */}
+            {warning && (
+              <div
+                className="quiz-play-warning"
+                role="alert"
+              >
+                Please fill all the fields!
+              </div>
+            )}
+
+            <div className="quiz-play-home-container">
+              <HomeButton />
+            </div>
+          </div>
         </div>
       </div>
     </div>

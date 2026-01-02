@@ -2,10 +2,11 @@ import React, { useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router";
 import HomeButton from "../HomeButton";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
+import "./FinishedLearning.css";
 
 const FinishedLearning = () => {
   const [showInput, setShowInput] = useState(false);
-  const [numMCQs, setNumMCQs] = useState(1);
+  const [numMCQs, setNumMCQs] = useState();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -33,37 +34,33 @@ const FinishedLearning = () => {
   }, [handleSubmit]);
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-6 md:py-10 px-4 md:px-6 relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
-      
-      <div className="max-w-2xl mx-auto relative z-10 flex flex-col items-center justify-center min-h-[80vh]">
-        <div className="w-full bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm">
-          <h1 className="text-2xl md:text-3xl font-bold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+    <div className="finished-learning-container">
+      <div className="finished-learning-content">
+        <div className="finished-learning-card">
+          <h1 className="finished-learning-title">
             Learning Complete
           </h1>
           
-          <div className="mb-8">
-            <h2 className="text-xl text-center mb-2 text-white">Topic: <span className="font-semibold">{topic}</span></h2>
-            <div className="w-24 h-1 mx-auto bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)]"></div>
+          <div className="finished-learning-topic">
+            <h2 className="finished-learning-topic-title">Topic: <span className="finished-learning-topic-name">{topic}</span></h2>
+            <div className="finished-learning-topic-divider"></div>
           </div>
           
           {!showInput ? (
             <>
-              <h3 className="text-lg text-center mb-8">
+              <h3 className="finished-learning-question">
                 Would you like to take an MCQ test to assess what you've learned?
               </h3>
-              <div className="flex justify-center gap-6 mb-6">
+              <div className="finished-learning-buttons">
                 <button
-                  className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg flex items-center gap-2 hover:opacity-90 transition-all shadow-lg"
+                  className="finished-learning-btn finished-learning-btn-primary"
                   onClick={handleYes}
                 >
                   <IoCheckmarkCircle size={20} />
                   <span>Yes, take test</span>
                 </button>
                 <button
-                  className="px-6 py-3 bg-[var(--primary-black)]/60 text-white rounded-lg flex items-center gap-2 hover:bg-[var(--primary-black)]/80 transition-all border border-[var(--accent-teal)]/20"
+                  className="finished-learning-btn finished-learning-btn-secondary"
                   onClick={handleNo}
                 >
                   <IoCloseCircle size={20} />
@@ -72,23 +69,23 @@ const FinishedLearning = () => {
               </div>
             </>
           ) : (
-            <div className="space-y-6">
-              <h3 className="text-lg font-medium text-white text-center">
+            <div className="finished-learning-input-section">
+              <h3 className="finished-learning-input-title">
                 How many MCQs would you like to generate? (max 10)
               </h3>
-              <div className="flex flex-col items-center gap-4">
+              <div className="finished-learning-input-container">
                 <input
                   type="number"
                   id="numMCQs"
                   value={numMCQs}
-                  className="w-full max-w-xs p-3 rounded-lg bg-[var(--primary-black)]/60 border border-[var(--accent-teal)]/20 placeholder-gray-400 text-white focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent focus:outline-none transition-all text-center text-lg"
+                  className="finished-learning-input"
                   onChange={(e) => setNumMCQs(Math.min(Math.max(Number(e.target.value), 1), 10))}
                   onKeyDown={handleEnterPressed}
                   max="10"
-                  min="1"
+                  placeholder="Enter number (1-10)"
                 />
                 <button
-                  className="px-8 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] font-medium"
+                  className="finished-learning-submit-btn"
                   onClick={handleSubmit}
                 >
                   Start Test
@@ -100,7 +97,7 @@ const FinishedLearning = () => {
       </div>
       
       {/* Home Button */}
-      <div className="fixed bottom-6 right-6 z-10">
+      <div className="finished-learning-home-btn">
         <HomeButton />
       </div>
     </div>

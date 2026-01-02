@@ -17,7 +17,7 @@ export default function ContactUs() {
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [feedbackType, setFeedbackType] = useState("success");
-  const backendURL = import.meta.env.VITE_BACKEND_URL;
+  // const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -25,7 +25,7 @@ export default function ContactUs() {
     setFeedback("");
     try {
       const res = await fetch(
-        backendURL + "/api/user/contact-support",
+        "http://localhost:5000/api/user/contact-support",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -62,29 +62,60 @@ export default function ContactUs() {
           Let's Connect – We're Here to Help!
         </h2>
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="flex justify-center">
           {/* Contact Info Card */}
-          <div className="flex flex-col justify-center gap-8">
+          <div className="flex flex-col justify-center gap-8 max-w-2xl w-full">
             <img
               src={image}
               alt="Contact Us"
               className="rounded-xl shadow-xl w-64 md:w-80 border-4 border-[var(--accent-teal)]/30 mx-auto"
             />
-            <div className="bg-gray-800 rounded-2xl shadow-lg p-7 flex flex-col items-center text-center">
-              <FaEnvelope className="text-[var(--primary-violet)] text-3xl mb-2" />
-              <h3 className="text-xl font-bold text-white mb-1">
-                Email Support
-              </h3>
-              <p className="text-gray-400 mb-2">
-                Prefer writing? Drop us an email.
-              </p>
-              <span className="text-lg text-white font-semibold">
-                📧 info@merishiksha.com
-              </span>
+            <div className="bg-gray-800 rounded-2xl shadow-lg p-7 flex flex-col items-center text-center space-y-6">
+              {/* Email Section */}
+              <div className="flex flex-col items-center space-y-2">
+                <FaEnvelope className="text-[var(--primary-violet)] text-3xl" />
+                <h3 className="text-xl font-bold text-white mb-1">
+                  Email Support
+                </h3>
+                <p className="text-gray-400 mb-2 text-sm">
+                  Prefer writing? Drop us an email.
+                </p>
+                <div className="bg-gray-900/50 rounded-lg px-4 py-2 border border-gray-700 hover:border-[var(--accent-teal)] transition-colors">
+                  <span className="text-lg text-white font-semibold flex items-center gap-2">
+                    📧 info@merishiksha.com
+                  </span>
+                </div>
+              </div>
+              
+              {/* Divider */}
+              <div className="w-full h-px bg-gray-700"></div>
+              
+              {/* Phone Section */}
+              <div className="flex flex-col items-center space-y-2">
+                <FaPhoneAlt className="text-[var(--accent-teal)] text-3xl" />
+                <h3 className="text-xl font-bold text-white mb-1">
+                  Call Support
+                </h3>
+                <p className="text-gray-400 mb-2 text-sm">
+                  Need immediate help? Give us a call.
+                </p>
+                <div className="space-y-2">
+                  <div className="bg-gray-900/50 rounded-lg px-4 py-2 border border-gray-700 hover:border-[var(--accent-teal)] transition-colors">
+                    <span className="text-lg text-white font-semibold flex items-center gap-2">
+                      📱 +91 9978062293
+                    </span>
+                  </div>
+                  <div className="bg-gray-900/50 rounded-lg px-4 py-2 border border-gray-700 hover:border-[var(--accent-teal)] transition-colors">
+                    <span className="text-lg text-white font-semibold flex items-center gap-2">
+                      📱 +91 9033806717
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           {/* Contact Form Card */}
-          <div className="bg-gray-800 rounded-2xl shadow-lg p-7 flex flex-col justify-center">
+          {/* <div className="bg-gray-800 rounded-2xl shadow-lg p-7 flex flex-col justify-center">
             <form className="flex flex-col gap-5" onSubmit={sendMessage}>
               <div className="flex items-center bg-gray-900 rounded-lg px-4 py-3 border border-gray-700 focus-within:border-[var(--accent-teal)]">
                 <FaUser className="text-[var(--accent-teal)] mr-3 text-lg" />
@@ -137,7 +168,7 @@ export default function ContactUs() {
                 </div>
               )}
             </form>
-          </div>
+          </div> */}
         </div>
         {/* Optional: Home Button */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-10">

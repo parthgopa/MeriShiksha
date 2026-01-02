@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaArrowRight  } from 'react-icons/fa';
 // import LandingImage from '../../assets/finallanding.jpg';
 
 import LandingImage from "../../assets/finallanding.jpg"
@@ -16,12 +17,14 @@ const HeroSection = () => {
   };
 
   return (
+    
     <div className="relative w-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)] to-[var(--accent-teal)]/80 text-white pt-20 animate-fadeIn overflow-hidden">
+      
       {/* Background decorative elements */}
       <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
       
-      <div className="w-full h-auto mx-auto px-6 flex flex-col md:flex-row items-center justify-between relative z-10">
+      <div className="w-full h-auto mx-auto px-6 flex flex-col md:flex-row items-center justify-between relative">
         <div className="md:w-1/2 mt-10 md:mt-0 transform hover:scale-102 transition-all duration-500">
           <img
             src={LandingImage}
@@ -39,21 +42,13 @@ const HeroSection = () => {
             knowledge and teaching efficiency.
           </p>
           
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center md:justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <button 
               className="m-2 px-8 py-3 bg-gradient-to-r from-[var(--accent-teal)] via-[var(--primary-violet)] to-[var(--accent-teal)] bg-size-200 bg-pos-0 hover:bg-pos-100 text-white rounded-lg shadow-lg transition-all duration-500 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center justify-center group"
               onClick={handleGetStarted}
             >
               <span>Get Started</span>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </button>
-            <button 
-              className="px-8 py-3 bg-gradient-to-r from-[var(--accent-teal)] via-[var(--primary-violet)] to-[var(--accent-teal)] bg-size-200 bg-pos-0 hover:bg-pos-100 border-2 border-[var(--accent-teal)] text-white rounded-lg shadow-lg hover:bg-teal-500/10 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50"
-              onClick={() => navigate("/aboutUs")}
-            >
-              Learn More
+              {/* <FaArrowRight /> */}
             </button>
           </div>
         </div>

@@ -4,6 +4,7 @@ import APIService from "../API";
 import LoadingSpinner from "../LoadingSpinner";
 import HomeButton from "../HomeButton";
 import { IoArrowBack, IoArrowForward, IoCheckmarkDone } from "react-icons/io5";
+import "./MCQTest.css";
 
 const MCQTest = () => {
   const location = useLocation();
@@ -80,15 +81,11 @@ const MCQTest = () => {
   const currentQuestion = useMemo(() => questions[currentQuestionIndex] || '', [questions, currentQuestionIndex]);
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-6 md:py-10 px-4 md:px-6 relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
-      
-      <div className="max-w-4xl mx-auto relative z-10">
+    <div className="mcq-test-container">
+      <div className="mcq-test-content">
         {/* Header */}
-        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
+        <div className="mcq-test-header">
+          <h1 className="mcq-test-title">
             {incomingdata === "FromTopicLearning" && `MCQ Quiz: ${topic}`}
             {incomingdata === "FromParagraph" && "MCQ Quiz"}
             {incomingdata === "RetakeMCQs" && "ReTest Quiz"}
@@ -97,9 +94,9 @@ const MCQTest = () => {
           
           {/* Progress Bar */}
           {!loading && (
-            <div className="w-full h-2 bg-[var(--primary-black)]/60 rounded-full overflow-hidden">
+            <div className="mcq-test-progress-container">
               <div
-                className="h-full bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] transition-all"
+                className="mcq-test-progress-bar"
                 style={{
                   width: `${((currentQuestionIndex + 1) / questions.length) * 100}%`,
                 }}
@@ -109,32 +106,32 @@ const MCQTest = () => {
           
           {/* Question Counter */}
           {!loading && questions.length > 0 && (
-            <div className="text-center mt-4 text-gray-300">
+            <div className="mcq-test-counter">
               Question {currentQuestionIndex + 1} of {questions.length}
             </div>
           )}
         </div>
         
         {/* Content */}
-        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-6 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm mb-6">
+        <div className="mcq-test-question-card">
           {loading ? (
-            <div className="flex justify-center items-center py-20">
+            <div className="mcq-test-loading">
               <LoadingSpinner />
             </div>
           ) : (
             <>
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-6 text-white">
+              <div className="mcq-test-question-content">
+                <h2 className="mcq-test-question-text">
                   {currentQuestion}
                 </h2>
-                <div className="space-y-4">
+                <div className="mcq-test-options">
                   {currentOptions.map((option, idx) => (
                     <div
                       key={idx}
-                      className={`flex items-center p-4 rounded-lg cursor-pointer transition-all ${
+                      className={`mcq-test-option ${
                         userAnswers[currentQuestionIndex] === option
-                          ? "bg-gradient-to-r from-[var(--accent-teal)]/80 to-[var(--primary-violet)]/80 border-transparent"
-                          : "bg-[var(--primary-black)]/40 border border-[var(--accent-teal)]/20 hover:bg-[var(--primary-black)]/60"
+                          ? "selected"
+                          : "unselected"
                       }`}
                       onClick={() => handleAnswerChange(currentQuestionIndex, option)}
                     >
@@ -145,11 +142,11 @@ const MCQTest = () => {
                         value={option}
                         checked={userAnswers[currentQuestionIndex] === option}
                         onChange={() => handleAnswerChange(currentQuestionIndex, option)}
-                        className="peer hidden"
+                        className="mcq-test-option-input"
                       />
                       <label
                         htmlFor={`mcq-${currentQuestionIndex}-option-${idx}`}
-                        className="text-base font-medium w-full cursor-pointer"
+                        className="mcq-test-option-label"
                       >
                         {option}
                       </label>
@@ -163,14 +160,12 @@ const MCQTest = () => {
         
         {/* Navigation Buttons */}
         {!loading && (
-          <div className="flex justify-between items-center gap-4 mb-6">
+          <div className="mcq-test-navigation">
             <button
               onClick={handlePrevious}
               disabled={currentQuestionIndex === 0}
-              className={`px-6 py-3 rounded-lg flex items-center gap-2 transition-all ${
-                currentQuestionIndex === 0
-                  ? "bg-[var(--primary-black)]/60 text-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-[var(--primary-violet)] to-[var(--accent-teal)] text-white hover:opacity-90"
+              className={`mcq-test-nav-btn previous ${
+                currentQuestionIndex === 0 ? "" : ""
               }`}
             >
               <IoArrowBack size={20} />
@@ -180,7 +175,7 @@ const MCQTest = () => {
             {currentQuestionIndex < questions.length - 1 ? (
               <button
                 onClick={handleNext}
-                className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg flex items-center gap-2 hover:opacity-90 transition-all"
+                className="mcq-test-nav-btn next"
               >
                 <span>Next</span>
                 <IoArrowForward size={20} />
@@ -188,7 +183,7 @@ const MCQTest = () => {
             ) : (
               <button
                 onClick={handleFinish}
-                className="px-6 py-3 bg-gradient-to-r from-[var(--accent-teal)] to-[var(--primary-violet)] text-white rounded-lg flex items-center gap-2 hover:opacity-90 transition-all"
+                className="mcq-test-nav-btn finish"
               >
                 <span>Finish</span>
                 <IoCheckmarkDone size={20} />
@@ -199,7 +194,7 @@ const MCQTest = () => {
       </div>
       
       {/* Home Button */}
-      <div className="fixed bottom-6 right-6 z-10">
+      <div className="mcq-test-home-btn">
         <HomeButton />
       </div>
     </div>

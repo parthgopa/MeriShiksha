@@ -1,4 +1,3 @@
-import styles from "./Questions.module.css";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router";
 import LoadingSpinner from "../LoadingSpinner";
@@ -8,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import BlackLoadingSpinner from "../BlackLoadingSpinner";
 import { FaArrowLeft, FaCopy, FaCheckCircle } from "react-icons/fa";
 import { IoDocumentTextOutline } from "react-icons/io5";
+import "./Questions.css";
 
 const Questions = () => {
   const location = useLocation(null);
@@ -125,50 +125,48 @@ const Questions = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] flex justify-center items-center">
-        <div className="text-center">
+      <div className="questions-loading">
+        <div className="questions-loading-content">
           <BlackLoadingSpinner />
-          <p className="mt-4 text-white text-lg animate-pulse">Generating your questions...</p>
+          <p className="questions-loading-text">Generating your questions...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)]/30 to-[var(--primary-black)] text-white py-10 px-6 relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-20 right-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 left-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
-      
-      <div className="max-w-4xl mx-auto relative z-10" id="container">
-        <div className="bg-gradient-to-br from-[var(--primary-black)]/80 to-[var(--primary-violet)]/20 p-8 rounded-xl shadow-2xl border border-[var(--accent-teal)]/10 backdrop-blur-sm">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-teal)] via-white to-[var(--primary-violet)]">
-              Multiple Choice Questions
-            </h2>
-            <div className="px-4 py-2 bg-[var(--primary-black)]/60 rounded-lg border border-[var(--accent-teal)]/20">
-              <span className="text-[var(--accent-teal)]">{level}</span>
+    <div className="questions-container">
+      <div className="questions-content" id="container">
+        <div className="questions-card">
+          <div className="questions-header">
+            <div className="questions-title-row">
+              <h2 className="questions-title">
+                Multiple Choice Questions
+              </h2>
+              <div className="questions-level-badge">
+                {level}
+              </div>
             </div>
-          </div>
           
-          <div className="mb-6 flex flex-wrap gap-3">
-            <div className="px-4 py-2 bg-[var(--primary-black)]/60 rounded-lg border border-[var(--accent-teal)]/20">
-              <span className="text-[var(--accent-teal)]">Subject:</span> {subject}
-            </div>
-            <div className="px-4 py-2 bg-[var(--primary-black)]/60 rounded-lg border border-[var(--accent-teal)]/20">
-              <span className="text-[var(--accent-teal)]">Topic:</span> {topic}
-            </div>
-            <div className="px-4 py-2 bg-[var(--primary-black)]/60 rounded-lg border border-[var(--accent-teal)]/20">
-              <span className="text-[var(--accent-teal)]">Questions:</span> {numMCQs}
+            <div className="questions-info">
+              <div className="questions-info-badge">
+                <span className="questions-info-label">Subject:</span> {subject}
+              </div>
+              <div className="questions-info-badge">
+                <span className="questions-info-label">Topic:</span> {topic}
+              </div>
+              <div className="questions-info-badge">
+                <span className="questions-info-label">Questions:</span> {numMCQs}
+              </div>
             </div>
           </div>
 
           <div 
             id="output-container" 
-            className="bg-[var(--primary-black)]/60 p-6 rounded-xl border border-[var(--accent-teal)]/20 mb-6 max-h-[60vh] overflow-y-auto custom-scrollbar"
+            className="questions-output"
           >
             <ReactMarkdown
-              className="prose prose-invert prose-headings:text-[var(--accent-teal)] prose-strong:text-white/90 prose-li:marker:text-[var(--accent-teal)] max-w-none"
+              className="questions-markdown"
               children={questions
                 .map(
                   (q, index) =>
@@ -182,28 +180,21 @@ const Questions = () => {
             />
           </div>
 
-          <div className="flex flex-wrap justify-between gap-4 mt-8">
-            <button
-              onClick={() => navigate(-1)}
-              className="px-6 py-3 bg-[var(--primary-black)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] hover:bg-[var(--primary-black)]/80 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center gap-2"
-            >
-              <FaArrowLeft className="text-[var(--accent-teal)]" />
-              <span>Back</span>
-            </button>
+          <div className="questions-actions">
             
-            <div className="flex gap-4">
+            <div className="questions-actions-row">
               <button
                 onClick={copyToClipboard}
-                className="px-6 py-3 bg-[var(--primary-black)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] hover:bg-[var(--primary-black)]/80 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center gap-2 relative"
+                className={`questions-btn questions-btn-copy ${copySuccess ? 'copied' : ''}`}
               >
                 {copySuccess ? (
                   <>
-                    <FaCheckCircle className="text-green-400" />
+                    <FaCheckCircle className="questions-btn-icon success" />
                     <span>Copied!</span>
                   </>
                 ) : (
                   <>
-                    <FaCopy className="text-[var(--accent-teal)]" />
+                    <FaCopy className="questions-btn-icon" />
                     <span>Copy</span>
                   </>
                 )}
@@ -211,9 +202,9 @@ const Questions = () => {
               
               <button
                 onClick={handleShowAnswer}
-                className="px-6 py-3 bg-[var(--primary-black)] text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.02] hover:bg-[var(--primary-black)]/80 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 flex items-center gap-2"
+                className="questions-btn questions-btn-answers"
               >
-                <IoDocumentTextOutline className="text-[var(--accent-teal)]" />
+                <IoDocumentTextOutline className="questions-btn-icon" />
                 <span>{showAnswers ? "Hide Answers" : "Show Answers"}</span>
               </button>
             </div>
@@ -221,7 +212,7 @@ const Questions = () => {
         </div>
         
         {showAnswers && (
-          <div ref={answerRef} className="mt-8">
+          <div ref={answerRef} className="questions-answer-section">
             <Answer
               correctAnswers={correctAnswers}
               closeAnswer={() => setShowAnswers(false)}

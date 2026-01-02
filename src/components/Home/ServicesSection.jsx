@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaBriefcase,FaUserGraduate,FaChalkboardTeacher } from "react-icons/fa";
 
 const ServicesSection = ({ pages, servicesSectionRef }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -18,22 +19,8 @@ const ServicesSection = ({ pages, servicesSectionRef }) => {
       title: "Career Crafting",
       description: "Plan your career path with AI-powered guidance and tools",
       ref: careerCraftingRef,
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-[var(--accent-teal)]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-          />
-        </svg>
-      ),
+      icon: 
+        <FaBriefcase />
     },
     {
       id: "Empowering Learner",
@@ -41,44 +28,14 @@ const ServicesSection = ({ pages, servicesSectionRef }) => {
       description:
         "Enhance your learning experience with personalized AI tools",
       ref: empoweringLearnerRef,
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-[var(--accent-teal)]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-          />
-        </svg>
-      ),
+      icon: <FaUserGraduate/>,
     },
     {
       id: "Empowering Tutor",
       title: "Empowering Tutor",
       description: "Improve your teaching methods with AI-powered assistance",
       ref: empoweringTutorRef,
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-[var(--accent-teal)]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-          />
-        </svg>
-      ),
+      icon: <FaChalkboardTeacher/>,
     },
   ];
 
@@ -97,8 +54,8 @@ const ServicesSection = ({ pages, servicesSectionRef }) => {
       setSelectedCategory(categoryId);
       setTimeout(() => {
         setAnimateItems(true);
-      }, 100);
-    }, 300);
+      }, 20);
+    }, 100);
   };
 
   // Function to get subcategories for Career Crafting
@@ -233,260 +190,131 @@ const ServicesSection = ({ pages, servicesSectionRef }) => {
     },
   ];
 
-  // Render category content
-  const renderCategoryContent = (categoryId) => {
-    if (categoryId === "Career Crafting") {
-      return (
-        <div className="animate-fadeIn mt-4" ref={careerCraftingRef}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {getSubcategories("Career Crafting").map(
-              (subcategory, subIndex) => {
-                const subcategoryPages = getFilteredPages(
-                  "Career Crafting",
-                  subcategory.id
-                );
-                return subcategoryPages.map((page, index) => (
-                  <div
-                    key={`career-crafting-${subcategory.id}-${index}`}
-                    className={`transition-all duration-500 transform ${
-                      animateItems
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-10"
-                    }`}
-                    style={{
-                      transitionDelay: `${subIndex * 0.1 + index * 0.05}s`,
-                    }}
-                    onClick={() => navigate(page.path)}
-                  >
-                    <div className="p-3 sm:p-4 rounded-lg hover:bg-[var(--primary-violet)]/30 cursor-pointer group transition-all duration-300">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 rounded-full bg-[var(--accent-teal)] mr-3 group-hover:scale-125 transition-all duration-300"></div>
-                        <h3 className="text-base sm:text-lg font-medium text-white group-hover:text-[var(--accent-teal)] transition-all duration-300">
-                          {page.title}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-                ));
-              }
-            )}
-          </div>
-        </div>
-      );
-    } else if (categoryId === "Empowering Learner") {
-      return (
-        <div className="animate-fadeIn mt-4" ref={empoweringLearnerRef}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {empoweringLearnerPages.map((page, index) => (
-              <div
-                key={`empowering-learner-${index}`}
-                className={`transition-all duration-500 transform ${
-                  animateItems
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                }`}
-                style={{ transitionDelay: `${index * 0.1}s` }}
-                onClick={() => navigate(page.path)}
-              >
-                <div className="p-3 sm:p-4 rounded-lg hover:bg-[var(--primary-violet)]/30 cursor-pointer group transition-all duration-300">
-                  <div className="flex items-center">
-                    <div className="w-2 h-2 rounded-full bg-[var(--accent-teal)] mr-3 group-hover:scale-125 transition-all duration-300"></div>
-                    <h3 className="text-base sm:text-lg font-medium text-white group-hover:text-[var(--accent-teal)] transition-all duration-300">
-                      {page.title}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    } else if (categoryId === "Empowering Tutor") {
-      return (
-        <div className="animate-fadeIn mt-4" ref={empoweringTutorRef}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {empoweringTutorPages.map((page, index) => (
-              <div
-                key={`empowering-tutor-${index}`}
-                className={`transition-all duration-500 transform ${
-                  animateItems
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                }`}
-                style={{ transitionDelay: `${index * 0.1}s` }}
-                onClick={() => navigate(page.path)}
-              >
-                <div className="p-3 sm:p-4 rounded-lg hover:bg-[var(--primary-violet)]/30 cursor-pointer group transition-all duration-300">
-                  <div className="flex items-center">
-                    <div className="w-2 h-2 rounded-full bg-[var(--accent-teal)] mr-3 group-hover:scale-125 transition-all duration-300"></div>
-                    <h3 className="text-base sm:text-lg font-medium text-white group-hover:text-[var(--accent-teal)] transition-all duration-300">
-                      {page.title}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
-
+  // Inside your component file
+const CategoryContent = ({ pages, refProp }) => {
   return (
-    <div
-      className="bg-[var(--primary-black)] text-white py-8 sm:py-12 md:py-16 animate-fadeIn"
-      ref={servicesSectionRef}
-      id="services"
-    >
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8 py-6">
-        <div className="mb-12 text-center relative overflow-hidden">
-          {/* Background Gradient with Subtle Animation */}
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 opacity-70 blur-3xl animate-pulse duration-5000"></div>
-
-          {/* Content Overlay */}
-          <div className="relative z-10">
-            <h1 className="text-4xl font-extrabold text-white mb-4">
-              Functionalities
-            </h1>
-          </div>
-        </div>
-
-        <div className="space-y-8 md:space-y-12">
-          {categories.map((category) => (
-            <div key={category.id} className="relative">
-              {/* Category Header */}
-              <div
-                className={`relative cursor-pointer transition-all duration-300 transform hover:translate-x-1 ${
-                  selectedCategory === category.id ? "translate-x-2" : ""
-                }`}
-                onClick={() => handleCategoryClick(category.id)}
-              >
-                <div
-                  className={`flex items-center p-4 sm:p-5 rounded-t-lg shadow-md bg-gray-800 transition-all duration-300 ${
-                    selectedCategory === category.id
-                      ? "bg-gradient-to-r from-gray-800 to-purple-700 border-t border-l border-r border-teal-500/30"
-                      : "hover:bg-purple-900/30"
-                  }`}
-                >
-                  <div
-                    className={`mr-3 sm:mr-4 text-2xl ${
-                      selectedCategory === category.id
-                        ? "text-teal-400"
-                        : "text-white"
-                    }`}
-                  >
-                    {category.icon}
-                  </div>
-                  <div className="flex-1">
-                    <h3
-                      className={`text-xl font-semibold transition-all duration-300 ${
-                        selectedCategory === category.id
-                          ? "text-white"
-                          : "text-white"
-                      }`}
-                    >
-                      {category.title}
-                    </h3>
-                  </div>
-                  <div className="ml-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`h-5 w-5 transition-transform duration-300 ${
-                        selectedCategory === category.id
-                          ? "rotate-180 text-teal-400"
-                          : "text-gray-400"
-                      }`}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </div>
-                </div>
+    <div className="animate-fadeIn mt-4" ref={refProp}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        {pages.map((page, index) => (
+          <div
+            key={page.id || index}
+            className={`transition-all duration-500 transform ${
+              animateItems ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            }`}
+            style={{ transitionDelay: `${index * 0.1}s` }}
+            onClick={() => navigate(page.path)}
+          >
+            <div className="p-2  rounded-lg hover:bg-[var(--primary-violet)]/30 cursor-pointer group transition-all duration-300 sm:p-2 xs:p-3">
+              <div className="flex items-center">
+                <div className="w-2 h-2 rounded-full bg-[var(--accent-teal)] mr-3 group-hover:scale-125 transition-all duration-300"></div>
+                <h3 className="text-base sm:text-lg font-medium text-white group-hover:text-[var(--accent-teal)] transition-all duration-300">
+                  {page.title}
+                </h3>
               </div>
-
-              {/* Curved Connection Line - Only visible when selected */}
-              {selectedCategory === category.id && (
-                <div className="absolute left-7 top-[3.2rem] h-6 w-6 z-10">
-                  <svg
-                    className="w-6 h-6"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0,0 C12,0 24,12 24,24"
-                      stroke="url(#curveGradient)"
-                      strokeWidth="2"
-                      strokeDasharray="4,2"
-                      className="animate-dash"
-                    />
-                    <defs>
-                      <linearGradient
-                        id="curveGradient"
-                        x1="0%"
-                        y1="0%"
-                        x2="100%"
-                        y2="100%"
-                      >
-                        <stop offset="0%" stopColor="var(--accent-teal)" />
-                        <stop offset="100%" stopColor="var(--primary-violet)" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                </div>
-              )}
-
-              {/* Category Content */}
-              {selectedCategory === category.id && (
-                <div className="bg-gradient-to-br from-gray-800 to-purple-900/20 border border-teal-500/30 rounded-b-lg rounded-tr-lg p-6 sm:p-8 shadow-lg text-white left-5">
-                  {renderCategoryContent(category.id)}
-                </div>
-              )}
             </div>
-          ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Usage inside renderCategoryContent
+const renderCategoryContent = (categoryId) => {
+  if (categoryId === "Career Crafting") {
+    const pages = getSubcategories("Career Crafting").flatMap((sub, subIndex) =>
+      getFilteredPages("Career Crafting", sub.id).map((page, index) => ({
+        ...page,
+        delay: subIndex * 0.1 + index * 0.05,
+      }))
+    );
+    return <CategoryContent pages={pages} refProp={careerCraftingRef} />;
+  }
+
+  if (categoryId === "Empowering Learner") {
+    return <CategoryContent pages={empoweringLearnerPages} refProp={empoweringLearnerRef} />;
+  }
+
+  if (categoryId === "Empowering Tutor") {
+    return <CategoryContent pages={empoweringTutorPages} refProp={empoweringTutorRef} />;
+  }
+  return null;
+};
+
+  // CategoryHeader.jsx (inline or same file)
+const CategoryHeader = ({ category, selectedCategory, onClick }) => (
+  <div
+    className={`relative cursor-pointer transition-all duration-300 transform`}
+    onClick={() => onClick(category.id)}
+  >
+    <div
+      className={`flex items-center p-4 rounded-t-lg shadow-md bg-gray-800 transition-all duration-300 ${
+        selectedCategory === category.id
+          ? "bg-gradient-to-r from-purple-900 to-purple-800 border-t border-l border-r border-teal-500/30"
+          : "hover:bg-blue-500/30"
+      }`}
+    >
+      <div
+        className={`mr-3 sm:mr-4 text-2xl ${
+          selectedCategory === category.id ? "text-teal-400" : "text-white"
+        }`}
+      >
+        {category.icon}
+      </div>
+      <h3 className="text-xl font-semibold text-white transition-all duration-300">
+        {category.title}
+      </h3>
+    </div>
+  </div>
+);
+
+// CategoryBlock.jsx (inline or same file)
+const CategoryBlock = ({ category, selectedCategory, onClick }) => (
+  <div key={category.id} className="relative">
+    <CategoryHeader
+      category={category}
+      selectedCategory={selectedCategory}
+      onClick={onClick}
+    />
+    {selectedCategory === category.id && (
+      <div className="bg-gradient-to-br from-gray-800 to-purple-900/20 border border-teal-500/30 rounded-b-lg rounded-tr-lg p-4 xs:p-2 sm:p-6
+ shadow-lg text-white left-5">
+        {renderCategoryContent(category.id)}
+      </div>
+    )}
+  </div>
+);
+
+// Main return
+return (
+  <div
+    className="bg-[var(--primary-black)] text-white py-8 sm:py-12 md:py-16 animate-fadeIn"
+    ref={servicesSectionRef}
+    id="services"
+  >
+    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8 py-6">
+      {/* Section Header */}
+      <div className="mb-10 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 opacity-70 blur-3xl animate-pulse duration-5000"></div>
+        <div className="relative">
+          <h1 className="text-4xl font-extrabold text-white p-2 align:middle">Functionalities</h1>
         </div>
       </div>
 
-      <style>
-        {`
-          @keyframes dash {
-            to {
-              stroke-dashoffset: 12;
-            }
-          }
-          .animate-dash {
-            animation: dash 3s linear infinite;
-          }
-          
-          @media (max-width: 640px) {
-            .grid {
-              grid-template-columns: 1fr;
-            }
-          }
-          
-          @media (min-width: 641px) and (max-width: 1023px) {
-            .grid {
-              grid-template-columns: repeat(2, 1fr);
-            }
-          }
-          
-          @media (min-width: 1024px) {
-            .grid {
-              grid-template-columns: repeat(3, 1fr);
-            }
-          }
-        `}
-      </style>
+      {/* Categories */}
+      <div className="space-y-6 md:space-y-10">
+        {categories.map((category) => (
+          <CategoryBlock
+            key={category.id}
+            category={category}
+            selectedCategory={selectedCategory}
+            onClick={handleCategoryClick}
+          />
+        ))}
+      </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default ServicesSection;

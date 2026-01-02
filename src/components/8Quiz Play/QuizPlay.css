@@ -1,0 +1,311 @@
+/* QuizPlay.css - Mobile-first responsive design */
+
+/* CSS Variables for consistent theming */
+:root {
+  --primary-black: #0a0a0a;
+  --primary-violet: #6366f1;
+  --accent-teal: #14b8a6;
+  --text-white: #ffffff;
+  --text-gray: #9ca3af;
+  --bg-glass: rgba(10, 10, 10, 0.8);
+  --bg-card: rgba(10, 10, 10, 0.6);
+  --border-accent: rgba(20, 184, 166, 0.2);
+  --shadow-glow: 0 0 20px rgba(20, 184, 166, 0.1);
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Main container */
+.quiz-play-container {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary-black) 0%, rgba(99, 102, 241, 0.3) 50%, var(--primary-black) 100%);
+  color: var(--text-white);
+  padding: 1.5rem 1rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Decorative background elements */
+.quiz-play-container::before {
+  content: '';
+  position: absolute;
+  top: 5rem;
+  left: 2rem;
+  width: 16rem;
+  height: 16rem;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(3rem);
+  z-index: 0;
+}
+
+.quiz-play-container::after {
+  content: '';
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  width: 20rem;
+  height: 20rem;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(3rem);
+  z-index: 0;
+}
+
+/* Content wrapper */
+.quiz-play-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Image section */
+.quiz-play-image-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.quiz-play-image-container {
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+}
+
+.quiz-play-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  transition: var(--transition-smooth);
+}
+
+.quiz-play-image:hover {
+  transform: scale(1.01);
+}
+
+/* Form section */
+.quiz-play-form-section {
+  width: 100%;
+  max-width: 600px;
+}
+
+.quiz-play-form-card {
+  width: 100%;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-glow);
+  background: linear-gradient(135deg, var(--bg-glass) 0%, rgba(99, 102, 241, 0.2) 100%);
+  border: 1px solid var(--border-accent);
+  backdrop-filter: blur(10px);
+}
+
+.quiz-play-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, var(--accent-teal) 0%, var(--text-white) 50%, var(--primary-violet) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+
+/* Form */
+.quiz-play-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Form fields */
+.quiz-play-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.quiz-play-label {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--text-white);
+}
+
+.quiz-play-input,
+.quiz-play-select {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-accent);
+  color: var(--text-white);
+  font-size: 1rem;
+  transition: var(--transition-smooth);
+  outline: none;
+}
+
+.quiz-play-input::placeholder {
+  color: var(--text-gray);
+}
+
+.quiz-play-input:focus,
+.quiz-play-select:focus {
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+  transform: translateY(-1px);
+}
+
+.quiz-play-select option {
+  background: var(--primary-black);
+  color: var(--text-white);
+}
+
+/* Submit button */
+.quiz-play-submit-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.quiz-play-submit-btn {
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, var(--accent-teal) 0%, var(--primary-violet) 100%);
+  color: var(--text-white);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3);
+  min-height: 48px; /* Accessibility - minimum touch target */
+}
+
+.quiz-play-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(20, 184, 166, 0.4);
+}
+
+/* Warning message */
+.quiz-play-warning {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(20, 184, 166, 0.2);
+  border: 1px solid var(--accent-teal);
+  border-radius: 0.5rem;
+  text-align: center;
+  color: var(--primary-black);
+  font-weight: 600;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* Home button container */
+.quiz-play-home-container {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .quiz-play-container {
+    padding: 2.5rem 1.5rem;
+  }
+  
+  .quiz-play-form-card {
+    padding: 3rem;
+  }
+  
+  .quiz-play-title {
+    font-size: 2.25rem;
+  }
+  
+  .quiz-play-label {
+    font-size: 1.125rem;
+  }
+  
+  .quiz-play-image-section {
+    margin-bottom: 0;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .quiz-play-content {
+    flex-direction: row;
+    align-items: center;
+    gap: 4rem;
+  }
+  
+  .quiz-play-image-section {
+    width: auto;
+    flex: 1;
+  }
+  
+  .quiz-play-form-section {
+    flex: 2;
+    max-width: 700px;
+  }
+  
+  .quiz-play-title {
+    font-size: 2.5rem;
+  }
+  
+  .quiz-play-form-card {
+    padding: 4rem;
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1280px) {
+  .quiz-play-container {
+    padding: 3rem;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.quiz-play-input:focus-visible,
+.quiz-play-select:focus-visible,
+.quiz-play-submit-btn:focus-visible {
+  outline: 2px solid var(--accent-teal);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .quiz-play-form-card {
+    border: 2px solid var(--accent-teal);
+  }
+  
+  .quiz-play-input,
+  .quiz-play-select {
+    border: 2px solid var(--text-white);
+  }
+  
+  .quiz-play-submit-btn {
+    border: 2px solid var(--text-white);
+  }
+}
