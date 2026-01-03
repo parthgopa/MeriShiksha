@@ -26,13 +26,7 @@ const About = () => {
               www.merishiksha.com
             </a>
             , a cutting-edge educational platform powered by Google AI.
-            {/* Developed by <span className="font-bold">Parth Gopani</span>, a
-            third-year Computer Science Engineering student at{" "}
-            <span className="font-bold">
-              The Maharaja Sayajirao University of Baroda
-            </span>
-            , this portal redefines career development and academic excellence
-            for students worldwide. */}
+            It is a project of Octet technology.
           </p>
 
           <p className="mt-4 text-gray-300">
@@ -49,18 +43,6 @@ const About = () => {
           <h2 className="text-3xl font-bold text-white mt-6">
             Acknowledgments
           </h2>
-          {/* <p className="text-gray-300 mt-2">
-            This project was brought to life under the expert guidance and
-            technical mentorship of{" "}
-            <span className="font-bold">Mr. Rajiv Shah</span>, a seasoned AI and
-            IT consultant.
-          </p> */}
-          {/* <p className="text-gray-300 mt-2">
-            We extend our heartfelt gratitude to{" "}
-            <span className="font-bold">Upasna Charitable Trust</span> and its
-            trustees for their invaluable financial support during the initial
-            stages of development.
-          </p> */}
           <p className="text-gray-300 mt-2">
             Finally, we thank all our well-wishers for their unwavering
             encouragement and contributions to this mission.

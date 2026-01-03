@@ -2,19 +2,16 @@ import axios from "axios";
 
 const APIService = async ({ question, onResponse, retries = 2 }) => {
 
-  // const backendURL = "https://merishiksha-production.up.railway.app";
-  const backendURL = "http://localhost:5000";
-
+  const API_KEY = "AIzaSyCx9HnzaZy4yD6cUBMzcYQIY1Wl2vz8t8o";
 
 
   const makeRequest = async (attempt = 1) => {
     try {
       const response = await axios({
-        url: `${backendURL}/api/gemini`,
+        url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
         method: "POST",
         data: {
-          question: question,
-        },
+          contents: [{ parts: [{ text: question }] }],        },
         timeout: 120000, // 120 second timeout for complex requests
         headers: {
           'Content-Type': 'application/json',
