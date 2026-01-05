@@ -21,10 +21,10 @@ const APIService = async ({ question, onResponse, retries = 2 }) => {
         }
       });
 
+
       if (response.status === 200 && response.data) {
         onResponse(response.data);
       } else {
-        console.error("Invalid response from backend API:", response);
         onResponse({
           candidates: [{
             content: {
