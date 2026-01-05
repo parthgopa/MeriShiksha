@@ -16,7 +16,7 @@ function App() {
         </div>
       </div>
       <hr />
-      <Danger />
+      {/* <Danger /> */}
     </AuthProvider>
   );
 }

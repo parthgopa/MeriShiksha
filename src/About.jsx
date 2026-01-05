@@ -50,9 +50,9 @@ const About = () => {
         </div>
 
         {/* Home Button */}
-        <div className="mt-6 flex justify-center">
+        {/* <div className="mt-6 flex justify-center">
           <HomeButton />
-        </div>
+        </div> */}
       </div>
     </div>
   );

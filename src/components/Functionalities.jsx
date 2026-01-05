@@ -203,10 +203,10 @@ const Functionalities = () => {
 
 
         {/* Alexa Chatbot Button */}
-        <div className="fixed bottom-8 right-8 z-50">
+        <div className="fixed bottom-0 right-8 z-50">
           <button
             onClick={() => navigate("/chatbot")}
-            className="bg-black p-2 bottom-15 right-0 fixed flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)] to-[var(--accent-teal)]-0 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 group"
+            className="bg-black p-2 bottom-0 right-0 fixed flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)] to-[var(--accent-teal)]-0 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--accent-teal)] focus:ring-opacity-50 group"
             aria-label="Chat with AI Assistant"
           >
             <div className="relative">

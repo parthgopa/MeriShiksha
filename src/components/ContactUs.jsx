@@ -171,11 +171,11 @@ export default function ContactUs() {
           </div> */}
         </div>
         {/* Optional: Home Button */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-10">
+        {/* <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-10">
           <div className="mt-6 md:mt-0">
             <HomeButton />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
     <Footer/>

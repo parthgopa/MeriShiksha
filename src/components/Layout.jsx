@@ -5,7 +5,7 @@ const Layout = ({ children }) => {
     <>
       <div>
         {children}
-        <Danger />
+        {/* <Danger /> */}
         {/* <Cognito /> */}
       </div>
     </>
