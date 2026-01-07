@@ -53,13 +53,13 @@ const Functionalities = () => {
       subcategory: "Language Learning",
     },
         
-    {
-      title: "IELTS Trainer",
-      description: "Upgrade you Vocabulary with AI talk",
-      path: "/ielts-trainer",
-      category: "Career Crafting",
-      subcategory: "Language Learning",
-    },
+    // {
+    //   title: "IELTS Trainer",
+    //   description: "Upgrade you Vocabulary with AI talk",
+    //   path: "/ielts-trainer",
+    //   category: "Career Crafting",
+    //   subcategory: "Language Learning",
+    // },
     {
       title: "Language Accelerator",
       description: "Upgrade you Vocabulary with AI talk",
