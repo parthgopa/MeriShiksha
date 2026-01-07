@@ -18,10 +18,10 @@ const HeroSection = () => {
 
   return (
     
-    <div className="relative w-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)] to-[var(--accent-teal)]/80 text-white pt-20 animate-fadeIn overflow-hidden">
+    <div className="relative w-full bg-gradient-to-br from-[var(--primary-black)] via-[var(--primary-violet)] to-[var(--accent-teal)]/80 text-white pt-20 lg:pt-25 animate-fadeIn overflow-hidden">
       
       {/* Background decorative elements */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
+      <div className="absolute top-25 left-10 w-64 h-64 bg-[var(--accent-teal)]/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-10 right-10 w-80 h-80 bg-[var(--primary-violet)]/20 rounded-full blur-3xl"></div>
       
       <div className="w-full h-auto mx-auto px-6 flex flex-col md:flex-row items-center justify-between relative">
@@ -29,7 +29,7 @@ const HeroSection = () => {
           <img
             src={LandingImage}
             alt="Robot Illustration"
-            className="lg:w-3xl w-screen h-auto mx-auto rounded-3xl shadow-2xl animate-float border-2 border-[var(--accent-teal)]/20"
+            className="lg:w-2xl w-[90vw] h-auto mx-auto rounded-3xl shadow-2xl animate-float border-2 border-[var(--accent-teal)]/20"
           />
         </div>
         <div className="md:w-1/2 text-center md:text-left p-6">

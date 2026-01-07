@@ -67,6 +67,13 @@ import LearningParts from "./components/11LanguageLearning/2Learningparts.jsx";
 import LanguageQuiz from "./components/11LanguageLearning/3languageQuiz.jsx";
 import LanguageResult from "./components/11LanguageLearning/4languageResult.jsx";
 // import LanguageChat from "./components/11LanguageLearning/languagechat.jsx";
+
+// Ielts trainer
+import IeltsInputs from "./components/Ielts/IeltsiInputs.jsx";
+import IeltsLearningParts from "./components/Ielts/IeltsLearningparts.jsx"
+import IeltsQuiz from "./components/Ielts/3languageQuiz.jsx";
+import IeltsResult from "./components/Ielts/IeltsResult.jsx";
+
 //11b
 import LanguageAccelerator from "./components/11bLanguageAccelerator/1languageaccelerator.jsx";
 import AcceleratedPage from "./components/11bLanguageAccelerator/2acceleratedpage.jsx";
@@ -424,6 +431,41 @@ const router = createBrowserRouter([
       </Layout>
     ),
   },
+
+  {
+    path: "/ielts-trainer",
+    element: (
+      <Layout>
+        <IeltsInputs />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/ielts-learning-parts",
+    element: (
+      <Layout>
+        <IeltsLearningParts />{" "}
+      </Layout>
+    ),
+  },
+  {
+    path: "/ielts-quiz",
+    element: (
+      <Layout>
+        <IeltsQuiz />{" "}
+      </Layout>
+    ),
+  },
+
+  {
+    path: "/ielts-result",
+    element: (
+      <Layout>
+        <IeltsResult />{" "}
+      </Layout>
+    ),
+  },
+
   {
     path: "/language-accelerator",
     element: (

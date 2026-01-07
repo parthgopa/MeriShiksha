@@ -2,8 +2,9 @@ import axios from "axios";
 
 const APIService = async ({ question, onResponse, retries = 2 }) => {
 
-  // const backendURL = "https://web-production-def47.up.railway.app";
-  const backendURL = "http://localhost:5000";
+  const backendURL = "https://web-production-def47.up.railway.app";
+  // const backendURL = "http://localhost:5000";
+  // console.log("Backend URL : ", backendURL);
 
 
 
