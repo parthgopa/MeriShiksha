@@ -88,7 +88,7 @@ const Header = () => {
               </Link>
             </li> */}
 
-            {currentUser ? (
+            {/* {currentUser ? (
               <>
                 <li>
                   <Link
@@ -140,7 +140,7 @@ const Header = () => {
                   </>
                 )}
               </>
-            )}
+            )} */}
           </ul>
         </nav>
 
@@ -212,7 +212,7 @@ const Header = () => {
               Admin Portal
             </Link>
           </li> */}
-          {currentUser ? (
+          {/* {currentUser ? (
             <>
               <li>
                 <Link
@@ -268,7 +268,7 @@ const Header = () => {
                 </>
               )}
             </>
-          )}
+          )} */}
         </ul>
       </div>
     </header>

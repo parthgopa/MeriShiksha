@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import HomeButton from "../HomeButton";
-import img4 from "../../assets/inputimages/ielts-trainer.png";
+import img4 from "../../assets/ielts-trainer.png";
 import LoadingSpinner from "../LoadingSpinner"; // Importing the LoadingSpinner component
 import SubscriptionCheck from "../Subscription/SubscriptionCheck";
 
@@ -11,7 +11,7 @@ const IeltsInputs = () => {
   const [currentLevel, setCurrentLevel] = useState("Beginner");
   const [takenBefore, setTakenBefore] = useState("no");
   const [previousBand, setPreviousBand] = useState("6.5");
-  const [weakestSkill, setWeakestSkill] = useState("Listening");
+  const [weakestSkill, setWeakestSkill] = useState("Speaking");
   const [timeAvailable, setTimeAvailable] = useState("3 months");
   const [loading, setLoading] = useState(false);
   const [warning, setWarning] = useState(false);
