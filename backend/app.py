@@ -5,6 +5,7 @@ import os
 
 # Import blueprints
 from api import api_bp
+from promptapi import promptapi_bp
 
 load_dotenv()
 
@@ -15,19 +16,23 @@ CORS(
     resources={r"/*": {"origins": ["https://merishiksha.ai4cs.in",
     "http://localhost:5173", 
     "http://localhost:5174",
-    "https://merishiksha.com",] }},
+    "https://merishiksha.com",
+    "https://prompt.merishiksha.com",
+    ] }},
     supports_credentials=True
 )
 
 # Register blueprints with proper URL prefixes
 app.register_blueprint(api_bp, url_prefix='/api')
+app.register_blueprint(promptapi_bp, url_prefix='/promptapi')
 
 @app.route('/')
 def home():
     return jsonify({
         "message": "MeriShiksha Backend API",
         "endpoints": {
-            "gemini": "/api/gemini"
+            "gemini": "/api/gemini",
+            "promptapi": "/promptapi"
         }
     })
 
