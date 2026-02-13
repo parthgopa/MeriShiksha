@@ -70,9 +70,9 @@ export const SubscriptionToggleProvider = ({ children }) => {
   };
 
   // Fetch subscription toggle on mount
-  useEffect(() => {
-    fetchSubscriptionToggle();
-  }, []);
+  // useEffect(() => {
+  //   fetchSubscriptionToggle();
+  // }, []);
 
   // Value to be provided by the context
   const value = {
