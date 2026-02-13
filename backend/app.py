@@ -11,18 +11,18 @@ load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app, resources={
-    r"/*": {
-        "origins": ["http://localhost:5173", 
-        "http://localhost:5174",
-        "https://merishiksha.com",
-        "https://prompt.merishiksha.com",
-        ],
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
-    }
-})
-
+CORS(app,
+     resources={r"/*": {"origins": [
+         "http://localhost:5173",
+         "http://localhost:5174",
+         "https://merishiksha.com",
+         "https://prompt.merishiksha.com"
+     ]}},
+     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+     allow_headers=["Content-Type", "Authorization"],
+     supports_credentials=True
+)
+   
 # Register blueprints with proper URL prefixes
 app.register_blueprint(api_bp, url_prefix='/api')
 app.register_blueprint(promptapi_bp, url_prefix='/promptapi')
